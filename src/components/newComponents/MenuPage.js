@@ -57,71 +57,13 @@ const MenuPage = ({ user, msgAlert }) => {
                 
                 <Card
                     href='#card-example-link-card'
-                    header='Elliot Baker'
+                    header='VLT'
                     meta='Friend'
                     description='Elliot is a sound engineer living in Nashville who enjoys playing guitar and hanging with his cat.'
                 />
             </Grid.Column>
         </Grid>
         </div>
-
-
-
-        // <Segment key={ activities.id } inverted color='yellow' class="capitalize-me">
-        //     <Grid centered stretched>
-        //         <Grid.Row padded>
-        //             <h1>{activities.activity}</h1>
-        //             <Segment fluid>
-        //                 <Grid columns={5}>
-        //                     <Grid.Column>
-        //                     {
-        //                     activities.owner 
-        //                     ?
-        //                     <h3>Activity Owner: 
-        //                         <Link to={`/user-public-page/${activities.owner._id}`}> 
-        //                             <h2>{activities.owner.email}</h2>
-        //                         </Link>
-        //                     </h3>
-        //                     : 
-        //                     <h3>Activity Owner: 
-        //                         <h3>None</h3>
-        //                     </h3>
-        //                     }
-        //                     </Grid.Column>
-        //                     <Grid.Column>
-        //                         <h3>Category: </h3>
-        //                         <h3>
-        //                             { activities.catagoryIcon
-        //                                 ?
-        //                                 <Icon size='large' name={activities.catagoryIcon}></Icon>
-        //                                 :
-        //                                 null
-        //                             }
-
-        //                             {activities.type}
-        //                         </h3>
-        //                     </Grid.Column>
-        //                     <Grid.Column>
-        //                         <h3>Accessibility: </h3>
-        //                         <h3>{activities.accessibility}</h3>
-        //                     </Grid.Column>
-        //                     <Grid.Column>
-        //                         <h3>Participants: </h3>
-        //                         <h3>{activities.participants}</h3>
-        //                     </Grid.Column>
-        //                     <Grid.Column>
-                            
-        //                     </Grid.Column>
-
-        //                 </Grid>
-                        
-        //             </Segment>
-        //         </Grid.Row>
-        //     </Grid>
-
-            
-        // </Segment>
-        
     ))
 
     
@@ -129,7 +71,7 @@ const MenuPage = ({ user, msgAlert }) => {
 return (
     <>
         <Segment inverted color='yellow' class="capitalize-me">
-            <Grid padded stretched>
+            <Grid centered stretched>
                 <Grid.Row padded>
                         <Segment raised >
                         <h1>Food</h1>
