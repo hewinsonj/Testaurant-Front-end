@@ -111,4 +111,4 @@ ERD
     ![](/testuarant_wireframes/Testuraunt-ERD.drawio.png)
 
 Routes Tables
-    ![](/testuarant_wireframes/Testuraunt-Routes%20Tables.drawio%20(1).png)
+    ![](/testuarant_wireframes/Testuraunt-Routes%20Tables.drawio%20(3).png)

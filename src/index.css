@@ -1,0 +1,139 @@
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: black;
+}
+
+#bigBody {
+  background-color: bisque;
+}
+
+#long {
+
+  height: 30rem;
+}
+
+#stretch {
+  height: 20rem;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+ buttonActivityPage {
+  justify-content: space-evenly;
+ }
+
+
+
+.signButton {
+  color: black;
+}
+
+.signSeg {
+  justify-content: center;
+  align-items: center;
+  border: 2rem black solid;
+}
+
+#container {
+  margin-top: 10rem;
+}
+
+#segment {
+  padding: 10rem;
+}
+
+#signOutText {
+  color: black;
+}
+
+/* #userPageSegment {
+  width: 30rem;
+} */
+
+
+#header {
+  background-color: rgba(100, 20, 0, 2);
+}
+
+#empContainer {
+  width: 75%;
+  margin: 2px;
+}
+
+#menuItems {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+}
+
+#menuItemBox {
+  margin: 5px;
+}
+
+#actList {
+  height: 10rem;
+  background-color: white;
+  color: black;
+}
+
+#actListItems {
+  justify-content: left;
+}
+
+
+#ranksHeader {
+  text-align: center;
+}
+
+#bestBuds {
+  text-align: center;
+}
+
+#viewBudsButton {
+  justify-content: center;
+  align-content: center;
+  text-align: center;
+}
+
+#viewButton {
+  align-items: right;
+}
+
+.modal {
+  width: 75vw !important;
+  height: auto !important;
+  top: auto !important;
+  left: auto !important;
+}
+
+#yourActs {
+  text-align: center;
+  font-size:xx-large;
+}
+
+#commFeed {
+  text-align: center;
+}
+.capitalize-me::first-letter {
+  text-transform: capitalize;
+}
+.AvatarSelection {
+  justify-content: center;
+  align-content: center;
+  text-align: center;
+}
+
+.scrolling-group {
+  max-height: 200vh;
+  overflow:scroll
+}
+
