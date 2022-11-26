@@ -22,6 +22,7 @@ import NewLandingPage from './components/newComponents/NewLandingPage'
 import EmployeePage from './components/newComponents/EmployeePage'
 import MenuPage from './components/newComponents/MenuPage'
 import MenuNavPage from './components/newComponents/MenuNav'
+import TestNav from './components/newComponents/TestNav'
 
 // import CreateActivity from './components/activities/CreateActivity'
 // import UpdateActivity from './components/activities/UpdateActivity'
@@ -34,6 +35,7 @@ const App = () => {
   const [msgAlerts, setMsgAlerts] = useState([])
   //trigger to help components update if there is a new activity created w/in the modal, which can be called from anywhere. This is purely a toggle and no meaning should be taken from whether it is true or false
   const [newActivity, setNewActivity] = useState(false)
+  const [newQuestion, setNewQuestion] = useState(false)
 
 
   const clearUser = () => {
@@ -68,14 +70,15 @@ const App = () => {
 					/>
 				))}
 				{/* <Header user={user} msgAlert={msgAlert} setNewActivity={setNewActivity} /> */}
-				<NewLandingPage user={user} msgAlert={msgAlert} setNewActivity={setNewActivity} />
+				<NewLandingPage user={user} msgAlert={msgAlert} setNewQuestion={setNewQuestion} />
 				<Routes>
 					<Route path='/' element={<Home user={user} msgAlert={msgAlert} setUser={setUser} />} />
 					<Route
 						path='/sign-up'
 						element={<SignUp msgAlert={msgAlert} setUser={setUser} />}
 					/>
-					<Route path='/my-profile/' element={<UserPage msgAlert={msgAlert} user={user} newActivity={newActivity} />} />
+					<Route path='/my-profile/' element={<UserPage msgAlert={msgAlert} user={user} newQuestion={newQuestion} />} />
+					
 					<Route path='/user-public-page/:otherUserId' element={<UserPublicPage msgAlert={msgAlert} currentUser={user} viewedUser={viewedUser}/>} />
 					<Route
 						path='/sign-in'
@@ -116,7 +119,7 @@ const App = () => {
 					<Route
 						path='/new-landing-page'
 						element={
-							<NewLandingPage msgAlert={msgAlert}/>
+							<NewLandingPage msgAlert={msgAlert} user={user} newQuestion={newQuestion}/>
 					}
 					/>
 					<Route
@@ -134,7 +137,13 @@ const App = () => {
 					<Route
 						path='/menu-nav'
 						element={
-							<MenuNavPage msgAlert={msgAlert} user={user} />
+							<MenuNavPage msgAlert={msgAlert} user={user} setNewQuestion={setNewQuestion} />
+					}
+					/>
+					<Route
+						path='/test-nav'
+						element={
+							<TestNav msgAlert={msgAlert} user={user} setNewQuestion={setNewQuestion} />
 					}
 					/>
 					<Route

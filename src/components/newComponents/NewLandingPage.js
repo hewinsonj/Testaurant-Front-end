@@ -48,7 +48,7 @@ export default class NewLandingPage extends Component {
                     active={activeItem === 'tests'}
                     onClick={this.handleItemClick}
                     >
-                        <Link to='tests'>
+                        <Link to='test-nav'>
                             Tests
                         </Link>
                     </Menu.Item>
@@ -81,6 +81,15 @@ export default class NewLandingPage extends Component {
                     </Menu.Item>
                     <Menu.Menu position='right'>
                         <Menu.Item
+                        name='change-pw'
+                        active={activeItem === 'change-pw'}
+                        onClick={this.handleItemClick}
+                        >
+                            <Link to='change-password'>
+                                Change-Password
+                            </Link>
+                        </Menu.Item>
+                        <Menu.Item
                         name='testaurant'
                         active={activeItem === 'testaurant'}
                         onClick={this.handleItemClick}
@@ -89,6 +98,7 @@ export default class NewLandingPage extends Component {
                                 <h1>Testaurant</h1>
                             </Link>
                         </Menu.Item>
+                        
 
                     </Menu.Menu>
                 </Menu>

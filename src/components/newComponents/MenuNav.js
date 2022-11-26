@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { Menu } from 'semantic-ui-react'
 import MenuPage from './MenuPage'
 import DrinksPage from './DrinksPage'
+import AddItem from './AddItem'
 import { Link } from 'react-router-dom'
 
 export default class MenuExampleTabular extends Component {
@@ -14,7 +15,8 @@ export default class MenuExampleTabular extends Component {
     const activitiesJSX = (activeItem === 'food') ? 
         <MenuPage/>
         :
-        <DrinksPage />
+        // <DrinksPage />
+        <AddItem user={this.props.user} setNewQuestion={this.props.setNewQuestion} msgAlert={this.props.msgAlert}/>
     return (
         <>
       <Menu tabular>
@@ -30,9 +32,16 @@ export default class MenuExampleTabular extends Component {
           onClick={this.handleItemClick}
         >
             
+        </Menu.Item>  
+        <Menu.Item
+          name='add item'
+          active={activeItem === 'add item'}
+          onClick={this.handleItemClick}
+        >
         </Menu.Item>    
         
       </Menu>
+      {/* {activeItem === 'add item' ? <AddItem/> : } */}
       {activitiesJSX}
       </>
     )

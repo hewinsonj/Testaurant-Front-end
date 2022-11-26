@@ -17,7 +17,7 @@ const ChangePassword = (props) => {
 	// }
     const [oldPassword, setOldPassword] = useState('')
     const [newPassword, setNewPassword] = useState('')
-    const [passwordConfirmation, setPasswordConfirmation] = useState('')
+    const [password_confirmation, setPasswordConfirmation] = useState('')
 
     const navigate = useNavigate()
 
@@ -26,7 +26,7 @@ const ChangePassword = (props) => {
 
 		const { msgAlert, user } = props
 
-        const passwords = {oldPassword, newPassword}
+        const passwords = {oldPassword, newPassword, password_confirmation}
 
 		changePassword(passwords, user)
 			.then(() =>
@@ -130,8 +130,8 @@ const ChangePassword = (props) => {
                             icon='check'
                             iconPosition='left'
                             required
-                            name='passwordConfirmation'
-                            value={passwordConfirmation}
+                            name='password_confirmation'
+                            value={password_confirmation}
                             type='password'
                             placeholder='Confirm New Password'
                             onChange={e => setPasswordConfirmation(e.target.value)}

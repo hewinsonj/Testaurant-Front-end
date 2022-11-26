@@ -95,9 +95,9 @@ const UserPage = ({ user, msgAlert, newActivity }) => {
 
                 <Grid columns={3}>
                     <Grid.Column width={4}>
-                        <BadgesSegment 
+                        {/* <BadgesSegment 
                             badges={badges} 
-                            badgeOwnerHandle={user.email} 
+                            badgeOwnerHandle= 
                             mine={true} 
                             activities={allMyActivities}
                             setBadgeUpdate={setBadgeUpdate}
@@ -105,11 +105,11 @@ const UserPage = ({ user, msgAlert, newActivity }) => {
                             badgeUpdate={badgeUpdate} 
                             setBadges={setBadges}
 
-                        />
+                        /> */}
                     </Grid.Column>
                     <Grid.Column width={7}>
                             <Segment>
-                                <h2 id='yourActs'>Your Activities</h2>
+                                <h2 id='yourActs'>Your Activities dog{user.email}</h2>
                                 <MyActivities
                                     allMyActivities={allMyActivities}
                                     user={user}

@@ -16,27 +16,27 @@ const DrinksPage = ({ user, msgAlert }) => {
     const [searchText, setSearchText] = useState([])
 
     //function for filtering as user types in activity name
-    const handleChange = (e) => {
-        let activities = allActivities
-        setFilterActivities(activities.filter(
-        a => a.activity.includes(e.target.value) || a.type.includes(e.target.value))
-        )
-    }
+    // const handleChange = (e) => {
+    //     let activities = allActivities
+    //     setFilterActivities(activities.filter(
+    //     a => a.activity.includes(e.target.value) || a.type.includes(e.target.value))
+    //     )
+    // }
     
-    useEffect(() => {
-        getAllActivities(user)
-        .then(res => {
-            setAllActivities(res.data.activities)
-            setFilterActivities(res.data.activities)
-        })
-        .catch((error) => {
-            msgAlert({
-                heading: 'Failure',
-                message: 'Index Activities failed' + error,
-                variant: 'danger'
-            })
-        })
-    },[])
+    // useEffect(() => {
+    //     getAllActivities(user)
+    //     .then(res => {
+    //         setAllActivities(res.data.activities)
+    //         setFilterActivities(res.data.activities)
+    //     })
+    //     .catch((error) => {
+    //         msgAlert({
+    //             heading: 'Failure',
+    //             message: 'Index Activities failed' + error,
+    //             variant: 'danger'
+    //         })
+    //     })
+    // },[])
 
     // const allActivitiesJSX = allActivities.map(activity => {
     //     return (
@@ -50,20 +50,20 @@ const DrinksPage = ({ user, msgAlert }) => {
     //     )
     // })
 
-    const Index = filterActivities.map(activities => (
-        <div id='menuItemBox'>
-        <Grid  centered >
-            <Grid.Column verticalAlign='middle' textAlign="center" >
+    // const Index = filterActivities.map(activities => (
+    //     <div id='menuItemBox'>
+    //     <Grid  centered >
+    //         <Grid.Column verticalAlign='middle' textAlign="center" >
                 
-                <Card
-                    href='#card-example-link-card'
-                    header='Elliot Baker'
-                    meta='Friend'
-                    description='Elliot is a sound engineer living in Nashville who enjoys playing guitar and hanging with his cat.'
-                />
-            </Grid.Column>
-        </Grid>
-        </div>
+    //             <Card
+    //                 href='#card-example-link-card'
+    //                 header='Elliot Baker'
+    //                 meta='Friend'
+    //                 description='Elliot is a sound engineer living in Nashville who enjoys playing guitar and hanging with his cat.'
+    //             />
+    //         </Grid.Column>
+    //     </Grid>
+    //     </div>
 
 
 
@@ -122,7 +122,7 @@ const DrinksPage = ({ user, msgAlert }) => {
             
         // </Segment>
         
-    ))
+    // ))
 
     
 
@@ -142,7 +142,7 @@ return (
                     <Form >
                         <Form.Input
                             placeholder='Type  here  to  filter  results  by  activity  name  or  type'
-                            onChange={handleChange}
+                            // onChange={handleChange}
                             >
                             
                         </Form.Input>
@@ -154,7 +154,7 @@ return (
         </Segment>
         <Segment centered>
         <div id='menuItems'>
-        {Index}
+        {/* {Index} */}
         </div>
         </Segment>
     </>

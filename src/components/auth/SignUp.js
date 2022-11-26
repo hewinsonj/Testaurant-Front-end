@@ -14,7 +14,7 @@ const SignUp = (props) => {
 
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  const [passwordConfirmation, setPasswordConfirmation] = useState('')
+  const [password_confirmation, setPasswordConfirmation] = useState('')
   const [username, setUsername] = useState('')
 
   const navigate = useNavigate()
@@ -24,7 +24,7 @@ const SignUp = (props) => {
 
   const { msgAlert, setUser } = props
 
-      const credentials = {email, username, password, passwordConfirmation}
+      const credentials = {email, password, password_confirmation}
 
   signUp(credentials)
     .then(() => signIn(credentials))
@@ -67,29 +67,29 @@ return (
               <Grid columns={2}>
                 <Grid.Column>
                   <Form.Field>
-                  <Form.Input 
+                  {/* <Form.Input 
                       fluid
-                      required
+                    //   required
                       type='first_name'
                       name='first_name'
                       value={email}
                       placeholder='Enter your first name'
                       onChange={e => setEmail(e.target.value)}
 
-                  />
+                  /> */}
               
               < br/>
 
-                  <Form.Input 
+                  {/* <Form.Input 
                       fluid
-                      required
+                    //   required
                       type='last_name'
                       name='last_name'
-                      value={username}
+                    //   value={username}
                       placeholder='Enter your last name'
                       onChange={e => setUsername(e.target.value)}
 
-                  />
+                  /> */}
           
               <br />
            
@@ -97,7 +97,7 @@ return (
                       fluid
                       icon='lock'
                       iconPosition='left'
-                      required
+                    //   required
                       name='password'
                       value={password}
                       type='password'
@@ -113,9 +113,9 @@ return (
                       icon='check' 
                       iconPosition='left' 
                       placeholder='Confirm Password'
-                      required
+                    //   required
                       name='passwordConfirmation'
-                      value={passwordConfirmation}
+                      value={password_confirmation}
                       type='password'
                       onChange={e => setPasswordConfirmation(e.target.value)}
                      
@@ -126,19 +126,19 @@ return (
                   <Form.Field>
                   <Form.Input 
                       fluid
-                      required
+                    //   required
                       type='email'
                       name='email'
-                      value={username}
+                      value={email}
                       placeholder='Enter your email'
-                      onChange={e => setUsername(e.target.value)}
+                      onChange={e => setEmail(e.target.value)}
                   />
           
               <br />
            
-                  <Form.Select 
+                  {/* <Form.Select 
                       fluid
-                      required
+                    //   required
                       name='access'
                       value={password}
                       type='select'
@@ -146,20 +146,20 @@ return (
                       onChange={e => setPassword(e.target.value)}
                       options={options}
 
-                  />
+                  /> */}
             
               <br />
              
-                  <Form.Input
+                  {/* <Form.Input
                       fluid 
                       placeholder='Enter your admin code'
-                      required
+                    //   required
                       name='admin_code'
-                      value={passwordConfirmation}
+                    //   value={admin_code}
                       type='text'
                       onChange={e => setPasswordConfirmation(e.target.value)}
                      
-                  />
+                  /> */}
                   </Form.Field>
                   </Grid.Column> 
                   </Grid>
