@@ -5,7 +5,7 @@ import { createQuestion } from '../../api/question'
 const AddItem = (props) => {
 
     const { heading, user, msgAlert, setNewQuestion, activeItem  } = props
-
+    
 
     const defaultQuestion = {
         question_str: '',
@@ -16,11 +16,7 @@ const AddItem = (props) => {
         answer: ''
     }
 
-    const showThis = () => {
-        if(activeItem === 'Questions'){
-        
-        }
-      }
+
     const [question, setQuestion] = useState(defaultQuestion)
 
 

@@ -23,6 +23,7 @@ import EmployeePage from './components/newComponents/EmployeePage'
 import MenuPage from './components/newComponents/MenuPage'
 import MenuNavPage from './components/newComponents/MenuNav'
 import TestNav from './components/newComponents/TestNav'
+import AddTest from './components/newComponents/AddTest'
 
 // import CreateActivity from './components/activities/CreateActivity'
 // import UpdateActivity from './components/activities/UpdateActivity'
@@ -147,11 +148,12 @@ const App = () => {
 					}
 					/>
 					<Route
-						path='/employees'
+						path='/test-add'
 						element={
-							<EmployeePage msgAlert={msgAlert} user={user} />
+							<AddTest msgAlert={msgAlert} user={user} setNewQuestion={setNewQuestion} />
 					}
 					/>
+					
 					{/* <Route
 						path='/user-page'
 						element={

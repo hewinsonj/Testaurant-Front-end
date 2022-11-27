@@ -2,10 +2,11 @@ import React, { Component } from 'react'
 import { Menu } from 'semantic-ui-react'
 import QuestionIndex from './QuestionIndex'
 import AddItem from './AddItem'
+import AddTest from './AddTest'
 import { Link } from 'react-router-dom'
 
 export default class TestNav extends Component {
-  state = { activeItem: 'food' }
+  state = { activeItem: 'Tests' }
 
   handleItemClick = (e, { name }) => this.setState({ activeItem: name })
 
@@ -13,11 +14,30 @@ export default class TestNav extends Component {
  
   render() {
     const { activeItem } = this.state
-    const activitiesJSX = (activeItem === 'Questions') ? 
+    const questionJSX = activeItem === 'Questions' ? 
         <QuestionIndex  user={this.props.user} setNewQuestion={this.props.setNewQuestion} msgAlert={this.props.msgAlert}/>
+        :
+        
+        null
+
+    const testJSX = activeItem === 'Tests' ? 
+
+        null
         :
         // <DrinksPage />
         <AddItem user={this.props.user} setNewQuestion={this.props.setNewQuestion} msgAlert={this.props.msgAlert} activeItem={this.props.activeItem}/>
+
+    const createQJSX =  activeItem === 'Create Question' ? 
+        null
+        :
+        // <DrinksPage />
+        <AddItem user={this.props.user} setNewQuestion={this.props.setNewQuestion} msgAlert={this.props.msgAlert} activeItem={this.props.activeItem}/>
+
+    const createTJSX = activeItem === 'Create Test' ? 
+        null
+        :
+        // <DrinksPage />
+        <AddTest user={this.props.user} setNewQuestion={this.props.setNewQuestion} msgAlert={this.props.msgAlert} activeItem={this.props.activeItem}/>
     return (
         <>
       <Menu tabular>
@@ -48,7 +68,10 @@ export default class TestNav extends Component {
         </Menu.Item>  
         
       </Menu>
-      {activeItem === 'add item' ? <AddItem/> : activitiesJSX}
+      {questionJSX}
+      {/* {testJSX} */}
+      {/* {createQJSX} */}
+      {createTJSX}
       
       </>
     )
