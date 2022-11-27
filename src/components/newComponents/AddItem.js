@@ -2,9 +2,10 @@ import React, { useState } from 'react'
 import {Button, Checkbox, Form, Container, Icon} from 'semantic-ui-react'
 import { createQuestion } from '../../api/question'
 
+
 const AddItem = (props) => {
 
-    const { heading, user, msgAlert, setNewQuestion, activeItem  } = props
+    const { heading, user, msgAlert, activeItem, setOpen, triggerRefresh, setNewQuestion} = props
     
 
     const defaultQuestion = {
@@ -15,10 +16,7 @@ const AddItem = (props) => {
         option4: '',
         answer: ''
     }
-
-
     const [question, setQuestion] = useState(defaultQuestion)
-
 
     const handleChange = (e , target) => {
         setQuestion(prevQuestion => {
@@ -56,7 +54,7 @@ const AddItem = (props) => {
                 })
             })
             .then(() => {
-                console.log("this is the question", question)
+                setOpen(false)
             })
             .then(() => setNewQuestion(prev => !prev))
             .catch((error) => {
@@ -68,7 +66,7 @@ const AddItem = (props) => {
             })
     }
 
-    
+    console.log(user, 'this be the user')
     return (
         <Container className="justify-content-center">
             <h3>{ heading }</h3>
@@ -153,7 +151,7 @@ const AddItem = (props) => {
                         label='Generate Random Activity'
                         onClick= { handleActivity }> 
                 <Icon name='random' /></Button> */}
-                <Button type='submit' color='yellow'>Submit</Button>
+                <Button type='submit' color='green'>Submit</Button>
             </Form>
         </Container>
     )

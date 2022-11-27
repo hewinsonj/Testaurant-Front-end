@@ -24,6 +24,8 @@ import MenuPage from './components/newComponents/MenuPage'
 import MenuNavPage from './components/newComponents/MenuNav'
 import TestNav from './components/newComponents/TestNav'
 import AddTest from './components/newComponents/AddTest'
+import AddQuestionModal from './components/newComponents/AddQuestionModal'
+import QuestionShow from './components/newComponents/QuestionShow'
 
 // import CreateActivity from './components/activities/CreateActivity'
 // import UpdateActivity from './components/activities/UpdateActivity'
@@ -37,6 +39,7 @@ const App = () => {
   //trigger to help components update if there is a new activity created w/in the modal, which can be called from anywhere. This is purely a toggle and no meaning should be taken from whether it is true or false
   const [newActivity, setNewActivity] = useState(false)
   const [newQuestion, setNewQuestion] = useState(false)
+  const [newTest, setNewTest] = useState(false)
 
 
   const clearUser = () => {
@@ -60,18 +63,10 @@ const App = () => {
 
 		return (
 			<Fragment>
-				{msgAlerts.map((msgAlert) => (
-					<AutoDismissAlert
-						key={msgAlert.id}
-						heading={msgAlert.heading}
-						variant={msgAlert.variant}
-						message={msgAlert.message}
-						id={msgAlert.id}
-						deleteAlert={deleteAlert}
-					/>
-				))}
+				<NewLandingPage user={user} msgAlert={msgAlert} setNewQuestion={setNewQuestion} setNewTest={setNewTest} />
+				
 				{/* <Header user={user} msgAlert={msgAlert} setNewActivity={setNewActivity} /> */}
-				<NewLandingPage user={user} msgAlert={msgAlert} setNewQuestion={setNewQuestion} />
+				
 				<Routes>
 					<Route path='/' element={<Home user={user} msgAlert={msgAlert} setUser={setUser} />} />
 					<Route
@@ -144,16 +139,27 @@ const App = () => {
 					<Route
 						path='/test-nav'
 						element={
-							<TestNav msgAlert={msgAlert} user={user} setNewQuestion={setNewQuestion} />
+							<TestNav msgAlert={msgAlert} user={user} setNewQuestion={setNewQuestion} setNewTest={setNewTest}/>
 					}
 					/>
 					<Route
 						path='/test-add'
 						element={
-							<AddTest msgAlert={msgAlert} user={user} setNewQuestion={setNewQuestion} />
+							<AddTest msgAlert={msgAlert} user={user} setNewQuestion={setNewQuestion} setNewTest={setNewTest}/>
 					}
 					/>
-					
+					<Route
+						path='/question-modal'
+						element={
+							<AddQuestionModal msgAlert={msgAlert} user={user} setNewQuestion={setNewQuestion} />
+					}
+					/>
+					<Route
+						path='/question-show/:questionId/'
+						element={
+							<QuestionShow msgAlert={msgAlert} user={user} />
+					}
+					/>
 					{/* <Route
 						path='/user-page'
 						element={
@@ -163,7 +169,16 @@ const App = () => {
 					}
 					/> */}
 				</Routes>
-				
+				{msgAlerts.map((msgAlert) => (
+					<AutoDismissAlert
+						key={msgAlert.id}
+						heading={msgAlert.heading}
+						variant={msgAlert.variant}
+						message={msgAlert.message}
+						id={msgAlert.id}
+						deleteAlert={deleteAlert}
+					/>
+				))}
 			</Fragment>
 		)
 }

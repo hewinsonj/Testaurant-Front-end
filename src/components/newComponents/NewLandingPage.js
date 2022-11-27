@@ -52,7 +52,7 @@ export default class NewLandingPage extends Component {
                             Tests
                         </Link>
                     </Menu.Item>
-                    <Menu.Item
+                    {/* <Menu.Item
                     name='lessons'
                     active={activeItem === 'lessons'}
                     onClick={this.handleItemClick}
@@ -60,7 +60,7 @@ export default class NewLandingPage extends Component {
                         <Link to='lessons'>
                             Lessons
                         </Link>
-                    </Menu.Item>
+                    </Menu.Item> */}
                     <Menu.Item
                     name='menu'
                     active={activeItem === 'menu'}

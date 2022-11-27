@@ -148,7 +148,8 @@ const AddTest = (props) => {
                         placeholder='Select Questions'
                     /> */}
                     {/* </Form.Group> */}
-                
+                    
+                    
                 <Form.Group inline>
                 
                     
@@ -156,9 +157,9 @@ const AddTest = (props) => {
 
 
                     <Grid.Column>
-                    <Segment raised textAlign='middle' >
+                    {/*<Segment raised textAlign='middle' >
                         <h1 id='commFeed'>All Questions</h1>
-                        <div className='scrolling-group'>
+                         <div className='scrolling-group'>
                         {allQuestions ? 
                             allQuestions.slice(0).reverse().map((question) => (
 
@@ -169,11 +170,11 @@ const AddTest = (props) => {
                             :
                             <LoadingScreen />
                         }
-                        </div>
-                    </Segment>
+                        </div> 
+                    </Segment>*/}
                     </Grid.Column>
                 </Grid>
-                <Button type='submit' color='yellow'>Submit</Button>
+                <Button type='submit' color='green'>Submit</Button>
                 
             </Form>
         </Container>

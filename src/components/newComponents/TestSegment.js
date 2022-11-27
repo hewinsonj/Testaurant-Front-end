@@ -1,19 +1,23 @@
 import React, { useState, useEffect } from 'react'
 import {  Link } from 'react-router-dom'
 import {  Segment, Grid, Image, Progress, Container, Form, Checkbox } from 'semantic-ui-react'
-import  QuestionShow from './QuestionShow'
+import TestShow from './TestShow'
+import TestTake from './TestTake'
 
-
-const QuestionSegment = ({ question, msgAlert, user}) => {
+const TestSegment = ({ test, msgAlert, user}) => {
 
     return (
          <Segment id='actListItems' textAlign='center'>
-                    <Grid >
+                    <Grid centered verticalAlign='middle' textAlign='center'>
                         <Grid.Row>
-        
-                            <h2>{question.question_str}</h2>
-                     
-                        <QuestionShow question={question} user={user} msgAlert={msgAlert}/>
+                        <h2>Test name: {test.name}</h2>
+                        <h2>Created: {test.created_at}</h2>
+                        </Grid.Row>
+                        <Grid.Row>
+                        <TestShow  test={test} user={user} msgAlert={msgAlert}/>
+                        <TestTake  test={test} user={user} msgAlert={msgAlert}/>
+                        </Grid.Row>
+
                     {/* <div id="hiddingQuestionButtons"> */}
                     {/* <Form.Checkbox  
                         name='question.id'
@@ -25,10 +29,9 @@ const QuestionSegment = ({ question, msgAlert, user}) => {
                         // onChange= { handleChange }
                     /> */}
                 {/* </div> */}
-                </Grid.Row>
                     </Grid>
         </Segment>
     )
 }
 
-export default QuestionSegment
+export default TestSegment
