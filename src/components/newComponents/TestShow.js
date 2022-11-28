@@ -52,7 +52,28 @@ const TestShow = ({ user, msgAlert, test}) => {
     //         })
     //     })
     // }
+   
+    const findString = (test, question) => {
+      for (let i = 0; i < test.question_new.length; i++) {
+        if(test.question_new[i] == question.id){
+          return <h3>{question.question_str}</h3>
+        }
+        console.log(test.question_new, 'this be the test qId', question.id, 'this be the question qId')
+      }
+    }
 
+  //   const findString = (test, allQuestions) => {
+  //   for (let i = 0; i < allQuestions.length; i++) {
+  //     for (let i = 0; i < test.question_new.length; i++) {
+  //       if(test.question_new[i] == allQuestions[i].id){
+  //         return allQuestions[i].question_str
+  //       }
+  //       // console.log(test.question_new, 'this be the test qId', question.id, 'this be the question qId')
+  //     }
+  //   }
+  // }
+
+    console.log(allQuestions, "this is all of the questions")
     useEffect(() => {
         
       getAllQuestions(user)
@@ -142,13 +163,24 @@ const TestShow = ({ user, msgAlert, test}) => {
                                 <h3>
                                   {test.updated_at}
                                 </h3>
-                                {test.question_new ? 
+                                {/* {test.question_new ? 
                                   test.question_new.slice(0).reverse().map((question) => (
                                       <h3>{question}</h3>
                                     ))
                                     :
                                     <LoadingScreen />
-                                }
+                                } */}
+                              <h3>
+                            {allQuestions ? 
+                              allQuestions.slice(0).map((question) => (
+                                  findString(test, question)
+                              ))
+                              :
+                              <LoadingScreen />
+                            }</h3>
+
+                            {/* <h3>{findString(test, allQuestions)}</h3> */}
+
                             </Grid.Row>
                         </Grid>
                     </Segment>
@@ -162,52 +194,13 @@ const TestShow = ({ user, msgAlert, test}) => {
         >
           <Grid.Row>
             <Grid.Column>
-            {/* <Modal
-              onClose={() => setNoteModalShow(false)}
-              onOpen={() => setNoteModalShow(true)}
-              open={noteModalShow}
-              trigger={
-                <Button size='large' variant="warning">Leave a Note</Button>
-              }
-            >
-					<Modal.Content>
-            <Segment  
-              padded='very'  
-              inverted color='yellow' 
-              verticalAlign='middle' 
-              id="segment"
-            >
-                <CreateNote user={user} msgAlert={msgAlert} activity={activity} triggerRefresh={()=>setUpdated(prev => !prev)} 
-                setNoteModalShow={setNoteModalShow} />
-            </ Segment>
-            
-            <Modal.Actions>
-              <Button color='black' onClick={() => setNoteModalShow(false)}>
-                Go Back
-              </Button>
-            </Modal.Actions>
-					</Modal.Content>
-        		</Modal> */}
              
             </Grid.Column>
             <Grid.Column>
-              {/* <NotesModal user={user} msgAlert={msgAlert} activity={activity} /> */}
             </Grid.Column>
             <Grid.Column textAlign='middle'>
-                  {/* <UpdateActivityModal 
-                    activity={activity}
-                    user={user}
-                    msgAlert={msgAlert}
-                    triggerRefresh={()=>setUpdated(prev=>!prev)}
-                    /> */}
-                    
-
-          
             </Grid.Column>
             <Grid.Column  textAlign='middle'>
-
-              {/* <Button onClick={() => handleDeleteActivity()} >Delete</Button> */}
-
             </Grid.Column>
           </Grid.Row>
         </Grid>
