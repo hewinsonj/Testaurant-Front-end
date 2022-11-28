@@ -120,7 +120,7 @@ export const updateDrink = (user, updatesToDrink, drinkId) => {
         headers: {
 			Authorization: `Token ${user.token}`,
 		},
-		url: `${apiUrl}/drinks/${drinkId}`,
+		url: `${apiUrl}/drinks/${drinkId}/`,
 		data: {
 			drink: updatesToDrink
 		}

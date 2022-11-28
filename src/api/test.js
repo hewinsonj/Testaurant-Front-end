@@ -74,6 +74,7 @@ export const getTest = (user, testId) => {
 //create an activity 
 //data returned: res.data.activity will be the new activity 
 export const createTest = (user, test) => {
+    console.log(test, 'this be the test right before my api request')
     return axios({
         method: 'POST',
         headers: {
@@ -81,10 +82,7 @@ export const createTest = (user, test) => {
         },
         url: apiUrl + '/test_thiss/',
         data: {
-            "question_news_data": {
-                "id": test.question_news_id
-                
-            },
+            "question_news": test.questions,
             "test_this": {
                 "name": test.name,
                 "created_at": test.created_at,

@@ -3,6 +3,7 @@ import { Label, Icon, Item, Button, Segment, Grid, Comment, Form, Modal, Progres
 import { useNavigate, useParams} from 'react-router-dom'
 import { Link } from 'react-router-dom'
 import { getTest, updateTest, deleteTest } from '../../api/test'
+import { getQuestion, getAllQuestions } from "../../api/question"
 // import UpdateActivityModal from "./UpdateActivityModal"
 import LoadingScreen from "../shared/LoadingPage"
 
@@ -15,7 +16,7 @@ const TestShow = ({ user, msgAlert, test}) => {
     const navigate = useNavigate()
     const [open, setOpen] = React.useState(false)
     const [noteModalShow, setNoteModalShow] = useState(false)
-    const testId = test.id
+    const [allQuestions, setAllQuestions] = useState(null)
 
 
     // useEffect(() => {
@@ -41,7 +42,31 @@ const TestShow = ({ user, msgAlert, test}) => {
     // }
 
   
-    
+    // const handleGetQuestion = (user, questionId) => {
+    //   getQuestion(user, questionId)
+    //     .catch((error) => {
+    //         msgAlert({
+    //             heading: 'Failure',
+    //             message: 'Show Question failed' + error,
+    //             variant: 'danger'
+    //         })
+    //     })
+    // }
+
+    useEffect(() => {
+        
+      getAllQuestions(user)
+          .then(res => {
+              setAllQuestions(res.data.question_news)
+          })
+          .catch(error => {
+              msgAlert({
+                  'heading': 'Error',
+                  'message': 'Could not get questions',
+                  'variant': 'danger'
+              })
+          })
+  },[])
 
     const handleDeleteTest = () => {
       deleteTest(user, test.id)
@@ -117,6 +142,13 @@ const TestShow = ({ user, msgAlert, test}) => {
                                 <h3>
                                   {test.updated_at}
                                 </h3>
+                                {test.question_new ? 
+                                  test.question_new.slice(0).reverse().map((question) => (
+                                      <h3>{question}</h3>
+                                    ))
+                                    :
+                                    <LoadingScreen />
+                                }
                             </Grid.Row>
                         </Grid>
                     </Segment>

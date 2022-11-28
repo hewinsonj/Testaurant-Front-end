@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import {  Button, Segment, Grid, Label, Icon, Image, Modal, Header, List, Container } from 'semantic-ui-react'
 
-import AddDrinkForm from './AddDrinkForm'
+import CreateDrink from './CreateDrink'
 
 const AddDrinkModal = ({heading, user, msgAlert, setNewDrink, activeItem}) => {
 
@@ -37,7 +37,7 @@ const AddDrinkModal = ({heading, user, msgAlert, setNewDrink, activeItem}) => {
                     </Modal.Description>
                     </Grid.Column>
                 </Grid> */}
-                <AddDrinkForm  user={user} setNewDrink={setNewDrink} msgAlert={msgAlert} activeItem={activeItem} setOpen={setOpen}/>
+                <CreateDrink  user={user} setNewDrink={setNewDrink} msgAlert={msgAlert} activeItem={activeItem} setOpen={setOpen}/>
             </Modal.Content>
             <Modal.Actions>
                 <Button color='red' onClick={() => setOpen(false)}>

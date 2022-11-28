@@ -4,6 +4,8 @@ import { useNavigate, useParams} from 'react-router-dom'
 import { Link } from 'react-router-dom'
 import { getDrink, updateDrink, deleteDrink } from '../../api/drink'
 import LoadingScreen from "../shared/LoadingPage"
+import DrinkUpdateModal from "./DrinkUpdateModal"
+import FoodUpdateModal from "./FoodUpdateModal"
 
 
 
@@ -154,6 +156,7 @@ const DrinkShow = ({ user, msgAlert, drink}) => {
                 <Button color='black' onClick={handleDeleteDrink}>
                     Delete Item
                 </Button>
+                <DrinkUpdateModal drink={drink} user={user} msgAlert={msgAlert}/>
             </Modal.Actions>
         </Modal>
     </>

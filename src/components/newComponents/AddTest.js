@@ -12,15 +12,15 @@ const AddTest = (props) => {
     
     const defaultTest = {
         name: '',
-        question_news_id: '',
+        question_news_id: [],
     }
 
-    const options = [
+    // const options = [
 
-        { key: 'm', text: 'Male', value: 'male' },
-        { key: 'f', text: 'Female', value: 'female' },
-        { key: 'o', text: 'Other', value: 'other' },
-      ]
+    //     { key: 'm', text: 'Male', value: 'male' },
+    //     { key: 'f', text: 'Female', value: 'female' },
+    //     { key: 'o', text: 'Other', value: 'other' },
+    //   ]
     const [test, setTest] = useState(defaultTest)
       
 
@@ -128,16 +128,16 @@ const AddTest = (props) => {
                         value= { test.updated_at }
                         onChange= { handleChange }
                     />
-                    <Form.Input 
+                    {/* <Form.Input 
                         required 
-                        name='question_news'
-                        id='question_news_id'
-                        label='question_news_id' 
-                        placeholder='question_news_id'
+                        name='test.question_news_id'
+                        id='test.question_news_id'
+                        label='test.question_news_id' 
+                        placeholder='test.question_news_id'
                         defaultValue= { test.question_news_id }
                         value= { test.question_news_id }
                         onChange= { handleChange }
-                    />
+                    /> */}
                 
                     </Segment>
                     </Grid.Row>
@@ -157,21 +157,40 @@ const AddTest = (props) => {
 
 
                     <Grid.Column>
-                    {/*<Segment raised textAlign='middle' >
+                    <Segment raised textAlign='middle' >
                         <h1 id='commFeed'>All Questions</h1>
                          <div className='scrolling-group'>
                         {allQuestions ? 
                             allQuestions.slice(0).reverse().map((question) => (
 
+                                <Form.Checkbox 
+                                    required 
+                                    name={question.question_str} 
+                                    id='question_news_id'
+                                    label={question.question_str} 
+                                    placeholder='question_news_id'
+                                    defaultValue= { test.question_news_id }
+                                    value= { question.id }
+                                    onChange= { handleChange }
+                                />
                                 
-                                
-                                <QuestionSegment key={question.id} question={question} user={user} msgAlert={msgAlert}/>
+                                // <Form.Checkbox
+                                //         required 
+                                //         name='con_tree_nut'
+                                //         id='con_tree_nut'
+                                //         label='con_tree_nut' 
+                                //         defaultValue= { drink.con_tree_nut}
+                                //         value= { drink.con_tree_nut}
+                                //         onChange= { handleChange }
+                                // />
+
+                                // <QuestionSegment key={question.id} question={question} user={user} msgAlert={msgAlert}/>
                             ))
                             :
                             <LoadingScreen />
                         }
                         </div> 
-                    </Segment>*/}
+                    </Segment>
                     </Grid.Column>
                 </Grid>
                 <Button type='submit' color='green'>Submit</Button>
