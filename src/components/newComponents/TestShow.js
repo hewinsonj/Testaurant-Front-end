@@ -42,26 +42,36 @@ const TestShow = ({ user, msgAlert, test}) => {
     // }
 
   
-    // const handleGetQuestion = (user, questionId) => {
-    //   getQuestion(user, questionId)
-    //     .catch((error) => {
-    //         msgAlert({
-    //             heading: 'Failure',
-    //             message: 'Show Question failed' + error,
-    //             variant: 'danger'
-    //         })
-    //     })
-    // }
+    const handleDeleteTest = () => {
+      deleteTest(user, test.id)
+      .then(() => {
+          setDeleted(true)
+          msgAlert({
+              heading: 'Success',
+              message: 'Deleting a Test',
+              variant: 'success'
+          })
+      })
+      .then(() => {
+        setOpen(false)
+      })
+      .catch((error) => {
+          msgAlert({
+              heading: 'Failure',
+              message: 'Deleting a Test Failure' + error,
+              variant: 'danger'
+          })
+      })
+  }
    
     const findString = (test, question) => {
       for (let i = 0; i < test.question_new.length; i++) {
         if(test.question_new[i] == question.id){
-          return <h3>{question.question_str}</h3>
+          return (<h3>(q){question.question_str}(a){question.answer}</h3> )
         }
-        console.log(test.question_new, 'this be the test qId', question.id, 'this be the question qId')
       }
     }
-
+    console.log(test, 'this is the test')
   //   const findString = (test, allQuestions) => {
   //   for (let i = 0; i < allQuestions.length; i++) {
   //     for (let i = 0; i < test.question_new.length; i++) {
@@ -89,27 +99,7 @@ const TestShow = ({ user, msgAlert, test}) => {
           })
   },[])
 
-    const handleDeleteTest = () => {
-      deleteTest(user, test.id)
-      .then(() => {
-          setDeleted(true)
-          msgAlert({
-              heading: 'Success',
-              message: 'Deleting an Test',
-              variant: 'success'
-          })
-      })
-      .then(() => {
-        navigate(`/test-nav`)
-      })
-      .catch((error) => {
-          msgAlert({
-              heading: 'Failure',
-              message: 'Deleting a Test Failure' + error,
-              variant: 'danger'
-          })
-      })
-  }
+
 
 
   if (!test) {
@@ -209,6 +199,9 @@ const TestShow = ({ user, msgAlert, test}) => {
             <Modal.Actions>
                 <Button color='black' onClick={() => setOpen(false)}>
                     Close
+                </Button>
+                <Button color='black' onClick={handleDeleteTest}>
+                    Delete Item
                 </Button>
             </Modal.Actions>
         </Modal>

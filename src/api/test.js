@@ -82,11 +82,11 @@ export const createTest = (user, test) => {
         },
         url: apiUrl + '/test_thiss/',
         data: {
-            "question_news": test.questions,
             "test_this": {
                 "name": test.name,
                 "created_at": test.created_at,
                 "updated_at": test.updated_at,
+                "question_new": test.question_news,
             }
         }
     })

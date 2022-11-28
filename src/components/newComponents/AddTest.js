@@ -12,7 +12,13 @@ const AddTest = (props) => {
     
     const defaultTest = {
         name: '',
-        question_news_id: [],
+        question_new: [],
+        created_at: '',
+        updated_at: '',
+    }
+
+    const tempQuestion = {
+        question_ids: [],
     }
 
     // const options = [
@@ -22,7 +28,7 @@ const AddTest = (props) => {
     //     { key: 'o', text: 'Other', value: 'other' },
     //   ]
     const [test, setTest] = useState(defaultTest)
-      
+    const [idStorage, setIdStorage] = useState(tempQuestion)
 
     const [allQuestions, setAllQuestions] = useState(null)
 
@@ -42,6 +48,7 @@ const AddTest = (props) => {
     },[])
 
     const handleChange = (e , target) => {
+        console.log('this is the target', e.target)
         setTest(prevTest => {
             const { name, value } = target
             const updatedName = name
@@ -53,17 +60,35 @@ const AddTest = (props) => {
             }
 
             //handle the checkbox
-            if (updatedName === 'private' && target.checked) {
-                updatedValue = true
-            } else if (updatedName === 'private' && !target.checked) {
+            if (updatedName === 'question_new' && target.checked) {
+                
+                updatedValue = (prevTest.question_new).push(parseInt(target.id))
+            } else if (updatedName === 'question_new' && !target.checked) {
                 updatedValue = false
             }
 
             const updatedTest = { [updatedName]: updatedValue }
 
+            return { ...prevTest}
+        })
+    }
+
+    const handleChangeOther = (e , target) => {
+        setTest(prevTest => {
+            const { name, value } = target
+            const updatedName = name
+            let updatedValue = value
+            // handle number type
+            if(target.type === 'number') {
+                // change from string to actual number
+                updatedValue = parseInt(e.target.value)
+            }
+            const updatedTest = { [updatedName]: updatedValue }
+
             return { ...prevTest, ...updatedTest}
         })
     }
+
     const handleCreateTest = (e) => {
         e.preventDefault()
 
@@ -88,7 +113,7 @@ const AddTest = (props) => {
                 })
             })
     }
-    console.log("this is the test", test)
+    console.log("this is the test from testAdd", test)
     
     return (
         <Container className="justify-content-center" >
@@ -106,7 +131,7 @@ const AddTest = (props) => {
                         placeholder='Test Name'
                         defaultValue= { test.name }
                         value= { test.name }
-                        onChange= { handleChange }
+                        onChange= { handleChangeOther }
                     />
                      <Form.Input 
                         required 
@@ -116,7 +141,7 @@ const AddTest = (props) => {
                         placeholder='created_at'
                         defaultValue= { test.created_at }
                         value= { test.created_at }
-                        onChange= { handleChange }
+                        onChange= { handleChangeOther }
                     />
                      <Form.Input 
                         required 
@@ -126,7 +151,7 @@ const AddTest = (props) => {
                         placeholder='updated_at'
                         defaultValue= { test.updated_at }
                         value= { test.updated_at }
-                        onChange= { handleChange }
+                        onChange= { handleChangeOther }
                     />
                     {/* <Form.Input 
                         required 
@@ -164,13 +189,12 @@ const AddTest = (props) => {
                             allQuestions.slice(0).reverse().map((question) => (
 
                                 <Form.Checkbox 
-                                    required 
-                                    name={question.question_str} 
-                                    id='question_news_id'
-                                    label={question.question_str} 
-                                    placeholder='question_news_id'
-                                    defaultValue= { test.question_news_id }
-                                    value= { question.id }
+                                    // required 
+                                    name='question_new' 
+                                    id={question.id}
+                                    label={question.question_str}
+                                    // defaultValue= 'defvalue'
+                                    value= {question.id}
                                     onChange= { handleChange }
                                 />
                                 
