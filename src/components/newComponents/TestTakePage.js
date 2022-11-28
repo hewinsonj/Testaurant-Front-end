@@ -8,26 +8,27 @@ import LoadingScreen from "../shared/LoadingPage"
 
 
 
-const TestTake = ({ user, msgAlert, test}) => {
+const TestTakePage = ({ user, msgAlert, test}) => {
 
     const [updated, setUpdated] = useState(false)
     const [deleted, setDeleted] = useState(false)
     const navigate = useNavigate()
     const [open, setOpen] = React.useState(false)
     const [noteModalShow, setNoteModalShow] = useState(false)
-    const testId = test.id
+    
+    const { testId } = useParams()
 
 
-    // useEffect(() => {
-    //   getTest(user, test.id)
-    //     .catch((error) => {
-    //         msgAlert({
-    //             heading: 'Failure',
-    //             message: 'Show Test failed' + error,
-    //             variant: 'danger'
-    //         })
-    //     })
-    // },[updated])
+    useEffect(() => {
+      getTest(user, testId)
+        .catch((error) => {
+            msgAlert({
+                heading: 'Failure',
+                message: 'Show Test failed' + error,
+                variant: 'danger'
+            })
+        })
+    },[updated])
 
     // const handleGet = () => {
     //   getTest(user, testId)
@@ -44,7 +45,7 @@ const TestTake = ({ user, msgAlert, test}) => {
     
 
     const handleDeleteTest = () => {
-      deleteTest(user, test.id)
+      deleteTest(user, testId)
       .then(() => {
           setDeleted(true)
           msgAlert({
@@ -74,17 +75,6 @@ const TestTake = ({ user, msgAlert, test}) => {
 
   return(
     <>  
-    <Modal
-            onClose={() => setOpen(false)}
-            onOpen={() => setOpen(true)}
-            open={open}
-            trigger={<Button floated="right" 
-            >Take Test</Button>}
-            size='large'
-        >
-            <Modal.Content scrolling>
-                
-            
       <Segment    
           inverted
           verticalAlign='middle' 
@@ -220,16 +210,10 @@ const TestTake = ({ user, msgAlert, test}) => {
           </Grid.Row>
         </Grid>
       </Segment>
-      </Modal.Content>
-            <Modal.Actions>
-                {/* <Button color='black' onClick={() => setOpen(false)}>
-                    Close
-                </Button> */}
-            </Modal.Actions>
-        </Modal>
+  
     </>
   )
 }
 
 
-export default TestTake
+export default TestTakePage

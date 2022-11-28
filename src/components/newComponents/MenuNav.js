@@ -1,22 +1,22 @@
 import React, { Component } from 'react'
 import { Menu } from 'semantic-ui-react'
-import MenuPage from './MenuPage'
-import DrinksPage from './DrinksPage'
+import FoodIndexPage from './FoodIndexPage'
+import DrinkIndexPage from './DrinkIndexPage'
 import AddItem from './AddItem'
 import { Link } from 'react-router-dom'
 
-export default class MenuExampleTabular extends Component {
-  state = { activeItem: 'food' }
+export default class MenuNav extends Component {
+  state = { activeItem: 'food', setNewFood: false, setNewDrink: false }
 
   handleItemClick = (e, { name }) => this.setState({ activeItem: name })
 
   render() {
     const { activeItem } = this.state
     const activitiesJSX = (activeItem === 'food') ? 
-        <MenuPage/>
+        <FoodIndexPage user={this.props.user} setNewFood={this.props.setNewFood} msgAlert={this.props.msgAlert}/>
         :
         // <DrinksPage />
-        <AddItem user={this.props.user} setNewQuestion={this.props.setNewQuestion} msgAlert={this.props.msgAlert}/>
+        <DrinkIndexPage user={this.props.user} setNewDrink={this.props.setNewDrink} msgAlert={this.props.msgAlert}/>
     return (
         <>
       <Menu tabular>
@@ -33,12 +33,6 @@ export default class MenuExampleTabular extends Component {
         >
             
         </Menu.Item>  
-        <Menu.Item
-          name='add item'
-          active={activeItem === 'add item'}
-          onClick={this.handleItemClick}
-        >
-        </Menu.Item>    
         
       </Menu>
       {/* {activeItem === 'add item' ? <AddItem/> : } */}

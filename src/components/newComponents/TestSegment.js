@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react'
 import {  Link } from 'react-router-dom'
-import {  Segment, Grid, Image, Progress, Container, Form, Checkbox } from 'semantic-ui-react'
+import {  Segment, Grid, Image, Progress, Container, Form, Checkbox, Button } from 'semantic-ui-react'
 import TestShow from './TestShow'
 import TestTake from './TestTake'
 
 const TestSegment = ({ test, msgAlert, user}) => {
-
+    console.log(test)
     return (
          <Segment id='actListItems' textAlign='center'>
                     <Grid centered verticalAlign='middle' textAlign='center'>
@@ -16,19 +16,10 @@ const TestSegment = ({ test, msgAlert, user}) => {
                         <Grid.Row>
                         <TestShow  test={test} user={user} msgAlert={msgAlert}/>
                         <TestTake  test={test} user={user} msgAlert={msgAlert}/>
+                        <Link to={`/test-take-page/${test.id}`}>
+                            <Button>Test Take Page</Button>
+                        </Link>
                         </Grid.Row>
-
-                    {/* <div id="hiddingQuestionButtons"> */}
-                    {/* <Form.Checkbox  
-                        name='question.id'
-                        // id='question.id'
-                        label={question.question_str}
-                        placeholder='Question Id'
-                        // defaultValue= { question.id }
-                        value= { question.id }
-                        // onChange= { handleChange }
-                    /> */}
-                {/* </div> */}
                     </Grid>
         </Segment>
     )

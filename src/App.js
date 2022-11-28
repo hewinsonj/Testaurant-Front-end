@@ -20,12 +20,13 @@ import ShowActivity from './components/activities/ShowActivity'
 import IndexActivity from './components/activities/IndexActivity'
 import NewLandingPage from './components/newComponents/NewLandingPage'
 import EmployeePage from './components/newComponents/EmployeePage'
-import MenuPage from './components/newComponents/MenuPage'
-import MenuNavPage from './components/newComponents/MenuNav'
+import FoodIndexPage from './components/newComponents/FoodIndexPage'
+import MenuNav from './components/newComponents/MenuNav'
 import TestNav from './components/newComponents/TestNav'
 import AddTest from './components/newComponents/AddTest'
 import AddQuestionModal from './components/newComponents/AddQuestionModal'
 import QuestionShow from './components/newComponents/QuestionShow'
+import TestTakePage from './components/newComponents/TestTakePage'
 
 // import CreateActivity from './components/activities/CreateActivity'
 // import UpdateActivity from './components/activities/UpdateActivity'
@@ -40,6 +41,7 @@ const App = () => {
   const [newActivity, setNewActivity] = useState(false)
   const [newQuestion, setNewQuestion] = useState(false)
   const [newTest, setNewTest] = useState(false)
+  const [newFood, setNewFood] = useState(false)
 
 
   const clearUser = () => {
@@ -125,15 +127,15 @@ const App = () => {
 					}
 					/>
 					<Route
-						path='/menu'
+						path='/food-index'
 						element={
-							<MenuPage msgAlert={msgAlert} user={user} />
+							<FoodIndexPage msgAlert={msgAlert} user={user} />
 					}
 					/>
 					<Route
 						path='/menu-nav'
 						element={
-							<MenuNavPage msgAlert={msgAlert} user={user} setNewQuestion={setNewQuestion} />
+							<MenuNav msgAlert={msgAlert} user={user} setNewFood={setNewFood} />
 					}
 					/>
 					<Route
@@ -158,6 +160,12 @@ const App = () => {
 						path='/question-show/:questionId/'
 						element={
 							<QuestionShow msgAlert={msgAlert} user={user} />
+					}
+					/>
+					<Route
+						path='/test-take-page/:testId/'
+						element={
+							<TestTakePage msgAlert={msgAlert} user={user} />
 					}
 					/>
 					{/* <Route
