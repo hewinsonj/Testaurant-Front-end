@@ -6,6 +6,7 @@ import { getQuestion, updateQuestion, deleteQuestion } from '../../api/question'
 // import UpdateActivityModal from "./UpdateActivityModal"
 import ActivityForm from "../shared/ActivityForm"
 import LoadingScreen from "../shared/LoadingPage"
+import QuestionUpdateModal from "./QuestionUpdateModal"
 
 
 
@@ -43,6 +44,9 @@ const QuestionShow = ({ user, msgAlert, question}) => {
               message: 'Deleting an Question',
               variant: 'success'
           })
+      })
+      .then(() => {
+        setOpen(false)
       })
       .then(() => {
         navigate(`/test-nav`)
@@ -196,6 +200,10 @@ const QuestionShow = ({ user, msgAlert, question}) => {
                 <Button color='black' onClick={() => setOpen(false)}>
                     Close
                 </Button>
+                <Button color='black' onClick={handleDeleteQuestion}>
+                    Delete
+                </Button>
+                <QuestionUpdateModal question={question} user={user} msgAlert={msgAlert}/>
             </Modal.Actions>
         </Modal>
     </>

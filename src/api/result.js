@@ -13,10 +13,10 @@ import axios from 'axios'
 
 //get all activities (unless marked private)
 //data returned: res.data.activities will have all public activities 
-export const getAllQuestions = (user) => {
+export const getAllResults = (user) => {
     return axios({
         method: 'GET',
-        url: apiUrl + '/question_news/',
+        url: apiUrl + '/results/',
         headers: {
             Authorization: `Token ${user.token}`,
         }
@@ -24,10 +24,10 @@ export const getAllQuestions = (user) => {
 }
 
 // For Search Bar to filter all Activities
-export const searchQuestions = (searchText) => { 
+export const searchResults = (searchText) => { 
     return axios({ 
         method: 'POST', 
-        url: `${apiUrl}/questions`, 
+        url: `${apiUrl}/results/`, 
         data: searchText 
         })
     }
@@ -62,33 +62,35 @@ export const searchQuestions = (searchText) => {
 //data returned: res.data.activity is the activity object itself (including all notes as res.data.notes)
 //res.data.publicNotes has all notes associated with the activity which have been marked a private by their authors 
 //res.data.privateViewableNotes has all notes in the activity which have been marked private BUT which were authored by the current user making the request
-export const getQuestion = (user, questionId) => {
+export const getResult = (user, resultId) => {
     return axios({
         method: 'GET',
         headers: {
             Authorization: `Token ${user.token}`
         },
-        url: `${apiUrl}/question_news/${questionId}`
+        url: `${apiUrl}/results/${resultId}`
     })
 }
 //create an activity 
 //data returned: res.data.activity will be the new activity 
-export const createQuestion = (user, question) => {
+export const createResult = (user, result) => {
+    console.log(result, 'this is result right before my api request')
     return axios({
         method: 'POST',
         headers: {
             Authorization: `Token ${user.token}`
         },
-        url: apiUrl + '/question_news/',
+        url: apiUrl + '/results/',
         data: {
-            "question_new": {
-                "question_str": question.question_str,
-                "option1": question.option1,
-                "option2": question.option2,
-                "option3": question.option3,
-                "option4": question.option4,
-                "answer": question.answer,
-            }
+            "result": {
+                "score": result.score,
+                "correct": result.correct,
+                "wrong": result.wrong,
+                "total": result.total,
+                "percent": result.percent,
+                "time": result.time,
+                "the_test": result.the_test
+              }
         }
     })
 }
@@ -106,27 +108,27 @@ export const createQuestion = (user, question) => {
 
 //update an activity
 //nothing returned
-export const updateQuestion = (user, updatesToQuestion, questionId) => {
-	return axios({
-		method: 'PATCH',
-        headers: {
-			Authorization: `Token ${user.token}`,
-		},
-		url: `${apiUrl}/question_news/${questionId}/`,
-		data: {
-			question_new: updatesToQuestion
-		}
-	})
-}
+// export const updateQuestion = (user, updatesToQuestion, questionId) => {
+// 	return axios({
+// 		method: 'PATCH',
+//         headers: {
+// 			Authorization: `Token ${user.token}`,
+// 		},
+// 		url: `${apiUrl}/question_news/${questionId}/`,
+// 		data: {
+// 			question_new: updatesToQuestion
+// 		}
+// 	})
+// }
 
 //delete an activity
 //nothing returned 
-export const deleteQuestion= (user, questionId) => {
+export const deleteResult= (user, resultId) => {
 	return axios({
 		method: 'DELETE',
         headers: {
 			Authorization: `Token ${user.token}`,
 		},
-		url: `${apiUrl}/question_news/${questionId}`
+		url: `${apiUrl}/results/${resultId}`
 	})
 }

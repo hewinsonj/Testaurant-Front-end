@@ -5,21 +5,21 @@ import { v4 as uuid } from 'uuid'
 
 // import AuthenticatedRoute from './components/shared/AuthenticatedRoute'
 import AutoDismissAlert from './components/shared/AutoDismissAlert/AutoDismissAlert'
-import Header from './components/shared/Header'
+// import Header from './components/shared/Header'
 import RequireAuth from './components/shared/RequireAuth'
 import Home from './components/Home'
 import SignUp from './components/auth/SignUp'
 import SignIn from './components/auth/SignIn'
 import SignOut from './components/auth/SignOut'
 import SignPage from './components/shared/SignPage'
-import UserPage from './components/user/UserPage'
+import UserPage from './components/newComponents/UserPage'
 import UserPublicPage from './components/user/UserPublicPage'
 import ChangePassword from './components/auth/ChangePassword'
 import FeedPage from './components/activities/FeedPage'
 import ShowActivity from './components/activities/ShowActivity'
 import IndexActivity from './components/activities/IndexActivity'
 import NewLandingPage from './components/newComponents/NewLandingPage'
-import EmployeePage from './components/newComponents/EmployeePage'
+// import EmployeePage from './components/newComponents/EmployeePage'
 import FoodIndexPage from './components/newComponents/FoodIndexPage'
 import MenuNav from './components/newComponents/MenuNav'
 import TestNav from './components/newComponents/TestNav'
@@ -27,6 +27,7 @@ import AddTest from './components/newComponents/AddTest'
 import AddQuestionModal from './components/newComponents/AddQuestionModal'
 import QuestionShow from './components/newComponents/QuestionShow'
 import TestTakePage from './components/newComponents/TestTakePage'
+import ResultsPage from './components/newComponents/ResultsPage'
 
 // import CreateActivity from './components/activities/CreateActivity'
 // import UpdateActivity from './components/activities/UpdateActivity'
@@ -42,6 +43,7 @@ const App = () => {
   const [newQuestion, setNewQuestion] = useState(false)
   const [newTest, setNewTest] = useState(false)
   const [newFood, setNewFood] = useState(false)
+  const [activeItem, setActiveItem] = useState('testaurant')
 
 
   const clearUser = () => {
@@ -117,7 +119,7 @@ const App = () => {
 					<Route
 						path='/new-landing-page'
 						element={
-							<NewLandingPage msgAlert={msgAlert} user={user} newQuestion={newQuestion}/>
+							<NewLandingPage msgAlert={msgAlert} user={user} newQuestion={newQuestion} activeItem={activeItem}/>
 					}
 					/>
 					<Route
@@ -168,14 +170,13 @@ const App = () => {
 							<TestTakePage msgAlert={msgAlert} user={user} />
 					}
 					/>
-					{/* <Route
-						path='/user-page'
+					<Route
+						path='/results/'
 						element={
-						<RequireAuth user={user}>
-							<CreateActivity msgAlert={msgAlert} user={user} />
-						</RequireAuth>
+							<ResultsPage msgAlert={msgAlert} user={user} />
 					}
-					/> */}
+					/>
+
 				</Routes>
 				{msgAlerts.map((msgAlert) => (
 					<AutoDismissAlert

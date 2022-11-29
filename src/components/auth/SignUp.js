@@ -57,7 +57,7 @@ return (
       
       <Segment  
           padded='very'  
-          inverted color='yellow' 
+          inverted color='grey' 
           verticalAlign='middle' 
           id="segment"
       >

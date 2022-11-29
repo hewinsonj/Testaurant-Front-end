@@ -9,7 +9,6 @@ import FoodUpdateModal from "./FoodUpdateModal"
 
 
 const FoodShow = ({ user, msgAlert, food}) => {
-    const [activity, setActivity] = useState({})
     const [updated, setUpdated] = useState(false)
     const [deleted, setDeleted] = useState(false)
     const navigate = useNavigate()

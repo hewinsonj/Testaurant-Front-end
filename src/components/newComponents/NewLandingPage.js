@@ -79,6 +79,15 @@ export default class NewLandingPage extends Component {
                             Employees
                         </Link>
                     </Menu.Item>
+                    <Menu.Item
+                    name='results'
+                    active={activeItem === 'results'}
+                    onClick={this.handleItemClick}
+                    >
+                        <Link to='results'>
+                            Results
+                        </Link>
+                    </Menu.Item>
                     <Menu.Menu position='right'>
                         <Menu.Item
                         name='change-pw'

@@ -69,8 +69,8 @@ const AddDrinkForm = (props) => {
                         name='con_egg'
                         id='con_egg'
                         label='con_egg' 
-                        defaultValue= { drink.con_egg}
-                        value= { drink.con_egg}
+                        defaultChecked= { drink.con_egg}
+                        // value= { drink.con_egg}
                         onChange= { handleChange }
                 />
                 <Form.Checkbox
@@ -78,8 +78,8 @@ const AddDrinkForm = (props) => {
                         name='con_tree_nut'
                         id='con_tree_nut'
                         label='con_tree_nut' 
-                        defaultValue= { drink.con_tree_nut}
-                        value= { drink.con_tree_nut}
+                        defaultChecked= { drink.con_tree_nut}
+                        // value= { drink.con_tree_nut}
                         onChange= { handleChange }
                 />
                 <Form.Checkbox
@@ -87,8 +87,8 @@ const AddDrinkForm = (props) => {
                         name='con_peanut'
                         id='con_peanut'
                         label='con_peanut' 
-                        defaultValue= { drink.con_peanut}
-                        value= { drink.con_peanut}
+                        defaultChecked= { drink.con_peanut}
+                        // value= { drink.con_peanut}
                         onChange= { handleChange }
                 />
                 <Form.Checkbox
@@ -96,8 +96,8 @@ const AddDrinkForm = (props) => {
                         name='con_shellfish'
                         id='con_shellfish'
                         label='con_shellfish' 
-                        defaultValue= { drink.con_shellfish}
-                        value= { drink.con_shellfish}
+                        defaultChecked= { drink.con_shellfish}
+                        // value= { drink.con_shellfish}
                         onChange= { handleChange }
                 />
                 <Form.Checkbox
@@ -105,8 +105,8 @@ const AddDrinkForm = (props) => {
                         name='con_soy'
                         id='con_soy'
                         label='con_soy' 
-                        defaultValue= { drink.con_soy}
-                        value= { drink.con_soy}
+                        defaultChecked= { drink.con_soy}
+                        // value= { drink.con_soy}
                         onChange= { handleChange }
                 />
                 <Form.Checkbox
@@ -114,8 +114,8 @@ const AddDrinkForm = (props) => {
                         name='con_fish'
                         id='con_fish'
                         label='con_fish' 
-                        defaultValue= { drink.con_fish}
-                        value= { drink.con_fish}
+                        defaultChecked= { drink.con_fish}
+                        // value= { drink.con_fish}
                         onChange= { handleChange }
                 />
                 <Form.Checkbox
@@ -123,8 +123,8 @@ const AddDrinkForm = (props) => {
                         name='con_wheat'
                         id='con_wheat'
                         label='con_wheat' 
-                        defaultValue= { drink.con_wheat}
-                        value= { drink.con_wheat}
+                        defaultChecked= { drink.con_wheat}
+                        // value= { drink.con_wheat}
                         onChange= { handleChange }
                 />
                 <Form.Checkbox
@@ -132,8 +132,8 @@ const AddDrinkForm = (props) => {
                         name='con_sesame'
                         id='con_sesame'
                         label='con_sesame' 
-                        defaultValue= { drink.con_sesame}
-                        value= { drink.con_sesame}
+                        defaultChecked= { drink.con_sesame}
+                        // value= { drink.con_sesame}
                         onChange= { handleChange }
                 />
                 <Form.Checkbox
@@ -141,8 +141,8 @@ const AddDrinkForm = (props) => {
                         name='con_gluten'
                         id='con_gluten'
                         label='con_gluten' 
-                        defaultValue= { drink.con_gluten}
-                        value= { drink.con_gluten}
+                        defaultChecked= { drink.con_gluten}
+                        // value= { drink.con_gluten}
                         onChange= { handleChange }
                 />
                 <Form.Group inline>

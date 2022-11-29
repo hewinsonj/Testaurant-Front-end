@@ -27,7 +27,7 @@ const SignIn = (props) => {
 
 	const onSignIn = (event) => {
 		event.preventDefault()
-		const { msgAlert, setUser } = props
+		const { msgAlert, setUser, activeItem } = props
 
         const credentials = {email, password}
 
@@ -40,7 +40,8 @@ const SignIn = (props) => {
 			// 		variant: 'success',
 			// 	})
 			// )
-			.then(() => navigate('/user-page'))
+			.then(() => navigate('/my-profile'))
+            .then(() => activeItem === 'testaurant')
 			.catch((error) => {
                 setEmail('')
                 setPassword('')
@@ -59,7 +60,8 @@ const SignIn = (props) => {
         >
             <Segment  
                 padded='very'  
-                inverted color='yellow' 
+                inverted 
+                color='grey' 
                 verticalAlign='middle' 
                 id="segment"
             >

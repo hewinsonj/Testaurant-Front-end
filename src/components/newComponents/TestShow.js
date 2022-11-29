@@ -4,7 +4,7 @@ import { useNavigate, useParams} from 'react-router-dom'
 import { Link } from 'react-router-dom'
 import { getTest, updateTest, deleteTest } from '../../api/test'
 import { getQuestion, getAllQuestions } from "../../api/question"
-// import UpdateActivityModal from "./UpdateActivityModal"
+import TestUpdateModal from "./TestUpdateModal"
 import LoadingScreen from "../shared/LoadingPage"
 
 
@@ -82,7 +82,9 @@ const TestShow = ({ user, msgAlert, test}) => {
   //     }
   //   }
   // }
-    console.log('this is the test', test)
+
+  
+    // console.log('this is the test', test)
 
     // console.log(allQuestions, "this is all of the questions")
     useEffect(() => {
@@ -204,6 +206,7 @@ const TestShow = ({ user, msgAlert, test}) => {
                 <Button color='black' onClick={handleDeleteTest}>
                     Delete Item
                 </Button>
+                <TestUpdateModal test={test} user={user} msgAlert={msgAlert}/>
             </Modal.Actions>
         </Modal>
     </>
