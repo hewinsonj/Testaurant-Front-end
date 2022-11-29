@@ -5,7 +5,7 @@ import TestShow from './TestShow'
 import TestTake from './TestTake'
 
 const TestSegment = ({ test, msgAlert, user}) => {
-    console.log(test)
+    
     return (
          <Segment id='actListItems' textAlign='center'>
                     <Grid centered verticalAlign='middle' textAlign='center'>

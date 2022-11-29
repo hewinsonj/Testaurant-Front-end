@@ -7,7 +7,7 @@ import QuestionSegment from './QuestionSegment'
 
 const AddTest = (props) => {
 
-    const { heading, user, msgAlert, setNewTest, activeItem, question  } = props
+    const { heading, user, msgAlert, setNewTest, activeItem, question, setOpen  } = props
 
     
     const defaultTest = {
@@ -48,8 +48,8 @@ const AddTest = (props) => {
     },[])
 
     const handleChange = (e , target) => {
-        console.log('this is the target', e.target)
-        setTest(prevTest => {
+        
+        setIdStorage(prevTest => {
             const { name, value } = target
             const updatedName = name
             let updatedValue = value
@@ -60,18 +60,25 @@ const AddTest = (props) => {
             }
 
             //handle the checkbox
-            if (updatedName === 'question_new' && target.checked) {
+            if (updatedName === 'question_ids' && target.checked) {
                 
-                updatedValue = (prevTest.question_new).push(parseInt(target.id))
-            } else if (updatedName === 'question_new' && !target.checked) {
+                updatedValue = (prevTest.question_ids).push(parseInt(target.id))
+            } else if (updatedName === 'question_ids' && !target.checked) {
+                for (let i = 0; i < prevTest.question_ids.length; i++) {
+                    if(prevTest.question_ids[i] === parseInt(target.id)){
+                        prevTest.question_ids.splice(i, 1)
+                    }
+                }
+
                 updatedValue = false
             }
 
             const updatedTest = { [updatedName]: updatedValue }
-
             return { ...prevTest}
         })
     }
+    console.log("this is the test from testAdd", test)
+
 
     const handleChangeOther = (e , target) => {
         setTest(prevTest => {
@@ -91,6 +98,10 @@ const AddTest = (props) => {
 
     const handleCreateTest = (e) => {
         e.preventDefault()
+        allQuestions.slice(0).map((question) => (
+            findQuestionObject( question, idStorage)
+            
+        ))
 
         createTest(user, test)
             // .then(() => handleClose())
@@ -104,6 +115,9 @@ const AddTest = (props) => {
             // .then(() => {
             //     console.log("this is the test", test)
             // })
+            .then(() => {
+                setOpen(false)
+            })
             .then(() => setNewTest(prev => !prev))
             .catch((error) => {
                 msgAlert({
@@ -113,10 +127,34 @@ const AddTest = (props) => {
                 })
             })
     }
-    console.log("this is the test from testAdd", test)
     
+    
+    const findQuestionObject = (question, idStorage) => {
+        for (let i = 0; i < idStorage.question_ids.length; i++) {
+          if(idStorage.question_ids[i] == question.id){
+            test.question_new.push(question)
+           console.log('this function works')
+          }
+        } return 
+        
+      }
+    
+      
+    console.log('these are the question objects', test.question_new)
+    console.log('this is the tempQuestion', idStorage.question_ids)
+
     return (
         <Container className="justify-content-center" >
+            
+            {/* <h3>
+            {allQuestions ? 
+                allQuestions.slice(0).map((question) => (
+                    findQuestionObject( question, idStorage)
+                    
+                ))
+                :
+                <LoadingScreen />
+            }</h3> */}
             <h3>{ heading }</h3>
             <Form onSubmit={ handleCreateTest }>
             <Grid centered columns={1}>
@@ -133,48 +171,12 @@ const AddTest = (props) => {
                         value= { test.name }
                         onChange= { handleChangeOther }
                     />
-                     <Form.Input 
-                        required 
-                        name='created_at'
-                        id='created_at'
-                        label='created_at' 
-                        placeholder='created_at'
-                        defaultValue= { test.created_at }
-                        value= { test.created_at }
-                        onChange= { handleChangeOther }
-                    />
-                     <Form.Input 
-                        required 
-                        name='updated_at'
-                        id='updated_at'
-                        label='updated_at' 
-                        placeholder='updated_at'
-                        defaultValue= { test.updated_at }
-                        value= { test.updated_at }
-                        onChange= { handleChangeOther }
-                    />
-                    {/* <Form.Input 
-                        required 
-                        name='test.question_news_id'
-                        id='test.question_news_id'
-                        label='test.question_news_id' 
-                        placeholder='test.question_news_id'
-                        defaultValue= { test.question_news_id }
-                        value= { test.question_news_id }
-                        onChange= { handleChange }
-                    /> */}
+                    
                 
                     </Segment>
                     </Grid.Row>
-                    {/* <Form.Select
-                        fluid
-                        label='Questions'
-                        options={options}
-                        placeholder='Select Questions'
-                    /> */}
-                    {/* </Form.Group> */}
                     
-                    
+
                 <Form.Group inline>
                 
                     
@@ -187,28 +189,15 @@ const AddTest = (props) => {
                          <div className='scrolling-group'>
                         {allQuestions ? 
                             allQuestions.slice(0).reverse().map((question) => (
-
                                 <Form.Checkbox 
                                     // required 
-                                    name='question_new' 
+                                    name='question_ids' 
                                     id={question.id}
                                     label={question.question_str}
                                     // defaultValue= 'defvalue'
                                     value= {question.id}
                                     onChange= { handleChange }
                                 />
-                                
-                                // <Form.Checkbox
-                                //         required 
-                                //         name='con_tree_nut'
-                                //         id='con_tree_nut'
-                                //         label='con_tree_nut' 
-                                //         defaultValue= { drink.con_tree_nut}
-                                //         value= { drink.con_tree_nut}
-                                //         onChange= { handleChange }
-                                // />
-
-                                // <QuestionSegment key={question.id} question={question} user={user} msgAlert={msgAlert}/>
                             ))
                             :
                             <LoadingScreen />

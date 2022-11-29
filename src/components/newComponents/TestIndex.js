@@ -17,9 +17,6 @@ const TestIndex = ({ user, msgAlert, newTest, setNewTest}) => {
             .then(res => {
                 setAllTests(res.data.test_thiss)
             })
-            .then(() => {
-                console.log(allTests)
-            })
             .catch(error => {
                 msgAlert({
                     'heading': 'Error',

@@ -66,12 +66,12 @@ const TestShow = ({ user, msgAlert, test}) => {
    
     const findString = (test, question) => {
       for (let i = 0; i < test.question_new.length; i++) {
-        if(test.question_new[i] == question.id){
+        if(test.question_new[i].id == question.id){
           return (<h3>(q){question.question_str}(a){question.answer}</h3> )
         }
       }
     }
-    console.log(test, 'this is the test')
+    
   //   const findString = (test, allQuestions) => {
   //   for (let i = 0; i < allQuestions.length; i++) {
   //     for (let i = 0; i < test.question_new.length; i++) {
@@ -82,8 +82,9 @@ const TestShow = ({ user, msgAlert, test}) => {
   //     }
   //   }
   // }
+    console.log('this is the test', test)
 
-    console.log(allQuestions, "this is all of the questions")
+    // console.log(allQuestions, "this is all of the questions")
     useEffect(() => {
         
       getAllQuestions(user)

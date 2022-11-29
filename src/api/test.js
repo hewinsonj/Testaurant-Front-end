@@ -71,7 +71,7 @@ export const getTest = (user, testId) => {
         url: `${apiUrl}/test_thiss/${testId}`
     })
 }
-//create an activity 
+//create a test
 //data returned: res.data.activity will be the new activity 
 export const createTest = (user, test) => {
     console.log(test, 'this be the test right before my api request')
@@ -84,10 +84,8 @@ export const createTest = (user, test) => {
         data: {
             "test_this": {
                 "name": test.name,
-                "created_at": test.created_at,
-                "updated_at": test.updated_at,
-                "question_new": test.question_news,
-            }
+                "question_new": test.question_new,
+            },
         }
     })
 }
