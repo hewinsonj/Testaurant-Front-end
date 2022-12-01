@@ -14,8 +14,8 @@ const CreateTest = (props) => {
     const defaultTest = {
         name: '',
         question_new: [],
-        created_at: '',
-        updated_at: '',
+        // created_at: '',
+        // updated_at: '',
     }
 
     const tempQuestion = {
@@ -95,7 +95,6 @@ const CreateTest = (props) => {
         e.preventDefault()
         allQuestions.slice(0).map((question) => (
             findQuestionObject( question, idStorage)
-            
         ))
 
         createTest(user, test)
@@ -107,9 +106,9 @@ const CreateTest = (props) => {
                     variant: 'success'
                 })
             })
-            // .then(() => {
-            //     console.log("this is the test", test)
-            // })
+            .then(() => {
+                console.log("this is the test", test)
+            })
             .then(() => {
                 setOpen(false)
             })

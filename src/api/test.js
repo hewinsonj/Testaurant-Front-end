@@ -104,12 +104,13 @@ export const createTest = (user, test) => {
 //update an activity
 //nothing returned
 export const updateTest = (user, updatesToTest, testId) => {
+    console.log(updatesToTest, 'test right before my update api request')
 	return axios({
 		method: 'PATCH',
         headers: {
 			Authorization: `Token ${user.token}`,
 		},
-		url: `${apiUrl}/test_thiss/${testId}`,
+		url: `${apiUrl}/test_thiss/${testId}/`,
 		data: {
 			test_this: updatesToTest
 		}

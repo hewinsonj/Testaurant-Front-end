@@ -1,12 +1,9 @@
-import { Spinner } from 'react-bootstrap'
-
+import {Icon} from 'semantic-ui-react'
 
 const LoadingScreen = () => (
     <div style={{textAlign: 'center'}}>
-        <Spinner role="status" animation="border">
-            <span className="visually-hidden">Loading...</span>
-        </Spinner>
-        <h1>yoopo</h1>
+        <h2>One moment please my dude...</h2>
+        <Icon loading name='spinner' />
     </div>
 
 )

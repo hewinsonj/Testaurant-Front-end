@@ -16,9 +16,6 @@ const TestSegment = ({ test, msgAlert, user}) => {
                         <Grid.Row>
                         <TestShow  test={test} user={user} msgAlert={msgAlert}/>
                         <TestTake  test={test} user={user} msgAlert={msgAlert}/>
-                        <Link to={`/test-take-page/${test.id}`}>
-                            <Button>Test Take Page</Button>
-                        </Link>
                         </Grid.Row>
                     </Grid>
         </Segment>

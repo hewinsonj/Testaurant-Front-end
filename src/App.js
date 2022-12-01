@@ -28,6 +28,8 @@ import AddQuestionModal from './components/newComponents/AddQuestionModal'
 import QuestionShow from './components/newComponents/QuestionShow'
 import TestTakePage from './components/newComponents/TestTakePage'
 import ResultsPage from './components/newComponents/ResultsPage'
+import TheLandingDisplay from './components/newComponents/TheLandingDisplay'
+import EmployeePage from './components/newComponents/EmployeePage'
 
 // import CreateActivity from './components/activities/CreateActivity'
 // import UpdateActivity from './components/activities/UpdateActivity'
@@ -72,7 +74,7 @@ const App = () => {
 				{/* <Header user={user} msgAlert={msgAlert} setNewActivity={setNewActivity} /> */}
 				
 				<Routes>
-					<Route path='/' element={<Home user={user} msgAlert={msgAlert} setUser={setUser} />} />
+					<Route path='/' element={<TheLandingDisplay user={user} msgAlert={msgAlert} setUser={setUser} />} />
 					<Route
 						path='/sign-up'
 						element={<SignUp msgAlert={msgAlert} setUser={setUser} />}
@@ -174,6 +176,12 @@ const App = () => {
 						path='/results/'
 						element={
 							<ResultsPage msgAlert={msgAlert} user={user} />
+					}
+					/>
+					<Route
+						path='/employees/'
+						element={
+							<EmployeePage msgAlert={msgAlert} user={user} />
 					}
 					/>
 

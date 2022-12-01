@@ -21,6 +21,10 @@ body {
   height: 20rem;
 }
 
+#literallyJustSpace {
+  width: 10em;
+}
+
 #hiddingQuestionButtons {
   display: none;
 }

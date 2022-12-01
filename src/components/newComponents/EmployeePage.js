@@ -2,41 +2,63 @@ import React, { useEffect, useState } from "react";
 import { Icon, Item, Button, Grid, Comment, Form, Modal, Search, Header, Segment, Select, Input} from 'semantic-ui-react'
 import { useNavigate } from 'react-router-dom'
 import { Link } from 'react-router-dom'
-import { getAllActivities } from '../../api/activity'
+import { getAllEmployees } from '../../api/user'
+import { getAllTests } from '../../api/test'
 // import { act } from "react-dom/test-utils";
 // import SearchBar from "../SearchBar/Search";
 
-const genderOptions = [
-    { key: 'm', text: 'Male', value: 'male' },
-    { key: 'f', text: 'Female', value: 'female' },
-    { key: 'o', text: 'Other', value: 'other' },
-  ]
+
 
 
 const EmployeePage = ({ user, msgAlert }) => {
     //set state for all public activities, filtered activities based on search
-    const [allActivities, setAllActivities] = useState([])
-    const [filterActivities, setFilterActivities] = useState([])
-    const [searchText, setSearchText] = useState([])
+    const [allEmployees, setAllEmployees] = useState([])
+    const [allTests, setAllTests] = useState(null)
+    // const [filterActivities, setFilterActivities] = useState([])
+    // const [searchText, setSearchText] = useState([])
 
     //function for filtering as user types in activity name
-    const handleChange = (e) => {
-        let activities = allActivities
-        setFilterActivities(activities.filter(
-        a => a.activity.includes(e.target.value) || a.type.includes(e.target.value))
-        )
-    }
-    
+    // const handleChange = (e) => {
+    //     let activities = allActivities
+    //     setFilterActivities(activities.filter(
+    //     a => a.activity.includes(e.target.value) || a.type.includes(e.target.value))
+    //     )
+    // }
+
+    // const genderOptions = () => {
+    // for (let i = 0; i < allTests.length; i++) {
+    //     { {key}: 'm', text: 'Male', value: 'male' },
+    //     { key: 'f', text: 'Female', value: 'female' },
+    //     { key: 'o', text: 'Other', value: 'other' },
+    //   } return 
+    // }
+
+
     useEffect(() => {
-        getAllActivities(user)
+        
+        getAllTests(user)
+            .then(res => {
+                setAllTests(res.data.test_thiss)
+            })
+            .catch(error => {
+                msgAlert({
+                    'heading': 'Error',
+                    'message': 'Could not get tests',
+                    'variant': 'danger'
+                })
+            })
+    },[])
+
+    useEffect(() => {
+        getAllEmployees(user)
         .then(res => {
-            setAllActivities(res.data.activities)
-            setFilterActivities(res.data.activities)
+            setAllEmployees(res.data.users)
+            // setFilterActivities(res.data.activities)
         })
         .catch((error) => {
             msgAlert({
                 heading: 'Failure',
-                message: 'Index Activities failed' + error,
+                message: 'Index Employees failed' + error,
                 variant: 'danger'
             })
         })
@@ -54,15 +76,15 @@ const EmployeePage = ({ user, msgAlert }) => {
     //     )
     // })
 
-    const Index = filterActivities.map(activities => (
+    const Index = allEmployees.map(employee => (
             <Grid centered stretched >
                 <div id='empContainer'>
                 <Grid.Row padded>
-                    <Segment fluid key={ activities.id }>
+                    <Segment fluid key={ employee.id }>
                         <Grid columns={5} verticalAlign='middle'>
                             <Grid.Column >
                                 {/* <h3>{activities.owner.email}</h3> */}
-                                <h3>(Employee Name)</h3>
+                                <h3>{employee.email}</h3>
                                 
                                
                             </Grid.Column>
@@ -71,7 +93,7 @@ const EmployeePage = ({ user, msgAlert }) => {
                                 <Form>
                                     <Form.Field
                                         control={Select}
-                                        options={genderOptions}
+                                        // options={genderOptions}
                                         placeholder='select a test'
                                         search
                                         searchInput={{ id: 'form-select-control-gender' }}
@@ -81,11 +103,11 @@ const EmployeePage = ({ user, msgAlert }) => {
                             </Grid.Column>
                             <Grid.Column>
                                 <h3>Untaken Tests: </h3>
-                                <h3>{activities.participants}</h3>
+                                <h3>yearight</h3>
                             </Grid.Column>
                             <Grid.Column>
                                 <h3>Taken Tests: </h3>
-                                <h3>{activities.price}</h3>
+                                <h3>yea right</h3>
                             </Grid.Column>
                             <Grid.Column>
                                 <h3>Hire Date: </h3>

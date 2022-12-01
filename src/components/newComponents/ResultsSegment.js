@@ -36,7 +36,6 @@ const ResultsSegment = ({ result, msgAlert, user}) => {
         
       }
       
-    console.log(result, 'this is supposed to be the test' )
     return (
          <Segment id='actListItems' textAlign='center'>
                     <Grid centered verticalAlign='middle' textAlign='center'>

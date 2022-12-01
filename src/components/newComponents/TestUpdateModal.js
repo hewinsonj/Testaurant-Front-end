@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import {Button, Checkbox, Form, Container, Icon, Segment, Modal} from 'semantic-ui-react'
-import { createTest } from '../../api/test'
+import { createTest, updateTest } from '../../api/test'
 import { getAllQuestions } from '../../api/question'
 import LoadingScreen from '../shared/LoadingPage'
 import QuestionSegment from './QuestionSegment'
@@ -16,9 +16,9 @@ const TestUpdateModal = (props) => {
     const [allQuestions, setAllQuestions] = useState(null)
 
 
-    // const tempQuestion = {
-    //     question_ids: [],
-    // }
+    const tempQuestion = {
+        question_ids: [],
+    }
 
     useEffect(() => {
         
@@ -53,7 +53,7 @@ const TestUpdateModal = (props) => {
             //handle the checkbox
             if (updatedName === 'question_ids' && target.checked) {
                 
-                updatedValue = (prevTest.question_ids).push(parseInt(target.id))
+                updatedValue = (props.test.question_new).push(parseInt(target.id))
             } else if (updatedName === 'question_ids' && !target.checked) {
                 for (let i = 0; i < prevTest.question_ids.length; i++) {
                     if(prevTest.question_ids[i] === parseInt(target.id)){
@@ -85,8 +85,8 @@ const TestUpdateModal = (props) => {
         } console.log('not working')
         
     }
-    console.log(test, 'this is test.question_new.id -------------------------------------')
-    console.log(question, 'this is question-------------------------------------')
+    // console.log(test, 'this is test.question_new.id -------------------------------------')
+    // console.log(question, 'this is question-------------------------------------')
 
 
 
@@ -107,14 +107,14 @@ const TestUpdateModal = (props) => {
         })
     }
 
-    const handleCreateTest = (e) => {
+    const handleUpdateTest = (e) => {
         e.preventDefault()
         allQuestions.slice(0).map((question) => (
             findQuestionObject( question, idStorage)
             
         ))
 
-        createTest(user, test)
+        updateTest(user, test, props.test.id)
             // .then(() => handleClose())
             .then(() => {
                 msgAlert({
@@ -141,15 +141,16 @@ const TestUpdateModal = (props) => {
     
     
     const findQuestionObject = (question, idStorage) => {
-        for (let i = 0; i < idStorage.question_ids.length; i++) {
+        for (let i = 0; i < tempQuestion.question_ids.length; i++) {
           if(idStorage.question_ids[i] == question.id){
-            test.question_new.push(question)
+            props.test.question_new.push(question.id)
            console.log('this function works')
           }
         } return 
         
       }
     
+      console.log(props.test, 'this is the damn temp q')
       
     // console.log('these are the question objects', test.question_new)
     // console.log('this is the tempQuestion', idStorage.question_ids)
@@ -172,7 +173,7 @@ const TestUpdateModal = (props) => {
                     handleChange={ handleChange }
                     handleChangeOther={handleChangeOther}
                     heading="Update Test!"
-                    handleSubmit={ handleCreateTest }
+                    handleSubmit={ handleUpdateTest }
                     allQuestions={allQuestions}
                     user={user}
                     handleChecked={handleChecked}

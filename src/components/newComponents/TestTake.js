@@ -15,14 +15,14 @@ const TestTake = ({ user, msgAlert, test}) => {
   const defaultResult = {
       score: '',
       correct: '0',
-      wrong: '0',
+      wrong: '',
       total: '',
       percent: '',
       time: '',
       the_test: null
   }
   const defaultResponses = {
-    answer1: '',
+    answers: [],
     // answer2: '',
     // answer3: '',
     // answer4: '',
@@ -51,7 +51,7 @@ const TestTake = ({ user, msgAlert, test}) => {
           }
 
           //handle the checkbox
-          if (updatedName === 'private' && target.checked) {
+          if (updatedName === 'reponses.answers' && target.checked) {
               updatedValue = true
           } else if (updatedName === 'private' && !target.checked) {
               updatedValue = false
@@ -64,12 +64,18 @@ const TestTake = ({ user, msgAlert, test}) => {
   }
 
   const handleCreateResult = (e) => {
-    console.log(test)
+    // for(let i = 0; i < test.question_new.length; i ++){
+    // console.log(test)}
     e.preventDefault()
-    if(responses.answer1 === test.question_new[0].answer){
-      result.correct = '1'
-    } else {
-      result.wrong = '1'
+    for(let i = 0; i < test.question_new.length; i ++){
+      
+      if(responses.answers[i] === test.question_new[i].answer){
+        result.correct += '1'
+      } else {
+        result.wrong += '1'
+        console.log(responses.answers, 'responses.answers')
+        console.log(test.question_new, 'test question')
+      }
     }
     result.percent = '100'
     
@@ -109,37 +115,37 @@ const TestTake = ({ user, msgAlert, test}) => {
     )
   }
 
-
-  const questionsJSX = test.question_new.slice(0).reverse().map((question) => (
+  // const questionsJSX = test.question_new.slice(0).reverse().map((question) => (
+  const questionsJSX = (test) => {  for (let i = 0; i < test.question_new.length; i++) { return (
     <Segment inverted class="capitalize-me">
             <Grid centered stretched>
                 <Grid.Row padded>
                     <Segment fluid>
                         <Grid textAlign="center" columns={4}>
                             <Grid.Row >
-                            <h2>{question.question_str}</h2>
+                            <h2>{test.question_new[i].question_str}</h2>
                             </Grid.Row>
                             <Grid.Column>
-                              <h2>{question.option1}</h2>
+                              <h2>{test.question_new[i].option1}</h2>
                             </Grid.Column>
                             <Grid.Column>
-                              <h2>{question.option2}</h2>
+                              <h2>{test.question_new[i].option2}</h2>
                             </Grid.Column>
                             <Grid.Column>
-                              <h2>{question.option3}</h2>
+                              <h2>{test.question_new[i].option3}</h2>
                             </Grid.Column>
                             <Grid.Column>
-                              <h2>{question.option4}</h2>
+                              <h2>{test.question_new[i].option4}</h2>
                             </Grid.Column>
                             <Grid.Row>
                               <Form.Input 
                                 required 
-                                name={result.answer1}
-                                id={result.answer1}
+                                name={responses.answers[i]}
+                                id={responses.answers[i]}
                                 label='answer' 
                                 placeholder='your answer'
                                 onChange={handleChange}
-                                // value= { resultAnswer{question.id}}
+                                value= { responses.answers[i]}
                                />
                             </Grid.Row>
                         </Grid>
@@ -147,7 +153,8 @@ const TestTake = ({ user, msgAlert, test}) => {
                 </Grid.Row>
             </Grid>
         </Segment>
-))
+    )}}
+// ))
 
   return(
     <>  
@@ -178,7 +185,7 @@ const TestTake = ({ user, msgAlert, test}) => {
             
           </Grid>
         </Segment>
-        {questionsJSX}
+        {questionsJSX(test)}
       </Segment>
       <Button type='submit' color='green'>Submit</Button>
       </Form>
