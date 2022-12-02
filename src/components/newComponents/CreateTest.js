@@ -339,16 +339,13 @@
 
 
 import React, { useState, useEffect } from 'react'
-import {Button, Checkbox, Form, Container, Icon, Segment, Grid} from 'semantic-ui-react'
 import { createTest } from '../../api/test'
 import { getAllQuestions } from '../../api/question'
-import LoadingScreen from '../shared/LoadingPage'
-import QuestionSegment from './QuestionSegment'
 import AddTest from './AddTest'
 
 const CreateTest = (props) => {
 
-    const { heading, user, msgAlert, setNewTest, activeItem, question, setOpen  } = props
+    const {  user, msgAlert, setNewTest, setOpen  } = props
 
     const defaultTest = {
         name: '',
@@ -390,11 +387,33 @@ const CreateTest = (props) => {
             } else if (name === 'question_ids' && !target.checked) {
                 updatedValue = updatedValue.filter(id => id !== parseInt(target.id)); // Remove unchecked question ID
             }
+<<<<<<< HEAD
 
             return { ...prevTest, question_ids: updatedValue }; // Return updated state
         });
     };
     //------------------- End handleChange refactor -----------------
+=======
+            //handle the checkbox
+            if (updatedName === 'question_ids' && target.checked) {
+                
+                updatedValue = (prevTest.question_ids).push(parseInt(target.id))
+            } else if (updatedName === 'question_ids' && !target.checked) {
+                for (let i = 0; i < prevTest.question_ids.length; i++) {
+                    if(prevTest.question_ids[i] === parseInt(target.id)){
+                        prevTest.question_ids.splice(i, 1)
+                    }
+                }
+                updatedValue = false
+            }
+
+            const updatedTest = { [updatedName]: updatedValue }
+            return { ...prevTest}
+        })
+    }
+    console.log("this is the test from testAdd", test)
+
+>>>>>>> 27bdab7 (cleaned up)
 
     const handleChangeOther = (e , target) => {
         setTest(prevTest => {
@@ -408,6 +427,7 @@ const CreateTest = (props) => {
     const handleCreateTest = (e) => {
         e.preventDefault();
 
+<<<<<<< HEAD
         // Update test state with question IDs from idStorage before API call
         setTest(prevTest => ({
             ...prevTest,
@@ -431,6 +451,14 @@ const CreateTest = (props) => {
                     });
                     setOpen(false);
                     setNewTest(prev => !prev);
+=======
+        createTest(user, test)
+            .then(() => {
+                msgAlert({
+                    heading: 'Success',
+                    message: 'Created Test',
+                    variant: 'success'
+>>>>>>> 27bdab7 (cleaned up)
                 })
                 .catch(error => {
                     msgAlert({
@@ -439,6 +467,7 @@ const CreateTest = (props) => {
                         variant: 'danger'
                     });
                 })
+<<<<<<< HEAD
                 .finally(() => {
                     setIsTestReady(false); // Reset the flag after the API call
                 });
@@ -447,6 +476,19 @@ const CreateTest = (props) => {
     //------------------- End useEffect for API Call ---------------------
 
     console.log('this is the idstorage.question_ids', idStorage.question_ids);
+=======
+            })
+    }
+    
+    const findQuestionObject = (question, idStorage) => {
+        for (let i = 0; i < idStorage.question_ids.length; i++) {
+          if(idStorage.question_ids[i] == question.id){
+            test.question_new.push(question.id)
+           console.log('this function works')
+          }
+        } return 
+      }
+>>>>>>> 27bdab7 (cleaned up)
 
     return (
         <AddTest

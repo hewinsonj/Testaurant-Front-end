@@ -1,12 +1,9 @@
-import React, { useState } from 'react'
-import {Button, Checkbox, Form, Container, Icon} from 'semantic-ui-react'
-import { createDrink } from '../../api/drink'
-
+import React from 'react'
+import {Button, Form, Container, Icon} from 'semantic-ui-react'
 
 const AddDrinkForm = (props) => {
     
     const { drink, handleChange, handleSubmit, heading } = props
-
 
     return (
         <Container className="justify-content-center">
@@ -33,7 +30,7 @@ const AddDrinkForm = (props) => {
                         defaultValue= { drink.ingredients}
                         value= { drink.ingredients}
                         onChange= { handleChange }
-                    />
+                />
                 <Form.Input 
                         required 
                         name='prep_instructs'
@@ -145,10 +142,6 @@ const AddDrinkForm = (props) => {
                         // value= { drink.con_gluten}
                         onChange= { handleChange }
                 />
-                <Form.Group inline>
-                
-                    
-                </Form.Group>
                 <Button type='submit' color='orange'>Submit</Button>
             </Form>
         </Container>

@@ -1,6 +1,5 @@
-import React, { useState } from 'react'
-import {Button, Checkbox, Form, Container, Icon} from 'semantic-ui-react'
-import { createQuestion } from '../../api/question'
+import React from 'react'
+import {Button, Form, Container } from 'semantic-ui-react'
 
 
 const AddItem = (props) => {
@@ -73,24 +72,6 @@ const AddItem = (props) => {
                         value= { question.answer}
                         onChange= { handleChange }
                     />
-                <Form.Group inline>
-                
-                    
-                </Form.Group>
-                {/* <Form.Field>
-                    <Checkbox 
-                        label='Mark Activity as Private'
-                        name='private'
-                        defaultChecked= { activity.private }
-                        onChange={ handleChange }
-                    />
-                </Form.Field> */}
-                {/* <Button icon
-                        type='button'
-                        color='yellow'
-                        label='Generate Random Activity'
-                        onClick= { handleActivity }> 
-                <Icon name='random' /></Button> */}
                 <Button type='submit' color='orange'>Submit</Button>
             </Form>
         </Container>

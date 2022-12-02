@@ -1,6 +1,5 @@
-import React, { useState, useEffect } from 'react'
-import {  Link } from 'react-router-dom'
-import {  Segment, Grid, Image, Progress, Container, Form, Checkbox, Button } from 'semantic-ui-react'
+import React from 'react'
+import {  Segment, Grid } from 'semantic-ui-react'
 import TestShow from './TestShow'
 import TestTake from './TestTake'
 
@@ -8,16 +7,25 @@ const TestSegment = ({ test, msgAlert, user, allQuestions}) => {
     
     return (
          <Segment id='actListItems' textAlign='center'>
-                    <Grid centered verticalAlign='middle' textAlign='center'>
-                        <Grid.Row>
+                <Grid centered verticalAlign='middle' textAlign='center'>
+                    <Grid.Row>
                         <h2>Test name: {test.name}</h2>
                         <h2>Created: {test.created_at}</h2>
+<<<<<<< HEAD
                         </Grid.Row>
                         <Grid.Row>
                         <TestShow  test={test} user={user} msgAlert={msgAlert} allQuestions={allQuestions}/>
                         <TestTake  test={test} user={user} msgAlert={msgAlert} allQuestions={allQuestions}/>
                         </Grid.Row>
                     </Grid>
+=======
+                    </Grid.Row>
+                    <Grid.Row>
+                        <TestShow  test={test} user={user} msgAlert={msgAlert}/>
+                        <TestTake  test={test} user={user} msgAlert={msgAlert}/>
+                    </Grid.Row>
+                </Grid>
+>>>>>>> 27bdab7 (cleaned up)
         </Segment>
     )
 }

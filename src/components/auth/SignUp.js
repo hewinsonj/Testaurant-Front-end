@@ -1,8 +1,8 @@
-import React, { useState, Component } from 'react'
+import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { signUp, signIn } from '../../api/auth'
 import messages from '../shared/AutoDismissAlert/messages'
-import { Grid, Segment, Feed, Icon, Button, Divider, Form, Container, Input, Message, Select } from 'semantic-ui-react'
+import { Grid, Segment, Form, Container } from 'semantic-ui-react'
 
 
 const options = [
@@ -23,8 +23,7 @@ const SignUp = (props) => {
   event.preventDefault()
 
   const { msgAlert, setUser } = props
-
-      const credentials = {email, password, password_confirmation}
+  const credentials = {email, password, password_confirmation}
 
   signUp(credentials)
     .then(() => signIn(credentials))
@@ -50,134 +49,77 @@ const SignUp = (props) => {
     })
 }
 
-
 return (
+    <div>
+      <Container id='container'>
 
- 
-      <div>
-        <Container id='container'>
-      <Segment  
-            
+        <Segment  
           inverted color='grey' 
           verticalAlign='middle' 
           id="segment"
-      >
+        >
+
           <h3>Sign Up</h3>
           <Form  onSubmit= {onSignUp}>
-            
-              <Grid columns={2}>
-                <Grid.Column>
+
+            <Grid columns={2}>
+
+              <Grid.Column>
+                <Form.Field>
+                  <br/>
+                  <br/>
                   <Form.Field>
-                  {/* <Form.Input 
+                    <Form.Input 
                       fluid
-                    //   required
-                      type='first_name'
-                      name='first_name'
-                      value={email}
-                      placeholder='Enter your first name'
-                      onChange={e => setEmail(e.target.value)}
-
-                  /> */}
-              
-              < br/>
-
-                  {/* <Form.Input 
-                      fluid
-                    //   required
-                      type='last_name'
-                      name='last_name'
-                    //   value={username}
-                      placeholder='Enter your last name'
-                      onChange={e => setUsername(e.target.value)}
-
-                  /> */}
-          
-              <br />
-              <Form.Field>
-                  <Form.Input 
-                      fluid
-                    //   required
                       type='email'
                       name='email'
                       value={email}
                       placeholder='Enter your email'
                       onChange={e => setEmail(e.target.value)}
-                  />
-          
-              <br />
-           
-                  {/* <Form.Select 
-                      fluid
-                    //   required
-                      name='access'
-                      value={password}
-                      type='select'
-                      placeholder='Select Access Level'
-                      onChange={e => setPassword(e.target.value)}
-                      options={options}
-
-                  /> */}
-             
-                  {/* <Form.Input
-                      fluid 
-                      placeholder='Enter your admin code'
-                    //   required
-                      name='admin_code'
-                    //   value={admin_code}
-                      type='text'
-                      onChange={e => setPasswordConfirmation(e.target.value)}
-                     
-                  /> */}
+                    />
+                    <br/>
                   </Form.Field>
                   <Form.Input 
-                      fluid
-                      icon='lock'
-                      iconPosition='left'
-                    //   required
-                      name='password'
-                      value={password}
-                      type='password'
-                      placeholder='Password'
-                      onChange={e => setPassword(e.target.value)}
-
+                    fluid
+                    icon='lock'
+                    iconPosition='left'
+                    name='password'
+                    value={password}
+                    type='password'
+                    placeholder='Password'
+                    onChange={e => setPassword(e.target.value)}
                   />
-            
-              <br />
-             
+                  <br />
                   <Form.Input
-                      fluid 
-                      icon='check' 
-                      iconPosition='left' 
-                      placeholder='Confirm Password'
-                    //   required
-                      name='passwordConfirmation'
-                      value={password_confirmation}
-                      type='password'
-                      onChange={e => setPasswordConfirmation(e.target.value)}
-                     
+                    fluid 
+                    icon='check' 
+                    iconPosition='left' 
+                    placeholder='Confirm Password'
+                    name='passwordConfirmation'
+                    value={password_confirmation}
+                    type='password'
+                    onChange={e => setPasswordConfirmation(e.target.value)}
                   />
-                  </Form.Field>
-                  
-                  
-                  </Grid.Column> 
-                  </Grid>
-             
-              <br />
-              <Form.Button 
-                   color='orange'
-                  class="signButton" 
-                  type='submit'
-                  centered
-                  textAlign='center'
-                  verticalAlign='middle'
-              >
-                  Submit
-              </Form.Button>
+                </Form.Field>
+              </Grid.Column> 
 
+            </Grid>
+            <br />
+            <Form.Button 
+              color='orange'
+              class="signButton" 
+              type='submit'
+              centered
+              textAlign='center'
+              verticalAlign='middle'
+            >
+              Submit
+            </Form.Button>
+            
           </Form>
-      </Segment>
+        </Segment>
       </Container>
-      </div>
+  </div>
 )
 
 }

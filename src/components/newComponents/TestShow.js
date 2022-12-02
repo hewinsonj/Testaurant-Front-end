@@ -1,24 +1,31 @@
 import React, { useEffect, useState } from "react"
-import { Label, Icon, Item, Button, Segment, Grid, Comment, Form, Modal, Progress, Divider } from 'semantic-ui-react'
-import { useNavigate, useParams} from 'react-router-dom'
-import { Link } from 'react-router-dom'
+import {  Button, Segment, Grid, Modal  } from 'semantic-ui-react'
+import { useNavigate } from 'react-router-dom'
 import { getTest, updateTest, deleteTest } from '../../api/test'
 import { getQuestion, getAllQuestions } from "../../api/question"
 import TestUpdateModal from "./TestUpdateModal"
 import LoadingScreen from "../shared/LoadingPage"
 
+<<<<<<< HEAD
 
 
 const TestShow = ({test, msgAlert, user, allQuestions}) => {
+=======
+const TestShow = ({ user, msgAlert, test}) => {
+>>>>>>> 27bdab7 (cleaned up)
 
     const [updated, setUpdated] = useState(false)
     const [deleted, setDeleted] = useState(false)
     const navigate = useNavigate()
     const [open, setOpen] = React.useState(false)
+<<<<<<< HEAD
     const [noteModalShow, setNoteModalShow] = useState(false)
     // const [allQuestions, setAllQuestions] = useState(null)
 
 
+=======
+    const [allQuestions, setAllQuestions] = useState(null)
+>>>>>>> 27bdab7 (cleaned up)
   
     const handleDeleteTest = () => {
       deleteTest(user, test.id)
@@ -75,9 +82,6 @@ const TestShow = ({test, msgAlert, user, allQuestions}) => {
 
 
 
-
-
-
   if (!test) {
     return (
       <LoadingScreen />
@@ -86,104 +90,69 @@ const TestShow = ({test, msgAlert, user, allQuestions}) => {
 
   return(
     <>  
-    <Modal
-            onClose={() => setOpen(false)}
-            onOpen={() => setOpen(true)}
-            open={open}
-            trigger={<Button floated="right" 
-            >Show Test</Button>}
-            size='large'
-        >
-            <Modal.Content scrolling>
-                
-            
-      <Segment    
-          inverted
-          verticalAlign='middle' 
-          id="segment"
+      <Modal
+        onClose={() => setOpen(false)}
+        onOpen={() => setOpen(true)}
+        open={open}
+        trigger={<Button floated="right" 
+        >Show Test</Button>}
+        size='large'
       >
-        <Segment>
-          <Grid padded textAlign="center">
-          
-              <h2>{test.name} </h2>
-            
-            
-          </Grid>
-        </Segment>
-        <Segment inverted class="capitalize-me">
-            <Grid centered stretched >
-                <Grid.Row padded>
-                    <Segment fluid>
-                        <Grid textAlign="center" columns={2}>
-                            <Grid.Row >
-                            <h2>Created by: {test.owner}</h2>
-                            </Grid.Row>
-                            
+        <Modal.Content scrolling>
+          <Segment    
+              inverted
+              verticalAlign='middle' 
+              id="segment"
+          >
+            <Segment>
+              <Grid padded textAlign="center">
+                  <h2>{test.name} </h2>
+              </Grid>
+            </Segment>
+            <Segment inverted class="capitalize-me">
+                <Grid centered stretched >
+                    <Grid.Row padded>
+                        <Segment fluid>
+                            <Grid textAlign="center" columns={2}>
+                              <Grid.Row >
+                                <h2>Created by: {test.owner}</h2>
+                              </Grid.Row>
                               <Grid.Column>
                                 <h3>Created on: </h3>
-                                <h3>
-                                  {test.created_at}
-                                </h3>
-                           
+                                <h3>{test.created_at}</h3>
                                 <h3>Updated on: </h3>
                                 <h3>
                                   {test.updated_at}
                                 </h3>
                                 </Grid.Column>
-                                {/* {test.question_new ? 
-                                  test.question_new.slice(0).reverse().map((question) => (
-                                      <h3>{question}</h3>
-                                    ))
-                                    :
-                                    <LoadingScreen />
-                                } */}
                                 <Grid.Column>
-                              <h3>
-                            {allQuestions ? 
-                              allQuestions.slice(0).map((question) => (
-                                  findString(test, question)
-                              ))
-                              :
-                              <LoadingScreen />
-                            }</h3>
-                          </Grid.Column>
-                            {/* <h3>{findString(test, allQuestions)}</h3> */}
-
-                           
-                        </Grid>
-                    </Segment>
-                </Grid.Row>
-            </Grid>
-        </Segment>
-        <Grid 
-          padded 
-          centered
-          columns={4}
-        >
-          <Grid.Row>
-            <Grid.Column>
-             
-            </Grid.Column>
-            <Grid.Column>
-            </Grid.Column>
-            <Grid.Column textAlign='middle'>
-            </Grid.Column>
-            <Grid.Column  textAlign='middle'>
-            </Grid.Column>
-          </Grid.Row>
-        </Grid>
-      </Segment>
-      </Modal.Content>
-            <Modal.Actions>
-                <Button color='black' onClick={() => setOpen(false)}>
-                    Close
-                </Button>
-                <Button color='black' onClick={handleDeleteTest}>
-                    Delete Item
-                </Button>
-                <TestUpdateModal test={test} user={user} msgAlert={msgAlert}/>
-            </Modal.Actions>
-        </Modal>
+                                  <h3>
+                                    {allQuestions ? 
+                                      allQuestions.slice(0).map((question) => (
+                                          findString(test, question)
+                                      ))
+                                    :
+                                      <LoadingScreen />
+                                    }
+                                  </h3>
+                                </Grid.Column>
+                            </Grid>
+                        </Segment>
+                    </Grid.Row>
+                </Grid>
+            </Segment>
+          </Segment>
+        </Modal.Content>
+          <Modal.Actions>
+            <Button color='black' onClick={() => setOpen(false)}>
+                Close
+            </Button>
+            <Button color='black' onClick={handleDeleteTest}>
+                Delete Item
+            </Button>
+            <TestUpdateModal test={test} user={user} msgAlert={msgAlert}/>
+          </Modal.Actions>
+      </Modal>
     </>
   )
 }

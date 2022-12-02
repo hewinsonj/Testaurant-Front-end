@@ -1,14 +1,12 @@
 import React, { useState } from 'react'
-import {Button, Checkbox, Form, Container, Icon} from 'semantic-ui-react'
 import { createDrink } from '../../api/drink'
 import AddDrinkForm from './AddDrinkForm'
 
 
 const CreateDrink = (props) => {
 
-    const { heading, user, msgAlert, activeItem, setOpen, triggerRefresh, setNewDrink} = props
+    const { user, msgAlert, setOpen } = props
     
-
     const defaultDrink = {
         name: '',
         ingredients: '',
@@ -38,7 +36,6 @@ const CreateDrink = (props) => {
                 // change from string to actual number
                 updatedValue = parseInt(e.target.value)
             }
-
             //handle the checkbox
             if (updatedName === 'con_peanut' && target.checked) {
                 updatedValue = true
@@ -95,7 +92,6 @@ const CreateDrink = (props) => {
         e.preventDefault()
 
         createDrink(user, drink)
-            // .then(() => handleClose())
             .then(() => {
                 msgAlert({
                     heading: 'Success',
@@ -106,7 +102,6 @@ const CreateDrink = (props) => {
             .then(() => {
                 setOpen(false)
             })
-            // .then(() => setNewDrink(prev => !prev))
             .catch((error) => {
                 msgAlert({
                     heading: 'Failure',
@@ -118,12 +113,10 @@ const CreateDrink = (props) => {
 
     return (
         <AddDrinkForm
-            // show={activityModalShow}
             drink={ drink }
             handleChange={ handleChange }
             heading="Create a new Drink Item!"
             handleSubmit={ handleCreateDrink }
-            // handleClose={() => setActivityModalShow(false)}
         />
     )
 }

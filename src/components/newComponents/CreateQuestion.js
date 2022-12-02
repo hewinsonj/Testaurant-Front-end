@@ -1,12 +1,11 @@
 import React, { useState } from 'react'
-import {Button, Checkbox, Form, Container, Icon} from 'semantic-ui-react'
 import { createQuestion } from '../../api/question'
 import AddItem from './AddItem'
 
 
 const CreateQuestion = (props) => {
 
-    const { heading, user, msgAlert, activeItem, setOpen, triggerRefresh, setNewQuestion} = props
+    const { user, msgAlert, setOpen, setNewQuestion} = props
     
 
     const defaultQuestion = {
@@ -46,7 +45,6 @@ const CreateQuestion = (props) => {
         e.preventDefault()
 
         createQuestion(user, question)
-            // .then(() => handleClose())
             .then(() => {
                 msgAlert({
                     heading: 'Success',
@@ -72,12 +70,10 @@ const CreateQuestion = (props) => {
     console.log(user, 'this be the user')
     return (
         <AddItem
-            // show={activityModalShow}
             question={ question }
             handleChange={ handleChange }
             heading="Create a new Question!"
             handleSubmit={ handleCreateQuestion }
-            // handleClose={() => setActivityModalShow(false)}
         />
     )
 }

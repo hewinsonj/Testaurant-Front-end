@@ -24,16 +24,6 @@ export const signIn = (credentials) => {
 	})
 }
 
-// export const signOut = (user) => {
-// 	return axios({
-// 		url: apiUrl + '/sign-out/',
-// 		method: 'DELETE',
-// 		data: {
-// 			user: user,
-// 			token: user.token,
-// 		},
-// 	})
-// }
 
 export const signOut = (user) => {
 	return axios({
@@ -61,20 +51,3 @@ export const changePassword = (passwords, user) => {
 		},
 	})
 }
-
-
-
-
-// user = authenticate(request, email=creds['email'], password=creds['password'])
-
-// [26/Nov/2022 00:33:28] "POST /sign-in/ HTTP/1.1" 500 87583
-// {'credentials': {'email': ['j@gmail.com'], 'password': ['poopingguy']}}
-// Internal Server Error: /sign-in/
-
-// [26/Nov/2022 00:32:44] "POST /sign-in/ HTTP/1.1" 200 7597
-// KeyError: 'email'{'credentials': {'email': 'j@gmail.com', 'password': 'poopingguy'}}
-// Internal Server Error: /sign-in/
-
-
-// <QueryDict: {'csrfmiddlewaretoken': ['I3NvqSVFBtRpWppwrnvv4hhWxOVsdCILVmBMnhPXtS8iVSk8Alp3FCNF5GnIGRjE'], 'email': ['j@gmail.com'], 'password': ['poopingguy']}>
-// [26/Nov/2022 00:50:27] "POST /sign-in/ HTTP/1.1" 200 7597

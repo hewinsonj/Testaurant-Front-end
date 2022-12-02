@@ -1,17 +1,12 @@
 import React, { useState, useEffect } from 'react'
-import {  Link } from 'react-router-dom'
-import {  Segment, Grid, Image, Progress, Container, Form, Checkbox, Button } from 'semantic-ui-react'
-import TestShow from './TestShow'
-import TestTake from './TestTake'
+import { Button } from 'semantic-ui-react'
 import { getAllTests } from "../../api/test"
-import LoadingScreen from "../shared/LoadingPage"
-import {  Button, Divider, Segment, Grid, Feed, Icon, Image, Progress, Modal, Container } from 'semantic-ui-react'
+import {  Button, Modal } from 'semantic-ui-react'
 import ResultsSegment from './ResultsSegment'
 
 const ResultsShowModal = ({ result, msgAlert, user}) => {
 
     const [allTests, setAllTests] = useState([])
-
 
     useEffect(() => {
         
@@ -35,21 +30,19 @@ const ResultsShowModal = ({ result, msgAlert, user}) => {
            
           } 
         }
-        
       }
-      
 
     return (
         <Modal
-        onClose={() => {
-            setOpen(false)
-            setResult(props.result)
-        }}
-        onOpen={() => setOpen(true)}
-        open={open}
-        trigger={
-            <Button color='black' onClick={()=>setFood(props.food)}>Show Result for test "{findString(result)}"</Button>
-        }
+            onClose={() => {
+                setOpen(false)
+                setResult(props.result)
+            }}
+            onOpen={() => setOpen(true)}
+            open={open}
+            trigger={
+                <Button color='black' onClick={()=>setFood(props.food)}>Show Result for test "{findString(result)}"</Button>
+            }
         >
             <Modal.Content>
                 <ResultsSegment 

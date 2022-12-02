@@ -1,17 +1,14 @@
 import React, { useState } from 'react'
-import {  Button, Segment, Grid, Label, Icon, Image, Modal, Header, List, Container } from 'semantic-ui-react'
+import {  Button, Grid, Modal } from 'semantic-ui-react'
 
 import CreateQuestion from './CreateQuestion'
 
-
-const AddQuestionModal = ({heading, user, msgAlert, setNewQuestion, activeItem}) => {
+const AddQuestionModal = ({ user, msgAlert, setNewQuestion, activeItem}) => {
 
     const [open, setOpen] = useState(false)
 
-
     return (       
-        <Grid.Column >
-        
+        <Grid.Column >    
         <Modal
             open={open}
             onClose={()=> setOpen(false)}
@@ -22,7 +19,6 @@ const AddQuestionModal = ({heading, user, msgAlert, setNewQuestion, activeItem})
                 <Button inverted color='green' floated='left'>
                     Create Question
                 </Button>
-            
             }
         >
             <Modal.Header >
@@ -31,13 +27,6 @@ const AddQuestionModal = ({heading, user, msgAlert, setNewQuestion, activeItem})
                 </Grid>
             </Modal.Header>
             <Modal.Content scrolling>
-                {/* <Grid columns={2}>
-                    
-                    <Grid.Column>
-                    <Modal.Description>
-                    </Modal.Description>
-                    </Grid.Column>
-                </Grid> */}
                 <CreateQuestion  user={user} setNewQuestion={setNewQuestion} msgAlert={msgAlert} activeItem={activeItem} setOpen={setOpen}/>
             </Modal.Content>
             <Modal.Actions>
@@ -45,8 +34,7 @@ const AddQuestionModal = ({heading, user, msgAlert, setNewQuestion, activeItem})
                     Cancel
                 </Button>
             </Modal.Actions> 
-        </Modal>
-         
+        </Modal>   
         </Grid.Column>
     )
 }

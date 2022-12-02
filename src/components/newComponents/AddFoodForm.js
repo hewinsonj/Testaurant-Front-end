@@ -1,7 +1,5 @@
-import React, { useState } from 'react'
-import {Button, Checkbox, Form, Container, Icon} from 'semantic-ui-react'
-import { createFood } from '../../api/food'
-
+import React from 'react'
+import {Button, Form, Container } from 'semantic-ui-react'
 
 const AddFoodForm = (props) => {
     const { food, handleChange, handleSubmit, heading } = props
@@ -37,7 +35,6 @@ const AddFoodForm = (props) => {
                         id='con_egg'
                         label='con_egg' 
                         defaultChecked= { food.con_egg}
-                        // value= { food.con_egg}
                         onChange= { handleChange }
                 />
                 <Form.Checkbox
@@ -46,7 +43,6 @@ const AddFoodForm = (props) => {
                         id='con_tree_nut'
                         label='con_tree_nut' 
                         defaultChecked= { food.con_tree_nut}
-                        // value= { food.con_tree_nut}
                         onChange= { handleChange }
                 />
                 <Form.Checkbox
@@ -55,7 +51,6 @@ const AddFoodForm = (props) => {
                         id='con_peanut'
                         label='con_peanut' 
                         defaultChecked= { food.con_peanut}
-                        // value= { food.con_peanut}
                         onChange= { handleChange }
                 />
                 <Form.Checkbox
@@ -64,7 +59,6 @@ const AddFoodForm = (props) => {
                         id='con_shellfish'
                         label='con_shellfish' 
                         defaultChecked= { food.con_shellfish}
-                        // value= { food.con_shellfish}
                         onChange= { handleChange }
                 />
                 <Form.Checkbox
@@ -73,7 +67,6 @@ const AddFoodForm = (props) => {
                         id='con_soy'
                         label='con_soy' 
                         defaultChecked= { food.con_soy}
-                        // value= { food.con_soy}
                         onChange= { handleChange }
                 />
                 <Form.Checkbox
@@ -82,7 +75,6 @@ const AddFoodForm = (props) => {
                         id='con_fish'
                         label='con_fish' 
                         defaultChecked= { food.con_fish}
-                        // value= { food.con_fish}
                         onChange= { handleChange }
                 />
                 <Form.Checkbox
@@ -91,7 +83,6 @@ const AddFoodForm = (props) => {
                         id='con_wheat'
                         label='con_wheat' 
                         defaultChecked= { food.con_wheat}
-                        // value= { food.con_wheat}
                         onChange= { handleChange }
                 />
                 <Form.Checkbox
@@ -100,7 +91,6 @@ const AddFoodForm = (props) => {
                         id='con_sesame'
                         label='con_sesame' 
                         defaultChecked= { food.con_sesame}
-                        // value= { food.con_sesame}
                         onChange= { handleChange }
                 />
                 <Form.Checkbox
@@ -109,13 +99,8 @@ const AddFoodForm = (props) => {
                         id='con_gluten'
                         label='con_gluten' 
                         defaultChecked= { food.con_gluten}
-                        //value= { food.con_gluten}
                         onChange= { handleChange }
                 />
-                <Form.Group inline>
-                
-                    
-                </Form.Group>
                 <Button type='submit' color='orange'>Submit</Button>
             </Form>
         </Container>
