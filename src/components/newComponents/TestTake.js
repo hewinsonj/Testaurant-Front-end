@@ -64,6 +64,11 @@ const TestTake = ({ user, msgAlert, test}) => {
   }
   const defaultResponses = {
     answer: '',
+    index: 0,
+  }
+
+  const defaultIndex =  {
+    count: 0
   }
 
   const defaultValue = 1
@@ -74,27 +79,9 @@ const TestTake = ({ user, msgAlert, test}) => {
     const [result, setResult] = useState(defaultResult)
     const [responses, setResponses] = useState(defaultResponses)
     const [value, setValue] = useState(defaultValue)
->>>>>>> 27bdab7 (cleaned up)
+    const [index, setIndex] = useState(defaultIndex)
 
 
-<<<<<<< HEAD
-//     const handleChange = (e , target) => {
-
-
-//       setResponses(prevResponse => {
-//           const { name, value } = target
-//           const updatedName = name
-//           let updatedValue = value
-//           // for(let i = 0; i < test.question_new.length; i ++){
-//           //   if (updatedName === responses.answers[i]) {
-//           //       updatedValue = target.value
-//           //   } else if (updatedName === 'private' && !target.checked) {
-//           //       updatedValue = false
-//           //   }
-//           // }
-//           const updatedResponse = { [updatedName]: updatedValue }
-//           console.log('this is the reponses as you make em', responses)
-=======
     const handleChange = (e , target) => {
       setResponses(prevResponse => {
           const { name, value } = target
@@ -178,18 +165,20 @@ const TestTake = ({ user, msgAlert, test}) => {
 //     // -------------------------------------------------------------
 =======
 
-  let index = 0
   const handleCheckAnswer = () => {
-    if(responses.answer == test.question_new[index].answer){
+    if(responses.answer === test.question_new[index.count].answer){
 
       result.correct += 1
 
     } else {
       result.wrong += 1
     }
-    index += 1
+    index.count += 1
     setResponses(defaultResponses)
+    console.log(index.count, 'responses . index')
   }
+
+  
 
   const handleCreateResult = (e) => {
     e.preventDefault()
@@ -370,7 +359,7 @@ const TestTake = ({ user, msgAlert, test}) => {
 =======
 >>>>>>> 27bdab7 (cleaned up)
 
-  const questionsJSX = test.question_new.slice(0).reverse().map((question) => (
+  const questionsJSX = test.question_new.slice(0).map((question) => (
 
       <>
         <div class='hideMe'>
@@ -380,29 +369,40 @@ const TestTake = ({ user, msgAlert, test}) => {
                 <Segment fluid >
                   <Grid textAlign="center" columns={4}>
                       <Grid.Row >
-                        <h2>{question.question_str}</h2>
+                        <Grid.Column floated='left' width={10}>
+                          <h2>{question.question_str}</h2>
+                        </Grid.Column>
+                        <Grid.Column width={6}>
+                          <h2>Question's Answered: {result.correct + result.wrong}</h2>
+                        </Grid.Column>
                       </Grid.Row>
-                      <Grid.Column>
-                        <h2>{question.option1}</h2>
-                      </Grid.Column>
-                      <Grid.Column>
-                        <h2>{question.option2}</h2>
-                      </Grid.Column>
-                      <Grid.Column>
-                        <h2>{question.option3}</h2>
-                      </Grid.Column>
-                      <Grid.Column>
-                        <h2>{question.option4}</h2>
-                      </Grid.Column>
+                      <Segment>
+                        <Grid.Column>
+                          <h2>{question.option1}</h2>
+                        </Grid.Column>
+                      </Segment>
+                      <Segment>
+                        <Grid.Column>
+                          <h2>{question.option2}</h2>
+                        </Grid.Column>
+                      </Segment>
+                      <Segment>
+                        <Grid.Column>
+                          <h2>{question.option3}</h2>
+                        </Grid.Column>
+                      </Segment>
+                      <Segment>
+                        <Grid.Column>
+                          <h2>{question.option4}</h2>
+                        </Grid.Column>
+                      </Segment>
                       <Grid.Row>
                         <Form onSubmit= { handleCheckAnswer }>
                           <Form.Input 
                             required 
                             name='answer'
-                            // id='answer'
                             placeholder='your answer'
                             onChange= { handleChange } 
-                            // defaultValue={responses.answer}
                             value= {responses.answer}
                           />
                           <h3>Save after every question</h3>
