@@ -48,15 +48,7 @@ export default class NewLandingPage extends Component {
                                 <h1>Testaurant</h1>
                             </Link>
                         </Menu.Item>
-                            <Menu.Item
-                            name='sign-out'
-                            active={activeItem === 'sign-out'}
-                            onClick={this.handleItemClick}
-                            >
-                                <Link to='sign-out'>
-                                    Sign out
-                                </Link>
-                            </Menu.Item>
+                            
                             <Menu.Item
                                 name='tests'
                                 active={activeItem === 'tests'}
@@ -94,6 +86,15 @@ export default class NewLandingPage extends Component {
                             >
                                 <Link to='results'>
                                     Results
+                                </Link>
+                            </Menu.Item>
+                            <Menu.Item
+                            name='sign-out'
+                            active={activeItem === 'sign-out'}
+                            onClick={this.handleItemClick}
+                            >
+                                <Link to='sign-out'>
+                                    Sign out
                                 </Link>
                             </Menu.Item>
 

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Icon, Item, Button, Grid, Comment, Form, Modal, Search, Header, Segment, Select, Input} from 'semantic-ui-react'
+import { Icon, Item, Button, Grid, Comment, Form, Modal, Search, Image, Segment, Select, Input} from 'semantic-ui-react'
 import { useNavigate } from 'react-router-dom'
 import { Link } from 'react-router-dom'
 import { getAllEmployees } from '../../api/user'
@@ -32,6 +32,11 @@ const EmployeePage = ({ user, msgAlert }) => {
     //     { key: 'o', text: 'Other', value: 'other' },
     //   } return 
     // }
+    const options = [
+        { key: 'm', text: 'Big Test', value: 'male' },
+        { key: 'f', text: 'You Better Not FAIL This One', value: 'female' },
+        { key: 'o', text: 'Dont Even Worry About This Little Thing', value: 'other' },
+      ]
 
 
     useEffect(() => {
@@ -81,10 +86,13 @@ const EmployeePage = ({ user, msgAlert }) => {
                 <div id='empContainer'>
                 <Grid.Row padded>
                     <Segment fluid key={ employee.id }>
-                        <Grid columns={5} verticalAlign='middle'>
+                        <Grid columns={4} verticalAlign='middle'>
                             <Grid.Column >
                                 {/* <h3>{activities.owner.email}</h3> */}
-                                <h3>{employee.email}</h3>
+                                <Link to='sign-out'>
+                                    <h3>{employee.email}</h3>
+                                </Link>
+                                
                                 
                                
                             </Grid.Column>
@@ -93,22 +101,22 @@ const EmployeePage = ({ user, msgAlert }) => {
                                 <Form>
                                     <Form.Field
                                         control={Select}
-                                        // options= {gender}
+                                        options= {options}
                                         placeholder='select a test'
                                         search
                                         searchInput={{ id: 'form-select-control-gender' }}
                                     />
-                                    
+                                    <Button type="submit">Send Test</Button>
                                 </Form>
                             </Grid.Column>
-                            <Grid.Column>
+                            {/* <Grid.Column>
                                 <h3>Untaken Tests: </h3>
                                 <h3>yearight</h3>
-                            </Grid.Column>
-                            <Grid.Column>
-                                <h3>Taken Tests: </h3>
-                                <h3>yea right</h3>
-                            </Grid.Column>
+                            </Grid.Column>*/}
+                            <Grid.Column centered>
+                                <h3>Taken Tests: <Icon name='file alternate outline' size="big" link/></h3>
+                                
+                            </Grid.Column> 
                             <Grid.Column>
                                 <h3>Hire Date: </h3>
                                 <h3>10/10/10</h3>

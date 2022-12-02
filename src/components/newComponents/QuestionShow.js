@@ -90,49 +90,48 @@ const QuestionShow = ({ user, msgAlert, question}) => {
           
       >
         <Segment>
-          <Grid padded>
+          <Grid padded centered>
           
               <h2>{question.question_str} </h2>
-            
-            
+
           </Grid>
         </Segment>
         <Segment inverted class="capitalize-me">
-            <Grid centered stretched>
+            <Grid centered stretched textAlign="center">
                 <Grid.Row padded>
                     <Segment fluid>
-                        <Grid columns={5}>
+                        <Grid columns={5} textAlign="center">
                             
-                            <Grid.Column>
+                            <Grid.Row>
                                 <h3>Option 1: </h3>
                                 <h3>
                                   {question.option1}
                                 </h3>
-                            </Grid.Column>
-                            <Grid.Column>
+                            </Grid.Row>
+                            <Grid.Row>
                                 <h3>Option 2: </h3>
                                 <h3>
                                   {question.option2}
                                 </h3>
-                            </Grid.Column>
-                            <Grid.Column>
+                            </Grid.Row>
+                            <Grid.Row>
                                 <h3>Option 3: </h3>
                                 <h3>
                                   {question.option3}
                                 </h3>
-                            </Grid.Column>
-                            <Grid.Column>
+                            </Grid.Row>
+                            <Grid.Row>
                                 <h3>Option 4: </h3>
                                 <h3>
                                   {question.option4}
                                 </h3>
-                            </Grid.Column>
-                            <Grid.Column>
+                            </Grid.Row>
+                            <Grid.Row>
                                 <h3>Answer: </h3>
                                 <h3>
                                   {question.answer}
                                 </h3>
-                            </Grid.Column>
+                            </Grid.Row>
                         </Grid>
                     </Segment>
                 </Grid.Row>

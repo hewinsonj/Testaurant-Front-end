@@ -31,14 +31,13 @@ const ResultsPage = ({ user, msgAlert, newTest, setNewTest}) => {
         <div >
 		    <Segment 
                 raised
-                inverted 
-                fluid
-                
+                color='black'
+                inverted
             >
                 
-                <Grid centered>
+                <Grid centered >
 
-                    <Segment raised >
+                    <Segment raised color='grey' inverted>
                         <Grid.Row>
                         {/* <AddTestModal user={user} msgAlert={msgAlert} 
                         // setNewTest={setNewTest}

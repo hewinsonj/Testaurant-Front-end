@@ -89,60 +89,160 @@ const DrinkShow = ({ user, msgAlert, drink}) => {
             <Grid centered stretched>
                 <Grid.Row padded>
                     <Segment fluid>
-                        <Grid columns={5}>
-                            
-                            <Grid.Column>
+                    <Grid centered stretched>
+                <Grid.Row padded>
+                    <Segment fluid>
+                        <Grid centered>
+                            <Grid.Row>
                                 <h3>Ingredients: </h3>
                                 <h3>
                                   {drink.ingredients}
                                 </h3>
-                            </Grid.Column>
-                            <Grid.Column>
-                                <h3>Garnishes: </h3>
-                                <h3>
-                                  {drink.garnishes}
-                                </h3>
-                            </Grid.Column>
-                            <Grid.Column>
-                                <h3>Prep Instuctions: </h3>
-                                <h3>
-                                  {drink.prep_instructs}
-                                </h3>
-                            </Grid.Column>
-                            <Grid.Column>
-                                <h3>Glassware: </h3>
-                                <h3>
-                                  {drink.glassware}
-                                </h3>
-                            </Grid.Column>
-                            <Grid.Column>
-                              <h3>con_tree_nut: {`${drink.con_tree_nut}`}</h3>
-                            </Grid.Column>
-                            <Grid.Column>
-                              <h3>con_peanut: {`${drink.con_peanut}`}</h3>
-                            </Grid.Column>
-                            <Grid.Column>
-                              <h3>con_shellfish: {`${drink.con_shellfish}`}</h3>
-                            </Grid.Column> 
-                            <Grid.Column>
-                              <h3>con_soy: {`${drink.con_soy}`}</h3>
-                            </Grid.Column>
-                            <Grid.Column>
-                              <h3>con_fish: {`${drink.con_fish}`}</h3>
-                            </Grid.Column>    
-                            <Grid.Column>
-                              <h3>con_wheat: {`${drink.con_wheat}`}</h3>
-                            </Grid.Column>
-                            <Grid.Column>
-                                <h3>con_egg: {`${drink.con_egg}`}</h3>
-                            </Grid.Column>
-                            <Grid.Column>
-                                 <h3>con_gluten: {`${drink.con_gluten}`}</h3>
-                            </Grid.Column>
-                            <Grid.Column>
-                                <h3>con_sesame: {`${drink.con_sesame}`}</h3>
-                            </Grid.Column>
+                            </Grid.Row>
+                            <Grid.Row>
+                              <h3>
+                                Contains Tree Nuts: {
+                                drink.con_tree_nut === true ?
+                                <div>
+                                  <Segment color="red" inverted>
+                                    <Icon name='warning'/>True<Icon name='warning'/>
+                                  </Segment>
+                                </div> 
+                                 : 
+                                 <div><Icon name='window close outline'/>False<Icon name='window close outline'/></div> 
+                                 }
+                              </h3>
+                            </Grid.Row>
+                            <Grid.Row>
+                              <h3>
+                                Contains Peanuts: {
+                                drink.con_peanut === true ?
+                                <div>
+                                  <Segment color="red" inverted>
+                                    <Icon name='warning'/>True<Icon name='warning'/>
+                                  </Segment>
+                                </div>  
+                                 : 
+                                 <div><Icon name='window close outline'/>False<Icon name='window close outline'/></div> 
+                                 }
+                              </h3>
+                            </Grid.Row>
+                            <Grid.Row>
+                              <h3>
+                                Contains Shellfish: {
+                                drink.con_shellfish === true ?
+                                <div>
+                                  <Segment color="red" inverted>
+                                    <Icon name='warning'/>True<Icon name='warning'/>
+                                  </Segment>
+                                </div> 
+                                 : 
+                                 <div><Icon name='window close outline'/>False<Icon name='window close outline'/></div> 
+                                 }
+                              </h3>
+                            </Grid.Row>
+                            <Grid.Row>
+                              <h3>
+                                Contains Soy: {
+                                drink.con_soy === true ?
+                                <div>
+                                  <Segment color="red" inverted>
+                                    <Icon name='warning'/>True<Icon name='warning'/>
+                                  </Segment>
+                                </div> 
+                                 : 
+                                 <div><Icon name='window close outline'/>False<Icon name='window close outline'/></div> 
+                                 }
+                              </h3>
+                            </Grid.Row> 
+                            <Grid.Row>
+                              <h3>
+                                Contains Fish: {
+                                drink.con_fish === true ?
+                                <div>
+                                  <Segment color="red" inverted>
+                                    <Icon name='warning'/>True<Icon name='warning'/>
+                                  </Segment>
+                                </div> 
+                                 : 
+                                 <div><Icon name='window close outline'/>False<Icon name='window close outline'/></div> 
+                                 }
+                              </h3>
+                            </Grid.Row>
+                            <Grid.Row>
+                              <h3>
+                                Contains Wheat: {
+                                drink.con_wheat === true ?
+                                <div>
+                                  <Segment color="red" inverted>
+                                    <Icon name='warning'/>True<Icon name='warning'/>
+                                  </Segment>
+                                </div>  
+                                 : 
+                                 <div><Icon name='window close outline'/>False<Icon name='window close outline'/></div> 
+                                 }
+                              </h3>
+                            </Grid.Row>    
+                            <Grid.Row>
+                              <h3>
+                                Contains Egg: {
+                                drink.con_egg === true ?
+                                <div>
+                                  <Segment color="red" inverted>
+                                    <Icon name='warning'/>True<Icon name='warning'/>
+                                  </Segment>
+                                </div>  
+                                 : 
+                                 <div><Icon name='window close outline'/>False<Icon name='window close outline'/></div> 
+                                 }
+                              </h3>
+                            </Grid.Row>
+                            <Grid.Row>
+                              <h3>
+                                Contains Gluten: {
+                                drink.con_gluten === true ?
+                                <div>
+                                  <Segment color="red" inverted>
+                                    <Icon name='warning'/>True<Icon name='warning'/>
+                                  </Segment>
+                                </div>  
+                                 : 
+                                 <div><Icon name='window close outline'/>False<Icon name='window close outline'/></div> 
+                                 }
+                              </h3>
+                            </Grid.Row>
+                            <Grid.Row>
+                              <h3>
+                                Contains Gluten: {
+                                drink.con_gluten === true ?
+                                <div>
+                                  <Segment color="red" inverted>
+                                    <Icon name='warning'/>True<Icon name='warning'/>
+                                  </Segment>
+                                </div> 
+                                 : 
+                                 <div><Icon name='window close outline'/>False<Icon name='window close outline'/></div> 
+                                 }
+                              </h3>
+                            </Grid.Row>
+                            <Grid.Row>
+                              <h3>
+                                Contains Sesame: {
+                                drink.con_sesame === true ?
+                                 <div>
+                                  <Segment color="red" inverted>
+                                    <Icon name='warning'/>True<Icon name='warning'/>
+                                  </Segment>
+                                </div> 
+                                 : 
+                                 <div><Icon name='window close outline'/>False<Icon name='window close outline'/></div> 
+                                 }
+                              </h3>
+                            </Grid.Row>
                         </Grid>
+                    </Segment>
+                </Grid.Row>
+            </Grid>
                     </Segment>
                 </Grid.Row>
             </Grid>

@@ -34,13 +34,13 @@ const SignOut = (props) => {
             >
                 <Segment  
                     padded='very'  
-                    inverted color='yellow' 
+                    inverted color='grey' 
                     verticalAlign='middle' 
                     id="segment"
                 >
                     <h3 id="signOutText">Are you sure you want to sign out?</h3>
-                    <Button secondary inverted color='yellow' onClick={onSignOut}>Sign Out</Button>
-                    <Button secondary inverted color='yellow' onClick={onCancel}>Stay</Button>
+                    <Button color='orange' onClick={onSignOut}>Sign Out</Button>
+                    <Button color='orange' onClick={onCancel}>Stay</Button>
                 </Segment>
             </Container>
         </div>

@@ -46,6 +46,7 @@
 
 
 
+<<<<<<< HEAD
 //     const handleChange = (e , target) => {
 
 
@@ -62,11 +63,28 @@
 //           // }
 //           const updatedResponse = { [updatedName]: updatedValue }
 //           console.log('this is the reponses as you make em', responses)
+=======
+    const handleChange = (e , target) => {
+      setResponses(prevResponse => {
+          const { name, value } = target
+          const updatedName = name
+          let updatedValue = value
+          // for(let i = 0; i < test.question_new.length; i ++){
+          //   if (updatedName === responses.answers[i]) {
+          //       updatedValue = target.value
+          //   } else if (updatedName === 'private' && !target.checked) {
+          //       updatedValue = false
+          //   }
+          // }
+          const updatedResponse = { [updatedName]: updatedValue }
+          console.log('this is the reponses as you make em', responses)
+>>>>>>> 8a48fff (about to refactor)
 
 //           return { ...prevResponse, ...updatedResponse}
 //       })
 //   }
 
+<<<<<<< HEAD
 //   // const pushIt = (target, i) => {
 //   //   for(let i = 0; i < test.question_new.length; i ++){
 //   //     if(responses.answers[i]){
@@ -131,6 +149,63 @@
 //     // console.log(result, 'this be the result')
 
 //     // -------------------------------------------------------------
+=======
+
+  let index = 0
+  const handleCheckAnswer = () => {
+    console.log(responses.answer, 'this is responses ans-------')
+    console.log(test.question_new[0].answer, 'this is the answer---------')
+    if(responses.answer == test.question_new[index].answer){
+      result.correct += 1
+
+    } else {
+      result.wrong += 1
+    }
+    index += 1
+    setResponses(defaultResponses)
+  }
+
+  const handleCreateResult = (e) => {
+    e.preventDefault()
+    if(result.correct == 0){
+      result.correct = '0'
+    } else if (result.wrong == 0){
+      result.wrong = '0'
+    }
+    result.correct = `${result.correct}`
+    result.percent = (((result.correct)/parseInt(test.question_new.length)) * 100)
+    result.percent = `${result.percent}`+'%'
+    result.wrong = `${result.wrong}`
+    result.time = ` mins` //${countMin}
+    result.total = '' + (test.question_new.length)
+    result.score = `${result.correct}` + ' out of ' + `${result.total}`
+    result.the_test = test.id
+    if(result.correct !== '0' || result.wrong !== '0'){
+      createResult(user, result)
+      .then(() => {
+          msgAlert({
+              heading: 'Success',
+              message: 'Created Result',
+              variant: 'success'
+          })
+      })
+      .then(() => {
+          setOpen(false)
+      })
+      .catch((error) => {
+          msgAlert({
+              heading: 'Failure',
+              message: 'Create Result Failure' + error,
+              variant: 'danger'
+          })
+      })
+    }
+}
+
+
+// const handleCancel = () => {
+//   if(responses.answer !== '' && setOpen(false)){
+>>>>>>> 8a48fff (about to refactor)
 //     createResult(user, result)
 //         // .then(() => handleClose())
 //         .then(() => {
@@ -143,10 +218,13 @@
 //         .then(() => {
 //             setOpen(false)
 //         })
+<<<<<<< HEAD
 //         .then(() => {
 //           zero()
 //         })
 //         // .then(() => setNewResult(prev => !prev))
+=======
+>>>>>>> 8a48fff (about to refactor)
 //         .catch((error) => {
 //             msgAlert({
 //                 heading: 'Failure',
@@ -154,6 +232,25 @@
 //                 variant: 'danger'
 //             })
 //         })
+<<<<<<< HEAD
+=======
+//     }
+// }
+
+// handleCancel()
+
+
+  if (!test) {
+    return (
+      <LoadingScreen />
+    )
+  }
+// let minutes = 0
+//   const minAdd = () => {
+//     minutes += 1
+//     console.log(minutes, 'mins')
+//     return minutes
+>>>>>>> 8a48fff (about to refactor)
 // }
 
 
@@ -173,6 +270,7 @@
 
 //   // const countMin = setInterval(minAdd, 60000)
   
+<<<<<<< HEAD
 //   const zero = clearInterval()
 
 //   // let value = 1
@@ -234,6 +332,78 @@
 //             size='large'
 //         >
 //             <Modal.Content scrolling>
+=======
+  // const zero = clearInterval()
+
+  // let value = 1
+  console.log('right here', responses.answer)
+
+  const questionsJSX = test.question_new.slice(0).reverse().map((question) => (
+
+  // const questionsJSX = (test) => {  for (let i = 0; i < test.question_new.length; i++) { 
+    <>
+   
+    <div class='hideMe'>
+    <Segment inverted >
+            <Grid centered stretched>
+                <Grid.Row padded>
+                    <Segment fluid >
+                        <Grid textAlign="center" columns={4}>
+                            <Grid.Row >
+                            <h2>{question.question_str}</h2>
+                            </Grid.Row>
+                            <Grid.Column>
+                              <h2>{question.option1}</h2>
+                            </Grid.Column>
+                            <Grid.Column>
+                              <h2>{question.option2}</h2>
+                            </Grid.Column>
+                            <Grid.Column>
+                              <h2>{question.option3}</h2>
+                            </Grid.Column>
+                            <Grid.Column>
+                              <h2>{question.option4}</h2>
+                            </Grid.Column>
+                            <Grid.Row>
+                            <Form onSubmit= { handleCheckAnswer }>
+                            <Form.Input 
+                              required 
+                              name='answer'
+                              // id='answer'
+                              placeholder='your answer'
+                              onChange= { handleChange } 
+                              // defaultValue={responses.answer}
+                              value= {responses.answer}
+                            />
+                            <h3>Save after every question</h3>
+                            <Button type='submit' color='green' >Save</Button>
+                           </Form>
+                            </Grid.Row>
+                        </Grid>
+                    </Segment>
+                </Grid.Row>
+            </Grid>
+        </Segment>
+        </div>
+        <Divider section/>
+        </>
+        
+    ))
+
+
+  return(
+    <>  
+    <Modal
+            onClose={() => setOpen(false)}
+            onOpen={() => setOpen(true)}
+            open={open}
+            trigger={<Button floated="right" 
+            >Take Test</Button>}
+            size='large'
+            closeOnDimmerClick = {false}
+        >
+            <Modal.Content scrolling>
+>>>>>>> 8a48fff (about to refactor)
                 
             
             
@@ -429,8 +599,27 @@ const TestTake = ({ user, msgAlert, test }) => {
             </Grid.Row>
           </Grid>
         </Segment>
+<<<<<<< HEAD
       </div>
       <Divider section />
+=======
+        {questionsJSX}
+      </Segment>
+      <Form 
+              onSubmit={ handleCreateResult }
+            >
+      <Button type='submit' color='green'>Submit</Button>
+      { (result.correct + result.wrong) == 0 ?
+      <Button color='red' floated="right" onClick={() => setOpen(false)}>
+          Cancel
+      </Button>
+      :
+      null
+      }
+      </Form>
+      </Modal.Content>
+        </Modal>
+>>>>>>> 8a48fff (about to refactor)
     </>
   ));
 

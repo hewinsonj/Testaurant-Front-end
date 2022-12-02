@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Icon, Item, Button, Grid, Comment, Form, Modal, Search, Header, Segment, Card} from 'semantic-ui-react'
+import { Icon, Item, Button, Grid, Comment, Form, Modal, Search, Header, Segment, Card, Container} from 'semantic-ui-react'
 import { useNavigate } from 'react-router-dom'
 import { Link } from 'react-router-dom'
 import { getAllFoods, deleteFood } from '../../api/food'
@@ -39,13 +39,15 @@ const FoodIndexPage = ({ user, msgAlert, setNewFood }) => {
 return (
     <>
         <div >
+            <Container>
 		    <Segment 
                 raised
                 inverted  
                 verticalAlign='middle' 
                 fluid
             >
-                <Grid centered textAlign='center'>
+                <Grid centered textAlign='center' fluid>
+                    <Grid.Row>
                     <Segment raised verticalAlign='middle' textAlign='center'>
                         <Grid.Row>
                         <AddFoodModal user={user} msgAlert={msgAlert} 
@@ -55,6 +57,7 @@ return (
                         <Grid.Row centered textAlign='center' verticalAlign='middle'>
                             <h1 >All Foods</h1>
                         </Grid.Row>
+                        <Grid.Row>
                         <div className='scrolling-group'>
                         {allFoods ? 
                             allFoods.slice(0).reverse().map((food) => (
@@ -64,9 +67,12 @@ return (
                             <LoadingScreen />
                         }
                         </div>
+                        </Grid.Row>
                     </Segment>
+                    </Grid.Row>
                 </Grid>
 		    </Segment>
+            </Container>
         </div>
     </>
 )

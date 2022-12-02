@@ -109,7 +109,7 @@ const ChangePassword = (props) => {
                     <Form.Button 
                         secondary 
                         inverted 
-                        color='yellow'
+                        color='orange'
                         class="signButton" 
                         type='submit'
                     >

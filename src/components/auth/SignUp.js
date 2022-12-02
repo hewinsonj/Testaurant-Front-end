@@ -54,9 +54,10 @@ const SignUp = (props) => {
 return (
 
  
-      
+      <div>
+        <Container id='container'>
       <Segment  
-          padded='very'  
+            
           inverted color='grey' 
           verticalAlign='middle' 
           id="segment"
@@ -92,7 +93,42 @@ return (
                   /> */}
           
               <br />
+              <Form.Field>
+                  <Form.Input 
+                      fluid
+                    //   required
+                      type='email'
+                      name='email'
+                      value={email}
+                      placeholder='Enter your email'
+                      onChange={e => setEmail(e.target.value)}
+                  />
+          
+              <br />
            
+                  {/* <Form.Select 
+                      fluid
+                    //   required
+                      name='access'
+                      value={password}
+                      type='select'
+                      placeholder='Select Access Level'
+                      onChange={e => setPassword(e.target.value)}
+                      options={options}
+
+                  /> */}
+             
+                  {/* <Form.Input
+                      fluid 
+                      placeholder='Enter your admin code'
+                    //   required
+                      name='admin_code'
+                    //   value={admin_code}
+                      type='text'
+                      onChange={e => setPasswordConfirmation(e.target.value)}
+                     
+                  /> */}
+                  </Form.Field>
                   <Form.Input 
                       fluid
                       icon='lock'
@@ -121,54 +157,14 @@ return (
                      
                   />
                   </Form.Field>
-                  </Grid.Column>
-                  <Grid.Column>
-                  <Form.Field>
-                  <Form.Input 
-                      fluid
-                    //   required
-                      type='email'
-                      name='email'
-                      value={email}
-                      placeholder='Enter your email'
-                      onChange={e => setEmail(e.target.value)}
-                  />
-          
-              <br />
-           
-                  {/* <Form.Select 
-                      fluid
-                    //   required
-                      name='access'
-                      value={password}
-                      type='select'
-                      placeholder='Select Access Level'
-                      onChange={e => setPassword(e.target.value)}
-                      options={options}
-
-                  /> */}
-            
-              <br />
-             
-                  {/* <Form.Input
-                      fluid 
-                      placeholder='Enter your admin code'
-                    //   required
-                      name='admin_code'
-                    //   value={admin_code}
-                      type='text'
-                      onChange={e => setPasswordConfirmation(e.target.value)}
-                     
-                  /> */}
-                  </Form.Field>
+                  
+                  
                   </Grid.Column> 
                   </Grid>
              
               <br />
               <Form.Button 
-                   secondary 
-                   inverted 
-                   color='yellow'
+                   color='orange'
                   class="signButton" 
                   type='submit'
                   centered
@@ -180,6 +176,8 @@ return (
 
           </Form>
       </Segment>
+      </Container>
+      </div>
 )
 
 }

@@ -116,7 +116,7 @@ const AddFoodForm = (props) => {
                 
                     
                 </Form.Group>
-                <Button type='submit' color='green'>Submit</Button>
+                <Button type='submit' color='orange'>Submit</Button>
             </Form>
         </Container>
     )
