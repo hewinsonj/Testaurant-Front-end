@@ -13,9 +13,7 @@ export default class NewLandingPage extends Component {
 
     return (
         <>
-            {/* <div id='long'> */}
-                {/* <div id='stretch'>Something</div> */}
-                <Menu tabular inverted  id='header'  size='massive' position='right' >
+            <Menu tabular inverted  id='header'  size='massive' position='right' >
                 {!this.props.user ? 
                     <Menu.Menu floated='right'>
                         <Menu.Item
@@ -37,7 +35,7 @@ export default class NewLandingPage extends Component {
                             </Link>
                         </Menu.Item>
                     </Menu.Menu>         
-                    :
+                :
                     <Menu.Menu >
                             <Menu.Item   
                             name='testaurant'
@@ -97,19 +95,11 @@ export default class NewLandingPage extends Component {
                                     Sign out
                                 </Link>
                             </Menu.Item>
-
-                   
-
-
-                               
-
-                  
                             
                         </Menu.Menu>
-                    }
-                </Menu>
-        {/* </div> */}
-    </>
+                }
+            </Menu>
+        </>
     )
   }
 }

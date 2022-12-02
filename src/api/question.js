@@ -1,16 +1,6 @@
 import apiUrl from '../apiConfig'
 import axios from 'axios'
 
-
-
-// USING API FOR HOME PAGE FEED!
-// export const HomeFeed = (user) => {
-// 	return axios({
-// 		method: 'GET',
-// 		url: apiUrl + '/'
-// 	})
-// }
-
 //get all activities (unless marked private)
 //data returned: res.data.activities will have all public activities 
 export const getAllQuestions = (user) => {
@@ -32,36 +22,8 @@ export const searchQuestions = (searchText) => {
         })
     }
 
-//get the logged-in user's activities
-//data returned: res.data.activities has all of the user's activities
-//res.data.completedCounts is an object w/ the number of completed activities per category (ex: res.data.completedCounts.eduction will be 2 if the user has completed 2 activities)
-// export const getMyActivities = (user) => {
-//     return axios({
-//         method: 'GET',
-//         headers: {
-//             Authorization: `Token token=${user.token}`
-//         },
-//         url: `${apiUrl}/activities/mine`
-//     })
-// }
+//get a single question 
 
-//get a user's public activities
-//data returned: res.data.activities has all of the requested user's public activities
-//res.data.completedCounts is an object w/ the number of completed activities per category (ex: res.data.completedCounts.eduction will be 2 if the user has completed 2 activities)
-// export const getTheirActivities = (currentUser, requestedUserId) => {
-//     return axios({
-//         method: 'GET',
-//         headers: {
-//             Authorization: `Token token=${currentUser.token}`
-//         },
-//         url: `${apiUrl}/activities/user/${requestedUserId}`
-//     })
-// }
-
-//get a single activity 
-//data returned: res.data.activity is the activity object itself (including all notes as res.data.notes)
-//res.data.publicNotes has all notes associated with the activity which have been marked a private by their authors 
-//res.data.privateViewableNotes has all notes in the activity which have been marked private BUT which were authored by the current user making the request
 export const getQuestion = (user, questionId) => {
     return axios({
         method: 'GET',
@@ -71,8 +33,8 @@ export const getQuestion = (user, questionId) => {
         url: `${apiUrl}/question_news/${questionId}`
     })
 }
-//create an activity 
-//data returned: res.data.activity will be the new activity 
+//create a question 
+//data returned: res.data.question will be the new question 
 export const createQuestion = (user, question) => {
     return axios({
         method: 'POST',
@@ -93,18 +55,7 @@ export const createQuestion = (user, question) => {
     })
 }
 
-// GET a single random activity
-// export const randomActivity = (user) => {
-//     return axios({
-//         method: 'GET',
-//         headers: {
-//             Authorization: `Token token=${user.token}`
-//         },
-//         url: apiUrl + '/random'
-//     })
-// }
-
-//update an activity
+//update a question
 //nothing returned
 export const updateQuestion = (user, updatesToQuestion, questionId) => {
 	return axios({
@@ -119,7 +70,7 @@ export const updateQuestion = (user, updatesToQuestion, questionId) => {
 	})
 }
 
-//delete an activity
+//delete a question
 //nothing returned 
 export const deleteQuestion= (user, questionId) => {
 	return axios({

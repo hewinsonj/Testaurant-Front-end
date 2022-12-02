@@ -2,10 +2,9 @@ import React, { useState } from 'react'
 import {Button, Modal} from 'semantic-ui-react'
 import ChangePassword from '../auth/ChangePassword'
 
-
 const ChangePasswordModal = (props) => {
 
-    const { heading, user, msgAlert, triggerRefresh, setNewQuestion} = props
+    const { user, msgAlert } = props
 
     const [open, setOpen] = useState(false)
 

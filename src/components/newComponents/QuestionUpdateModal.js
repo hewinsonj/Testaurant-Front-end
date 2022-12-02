@@ -1,15 +1,11 @@
 import React, { useState } from 'react'
-import {Button, Checkbox, Form, Container, Modal} from 'semantic-ui-react'
+import {Button,  Modal} from 'semantic-ui-react'
 import { updateQuestion } from '../../api/question'
 import AddItem from './AddItem'
 
-
 const QuestionUpdateModal = (props) => {
 
-    const { heading, user, msgAlert, activeItem, triggerRefresh, setNewQuestion} = props
-
-
-
+    const { user, msgAlert, triggerRefresh } = props
     const [question, setQuestion] = useState(props.question)
     const [open, setOpen] = useState(false)
 
@@ -66,29 +62,26 @@ const QuestionUpdateModal = (props) => {
 
     console.log(user, 'this be the user')
     return (
-
-
         <Modal
-        onClose={() => {
-            setOpen(false)
-            setQuestion(props.question)
-        }}
-        onOpen={() => setOpen(true)}
-        open={open}
-        trigger={
-            <Button color='black' onClick={()=>setQuestion(props.question)}>Update Question</Button>
-        }
-    >
-        <Modal.Content>
-            <AddItem
-                question={ question }
-                handleChange={ handleChange }
-                heading="Update a Question!"
-                handleSubmit={ handleUpdateQuestion }
-                // handleClose={() => setActivityModalShow(false)}
-            />
-        </Modal.Content>
-  </Modal>
+            onClose={() => {
+                setOpen(false)
+                setQuestion(props.question)
+            }}
+            onOpen={() => setOpen(true)}
+            open={open}
+            trigger={
+                <Button color='black' onClick={()=>setQuestion(props.question)}>Update Question</Button>
+            }
+        >
+            <Modal.Content>
+                <AddItem
+                    question={ question }
+                    handleChange={ handleChange }
+                    heading="Update a Question!"
+                    handleSubmit={ handleUpdateQuestion }
+                />
+            </Modal.Content>
+        </Modal>
     )
 }
 

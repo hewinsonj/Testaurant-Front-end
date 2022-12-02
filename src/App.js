@@ -3,23 +3,15 @@ import React, { useState, Fragment } from 'react'
 import { Route, Routes } from 'react-router-dom'
 import { v4 as uuid } from 'uuid'
 
-// import AuthenticatedRoute from './components/shared/AuthenticatedRoute'
 import AutoDismissAlert from './components/shared/AutoDismissAlert/AutoDismissAlert'
-// import Header from './components/shared/Header'
 import RequireAuth from './components/shared/RequireAuth'
-import Home from './components/Home'
 import SignUp from './components/auth/SignUp'
 import SignIn from './components/auth/SignIn'
 import SignOut from './components/auth/SignOut'
 import SignPage from './components/shared/SignPage'
 import UserPage from './components/newComponents/UserPage'
-import UserPublicPage from './components/user/UserPublicPage'
 import ChangePassword from './components/auth/ChangePassword'
-import FeedPage from './components/activities/FeedPage'
-import ShowActivity from './components/activities/ShowActivity'
-import IndexActivity from './components/activities/IndexActivity'
 import NewLandingPage from './components/newComponents/NewLandingPage'
-// import EmployeePage from './components/newComponents/EmployeePage'
 import FoodIndexPage from './components/newComponents/FoodIndexPage'
 import MenuNav from './components/newComponents/MenuNav'
 import TestNav from './components/newComponents/TestNav'
@@ -31,17 +23,11 @@ import ResultsPage from './components/newComponents/ResultsPage'
 import TheLandingDisplay from './components/newComponents/TheLandingDisplay'
 import EmployeePage from './components/newComponents/EmployeePage'
 
-// import CreateActivity from './components/activities/CreateActivity'
-// import UpdateActivity from './components/activities/UpdateActivity'
-
-
 const App = () => {
 
   const [user, setUser] = useState(null)
   const [viewedUser, setViewedUser] = useState(null)
   const [msgAlerts, setMsgAlerts] = useState([])
-  //trigger to help components update if there is a new activity created w/in the modal, which can be called from anywhere. This is purely a toggle and no meaning should be taken from whether it is true or false
-  const [newActivity, setNewActivity] = useState(false)
   const [newQuestion, setNewQuestion] = useState(false)
   const [newTest, setNewTest] = useState(false)
   const [newFood, setNewFood] = useState(false)
@@ -71,8 +57,6 @@ const App = () => {
 			<Fragment>
 				<NewLandingPage user={user} msgAlert={msgAlert} setNewQuestion={setNewQuestion} setNewTest={setNewTest} />
 				
-				{/* <Header user={user} msgAlert={msgAlert} setNewActivity={setNewActivity} /> */}
-				
 				<Routes>
 					<Route path='/' element={<TheLandingDisplay user={user} msgAlert={msgAlert} setUser={setUser} />} />
 					<Route
@@ -80,8 +64,7 @@ const App = () => {
 						element={<SignUp msgAlert={msgAlert} setUser={setUser} />}
 					/>
 					<Route path='/my-profile/' element={<UserPage msgAlert={msgAlert} user={user} newQuestion={newQuestion} />} />
-					
-					<Route path='/user-public-page/:otherUserId' element={<UserPublicPage msgAlert={msgAlert} currentUser={user} viewedUser={viewedUser}/>} />
+
 					<Route
 						path='/sign-in'
 						element={<SignIn msgAlert={msgAlert} setUser={setUser} />}
@@ -107,27 +90,9 @@ const App = () => {
 					}
 					/>
 					<Route
-						path='/feed-page/:otherUserId'
-						element={
-							<FeedPage msgAlert={msgAlert} currentUser={user}  />
-					}
-					/>
-					<Route
-						path='/show-page/:activityId'
-						element={
-							<ShowActivity msgAlert={msgAlert} user={user} />
-					}
-					/>
-					<Route
 						path='/new-landing-page'
 						element={
 							<NewLandingPage msgAlert={msgAlert} user={user} newQuestion={newQuestion} activeItem={activeItem}/>
-					}
-					/>
-					<Route
-						path='/activities'
-						element={
-							<IndexActivity msgAlert={msgAlert} user={user} />
 					}
 					/>
 					<Route

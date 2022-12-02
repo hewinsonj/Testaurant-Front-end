@@ -58,10 +58,10 @@ export const searchResults = (searchText) => {
 //     })
 // }
 
-//get a single activity 
-//data returned: res.data.activity is the activity object itself (including all notes as res.data.notes)
-//res.data.publicNotes has all notes associated with the activity which have been marked a private by their authors 
-//res.data.privateViewableNotes has all notes in the activity which have been marked private BUT which were authored by the current user making the request
+//get a single result 
+//data returned: res.data.result is the result object itself (including all notes as res.data.notes)
+//res.data.publicNotes has all notes associated with the result which have been marked a private by their authors 
+//res.data.privateViewableNotes has all notes in the result which have been marked private BUT which were authored by the current user making the request
 export const getResult = (user, resultId) => {
     return axios({
         method: 'GET',
@@ -71,8 +71,8 @@ export const getResult = (user, resultId) => {
         url: `${apiUrl}/results/${resultId}`
     })
 }
-//create an activity 
-//data returned: res.data.activity will be the new activity 
+//create a result 
+//data returned: res.data.result will be the new result 
 export const createResult = (user, result) => {
     console.log(result, 'this is result right before my api request')
     return axios({
@@ -95,33 +95,7 @@ export const createResult = (user, result) => {
     })
 }
 
-// GET a single random activity
-// export const randomActivity = (user) => {
-//     return axios({
-//         method: 'GET',
-//         headers: {
-//             Authorization: `Token token=${user.token}`
-//         },
-//         url: apiUrl + '/random'
-//     })
-// }
-
-//update an activity
-//nothing returned
-// export const updateQuestion = (user, updatesToQuestion, questionId) => {
-// 	return axios({
-// 		method: 'PATCH',
-//         headers: {
-// 			Authorization: `Token ${user.token}`,
-// 		},
-// 		url: `${apiUrl}/question_news/${questionId}/`,
-// 		data: {
-// 			question_new: updatesToQuestion
-// 		}
-// 	})
-// }
-
-//delete an activity
+//delete a result
 //nothing returned 
 export const deleteResult= (user, resultId) => {
 	return axios({

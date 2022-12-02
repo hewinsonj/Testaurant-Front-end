@@ -1,12 +1,10 @@
 import React, { useState } from 'react'
-import {Button, Checkbox, Form, Container, Icon} from 'semantic-ui-react'
 import { createFood } from '../../api/food'
 import AddFoodForm from './AddFoodForm'
 
-
 const CreateFood = (props) => {
 
-    const { heading, user, msgAlert, activeItem, setOpen, triggerRefresh, setNewFood} = props
+    const { user, msgAlert, setOpen } = props
     
 
     const defaultFood = {
@@ -92,7 +90,6 @@ const CreateFood = (props) => {
         e.preventDefault()
 
         createFood(user, food)
-            // .then(() => handleClose())
             .then(() => {
                 msgAlert({
                     heading: 'Success',
@@ -103,7 +100,6 @@ const CreateFood = (props) => {
             .then(() => {
                 setOpen(false)
             })
-            // .then(() => setNewFood(prev => !prev))
             .catch((error) => {
                 msgAlert({
                     heading: 'Failure',
@@ -115,12 +111,10 @@ const CreateFood = (props) => {
 
     return (
         <AddFoodForm
-            // show={activityModalShow}
             food={ food }
             handleChange={ handleChange }
             heading="Create a new Food Item!"
             handleSubmit={ handleCreateFood }
-            // handleClose={() => setActivityModalShow(false)}
         />
     )
 }

@@ -1,4 +1,3 @@
-import IndexActivity from "./activities/IndexActivity"
 import LoginPage from "./LoginPage/LoginPage"
 
 

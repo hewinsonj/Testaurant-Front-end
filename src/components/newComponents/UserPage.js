@@ -7,9 +7,7 @@ import ChangePasswordModal from './ChangePasswordModal'
 
 const UserPage = ({ user, msgAlert,}) => {
 
-    
 const [allResults, setAllResults] = useState([])
-
 
 useEffect(() => {
         
@@ -26,7 +24,6 @@ useEffect(() => {
         })
 },[])
 
-
 	return (
 		<>
         <div >
@@ -34,16 +31,9 @@ useEffect(() => {
                 raised
                 inverted 
                 color='black' 
-                // verticalAlign='middle' 
                 fluid
-                
             >
-                <Container fluid>
-
-  
-                </Container>
                 <Divider />
-
                 <Grid columns={3}>
                     <Grid.Column width={3}>
                         <ChangePasswordModal user={user} msgAlert={msgAlert} />
@@ -54,22 +44,16 @@ useEffect(() => {
                             </Segment>       
                             <Segment color='grey' inverted>
                             {allResults ? 
-                            allResults.slice(0).reverse().filter(result => result.owner === user.id).map((result) => (
-                                
-                                <ResultsSegment key={result.id} result={result} user={user} msgAlert={msgAlert} 
-                                // setNewResult={setNewResult}
-                                />
-                            ))
+                                allResults.slice(0).reverse().filter(result => result.owner === user.id).map((result) => (
+                                    <ResultsSegment key={result.id} result={result} user={user} msgAlert={msgAlert} />
+                                ))
                             :
-                            <LoadingScreen />
+                                <LoadingScreen />
                             }
-                            
                         </Segment>
                     </Grid.Column>
                 </Grid>
 		    </Segment>
-         
-		
         </div>
 		</>
 	)

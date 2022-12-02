@@ -24,41 +24,31 @@ const ResultsPage = ({ user, msgAlert, newTest, setNewTest}) => {
                 })
             })
     },[])
-    console.log('all the results', allResults)
    
 	return (
 		<>
-        <div >
-		    <Segment 
-                raised
-                color='black'
-                inverted
-            >
-                
-                <Grid centered >
-
-                    <Segment raised color='grey' inverted>
-                        <Grid.Row>
-                        {/* <AddTestModal user={user} msgAlert={msgAlert} 
-                        // setNewTest={setNewTest}
-                        /> */}
-                        </Grid.Row>
-                        <h1 id='commFeed'>All Results</h1>
-                        <div className='scrolling-group'>
-                        {allResults ? 
-                            allResults.slice(0).reverse().map((result) => (
-                                <ResultsSegment key={result.id} result={result} user={user} msgAlert={msgAlert} 
-                                // setNewResult={setNewResult}
-                                />
-                            ))
+            <div >
+                <Segment 
+                    raised
+                    color='black'
+                    inverted
+                >
+                    <Grid centered >
+                        <Segment raised color='grey' inverted>
+                            <h1 id='commFeed'>All Results</h1>
+                            <div className='scrolling-group'>
+                            {allResults ? 
+                                allResults.slice(0).reverse().map((result) => (
+                                    <ResultsSegment key={result.id} result={result} user={user} msgAlert={msgAlert} />
+                                ))
                             :
-                            <LoadingScreen />
-                        }
-                        </div>
-                    </Segment>
-                </Grid>
-		    </Segment>
-        </div>
+                                <LoadingScreen />
+                            }
+                            </div>
+                        </Segment>
+                    </Grid>
+                </Segment>
+            </div>
 		</>
 	)
 }

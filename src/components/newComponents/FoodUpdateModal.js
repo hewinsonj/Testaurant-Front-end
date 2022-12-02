@@ -5,7 +5,7 @@ import AddFoodForm from './AddFoodForm'
 
 const FoodUpdateModal = (props) => {
 
-    const {user, msgAlert, triggerRefresh} = props
+    const {user, msgAlert } = props
     
     const [food, setFood] = useState(props.food)
     const [open, setOpen] = useState(false)
