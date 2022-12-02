@@ -70,34 +70,36 @@ const QuestionShow = ({ user, msgAlert, question}) => {
                           <Grid columns={5} textAlign="center">
                               
                               <Grid.Row>
+                                <Grid.Column>
                                   <h3>Option 1: </h3>
                                   <h3>
                                     {question.option1}
                                   </h3>
-                              </Grid.Row>
-                              <Grid.Row>
+                                </Grid.Column>
+                                <Grid.Column>
                                   <h3>Option 2: </h3>
                                   <h3>
                                     {question.option2}
                                   </h3>
-                              </Grid.Row>
-                              <Grid.Row>
+                                </Grid.Column>
+                                <Grid.Column>
                                   <h3>Option 3: </h3>
                                   <h3>
                                     {question.option3}
                                   </h3>
-                              </Grid.Row>
-                              <Grid.Row>
+                                </Grid.Column>
+                                <Grid.Column>
                                   <h3>Option 4: </h3>
                                   <h3>
                                     {question.option4}
                                   </h3>
-                              </Grid.Row>
-                              <Grid.Row>
+                                </Grid.Column>
+                                <Grid.Column>
                                   <h3>Answer: </h3>
                                   <h3>
                                     {question.answer}
                                   </h3>
+                                </Grid.Column>
                               </Grid.Row>
                           </Grid>
                       </Segment>
