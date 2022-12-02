@@ -19,28 +19,6 @@ const TestShow = ({ user, msgAlert, test}) => {
     const [allQuestions, setAllQuestions] = useState(null)
 
 
-    // useEffect(() => {
-    //   getTest(user, test.id)
-    //     .catch((error) => {
-    //         msgAlert({
-    //             heading: 'Failure',
-    //             message: 'Show Test failed' + error,
-    //             variant: 'danger'
-    //         })
-    //     })
-    // },[updated])
-
-    // const handleGet = () => {
-    //   getTest(user, testId)
-    //     .catch((error) => {
-    //         msgAlert({
-    //             heading: 'Failure',
-    //             message: 'Show Test failed' + error,
-    //             variant: 'danger'
-    //         })
-    //     })
-    // }
-
   
     const handleDeleteTest = () => {
       deleteTest(user, test.id)
@@ -67,26 +45,11 @@ const TestShow = ({ user, msgAlert, test}) => {
     const findString = (test, question) => {
       for (let i = 0; i < test.question_new.length; i++) {
         if(test.question_new[i].id == question.id){
-          return (<h3>(q){question.question_str}(a){question.answer}</h3> )
+          return (<h3>(Q) {question.question_str} (A) {question.answer}</h3> )
         }
       }
     }
-    
-  //   const findString = (test, allQuestions) => {
-  //   for (let i = 0; i < allQuestions.length; i++) {
-  //     for (let i = 0; i < test.question_new.length; i++) {
-  //       if(test.question_new[i] == allQuestions[i].id){
-  //         return allQuestions[i].question_str
-  //       }
-  //       // console.log(test.question_new, 'this be the test qId', question.id, 'this be the question qId')
-  //     }
-  //   }
-  // }
 
-  
-    // console.log('this is the test', test)
-
-    // console.log(allQuestions, "this is all of the questions")
     useEffect(() => {
         
       getAllQuestions(user)
@@ -138,24 +101,25 @@ const TestShow = ({ user, msgAlert, test}) => {
           </Grid>
         </Segment>
         <Segment inverted class="capitalize-me">
-            <Grid centered stretched>
+            <Grid centered stretched >
                 <Grid.Row padded>
                     <Segment fluid>
-                        <Grid textAlign="center">
+                        <Grid textAlign="center" columns={2}>
                             <Grid.Row >
                             <h2>Created by: {test.owner}</h2>
                             </Grid.Row>
-                            <Grid.Row>
+                            
+                              <Grid.Column>
                                 <h3>Created on: </h3>
                                 <h3>
                                   {test.created_at}
                                 </h3>
-                            </Grid.Row>
-                            <Grid.Row>
+                           
                                 <h3>Updated on: </h3>
                                 <h3>
                                   {test.updated_at}
                                 </h3>
+                                </Grid.Column>
                                 {/* {test.question_new ? 
                                   test.question_new.slice(0).reverse().map((question) => (
                                       <h3>{question}</h3>
@@ -163,6 +127,7 @@ const TestShow = ({ user, msgAlert, test}) => {
                                     :
                                     <LoadingScreen />
                                 } */}
+                                <Grid.Column>
                               <h3>
                             {allQuestions ? 
                               allQuestions.slice(0).map((question) => (
@@ -171,10 +136,10 @@ const TestShow = ({ user, msgAlert, test}) => {
                               :
                               <LoadingScreen />
                             }</h3>
-
+                          </Grid.Column>
                             {/* <h3>{findString(test, allQuestions)}</h3> */}
 
-                            </Grid.Row>
+                           
                         </Grid>
                     </Segment>
                 </Grid.Row>

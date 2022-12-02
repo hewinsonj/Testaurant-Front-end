@@ -65,7 +65,7 @@ const SignIn = (props) => {
                 verticalAlign='middle' 
                 id="segment"
             >
-                <h3 id="signOutText">Sign In</h3>
+                <h3 >Sign In</h3>
                 <Form  onSubmit={onSignIn}>
                     <Form.Field>
                         <Form.Input 
@@ -96,9 +96,7 @@ const SignIn = (props) => {
                     </Form.Field>
                     <br />
                     <Form.Button 
-                        secondary 
-                        inverted 
-                        color='yellow' 
+                        color='orange' 
                         class="signButton" 
                         type='submit'
                     >

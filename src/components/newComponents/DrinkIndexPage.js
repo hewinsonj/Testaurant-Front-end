@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Icon, Item, Button, Grid, Comment, Form, Modal, Search, Header, Segment, Card} from 'semantic-ui-react'
+import { Icon, Item, Button, Grid, Comment, Form, Modal, Search, Header, Segment, Card, Container} from 'semantic-ui-react'
 import { useNavigate } from 'react-router-dom'
 import { Link } from 'react-router-dom'
 import { getAllDrinks, deleteDrink } from '../../api/drink'
@@ -39,13 +39,15 @@ const DrinkIndexPage = ({ user, msgAlert, setNewDrink }) => {
 return (
     <>
         <div >
+            <Container>
 		    <Segment 
                 raised
                 inverted  
                 verticalAlign='middle' 
                 fluid
             >
-                <Grid centered textAlign='center'>
+                <Grid centered textAlign='center' fluid>
+                    <Grid.Row>
                     <Segment raised verticalAlign='middle' textAlign='center'>
                         <Grid.Row>
                         <AddDrinkModal user={user} msgAlert={msgAlert} 
@@ -65,8 +67,10 @@ return (
                         }
                         </div>
                     </Segment>
+                    </Grid.Row>
                 </Grid>
 		    </Segment>
+            </Container>
         </div>
     </>
 )

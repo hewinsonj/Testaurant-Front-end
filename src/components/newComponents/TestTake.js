@@ -47,8 +47,6 @@ const TestTake = ({ user, msgAlert, test}) => {
 
 
     const handleChange = (e , target) => {
-
-
       setResponses(prevResponse => {
           const { name, value } = target
           const updatedName = name
@@ -67,50 +65,26 @@ const TestTake = ({ user, msgAlert, test}) => {
       })
   }
 
-  // const pushIt = (target, i) => {
-  //   for(let i = 0; i < test.question_new.length; i ++){
-  //     if(responses.answers[i]){
-  //       responses.answers[i].splice(i, 1)
-  //       responses.answers[i].push(target.value)
-  //     }
-  //   }
-  // }
+
   let index = 0
   const handleCheckAnswer = () => {
-    
-    if((responses.answer) === test.question_new[index].answer){
+    console.log(responses.answer, 'this is responses ans-------')
+    console.log(test.question_new[0].answer, 'this is the answer---------')
+    if(responses.answer == test.question_new[index].answer){
       result.correct += 1
+
     } else {
       result.wrong += 1
-      
     }
-    console.log(responses.answer, 'responses.answers 666')
-    console.log(result.correct, 'corrrect')
-    console.log(index, 'index')
     index += 1
-
+    setResponses(defaultResponses)
   }
 
   const handleCreateResult = (e) => {
-    // for(let i = 0; i < test.question_new.length; i ++){
-    // console.log(test)}
     e.preventDefault()
-    // for(let i = 0; i < test.question_new.length; i ++){
-      
-    //   if(responses.answers[i] === test.question_new[i].answer){
-    //     result.correct += '1'
-    //   } else {
-    //     result.wrong += '1'
-    //     console.log(responses.answers, 'responses.answers')
-    //     console.log(test.question_new, 'test question')
-    //   }
-    // }
-    
-    
-    // (parseInt(result.total)/parseInt(result.correct))
-    if(result.correct.length === 0){
+    if(result.correct == 0){
       result.correct = '0'
-    } else if (result.wrong === 0){
+    } else if (result.wrong == 0){
       result.wrong = '0'
     }
     result.correct = `${result.correct}`
@@ -121,33 +95,54 @@ const TestTake = ({ user, msgAlert, test}) => {
     result.total = '' + (test.question_new.length)
     result.score = `${result.correct}` + ' out of ' + `${result.total}`
     result.the_test = test.id
-    console.log(result, 'this be the result')
-    createResult(user, result)
-        // .then(() => handleClose())
-        .then(() => {
-            msgAlert({
-                heading: 'Success',
-                message: 'Created Result',
-                variant: 'success'
-            })
-        })
-        .then(() => {
-            setOpen(false)
-        })
-        .then(() => {
-          zero()
-        })
-        // .then(() => setNewResult(prev => !prev))
-        .catch((error) => {
-            msgAlert({
-                heading: 'Failure',
-                message: 'Create Result Failure' + error,
-                variant: 'danger'
-            })
-        })
+    if(result.correct !== '0' || result.wrong !== '0'){
+      createResult(user, result)
+      .then(() => {
+          msgAlert({
+              heading: 'Success',
+              message: 'Created Result',
+              variant: 'success'
+          })
+      })
+      .then(() => {
+          setOpen(false)
+      })
+      .catch((error) => {
+          msgAlert({
+              heading: 'Failure',
+              message: 'Create Result Failure' + error,
+              variant: 'danger'
+          })
+      })
+    }
 }
 
 
+// const handleCancel = () => {
+//   if(responses.answer !== '' && setOpen(false)){
+//     createResult(user, result)
+//         // .then(() => handleClose())
+//         .then(() => {
+//             msgAlert({
+//                 heading: 'Success',
+//                 message: 'Created Result',
+//                 variant: 'success'
+//             })
+//         })
+//         .then(() => {
+//             setOpen(false)
+//         })
+//         .catch((error) => {
+//             msgAlert({
+//                 heading: 'Failure',
+//                 message: 'Create Result Failure' + error,
+//                 variant: 'danger'
+//             })
+//         })
+//     }
+// }
+
+// handleCancel()
 
 
   if (!test) {
@@ -164,45 +159,49 @@ const TestTake = ({ user, msgAlert, test}) => {
 
   // const countMin = setInterval(minAdd, 60000)
   
-  const zero = clearInterval()
+  // const zero = clearInterval()
 
   // let value = 1
-  console.log('right here', responses.answers)
+  console.log('right here', responses.answer)
 
-  // const questionsJSX = test.question_new.slice(0).reverse().map((question) => (
-  const questionsJSX = (test) => {  for (let i = 0; i < test.question_new.length; i++) { 
-    return(
-    <Segment inverted class="capitalize-me">
+  const questionsJSX = test.question_new.slice(0).reverse().map((question) => (
+
+  // const questionsJSX = (test) => {  for (let i = 0; i < test.question_new.length; i++) { 
+    <>
+   
+    <div class='hideMe'>
+    <Segment inverted >
             <Grid centered stretched>
                 <Grid.Row padded>
-                    <Segment fluid>
+                    <Segment fluid >
                         <Grid textAlign="center" columns={4}>
                             <Grid.Row >
-                            <h2>{test.question_new[i].question_str}</h2>
+                            <h2>{question.question_str}</h2>
                             </Grid.Row>
                             <Grid.Column>
-                              <h2>{test.question_new[i].option1}</h2>
+                              <h2>{question.option1}</h2>
                             </Grid.Column>
                             <Grid.Column>
-                              <h2>{test.question_new[i].option2}</h2>
+                              <h2>{question.option2}</h2>
                             </Grid.Column>
                             <Grid.Column>
-                              <h2>{test.question_new[i].option3}</h2>
+                              <h2>{question.option3}</h2>
                             </Grid.Column>
                             <Grid.Column>
-                              <h2>{test.question_new[i].option4}</h2>
+                              <h2>{question.option4}</h2>
                             </Grid.Column>
                             <Grid.Row>
                             <Form onSubmit= { handleCheckAnswer }>
                             <Form.Input 
                               required 
                               name='answer'
-                              id='answer'
+                              // id='answer'
                               placeholder='your answer'
                               onChange= { handleChange } 
                               // defaultValue={responses.answer}
                               value= {responses.answer}
                             />
+                            <h3>Save after every question</h3>
                             <Button type='submit' color='green' >Save</Button>
                            </Form>
                             </Grid.Row>
@@ -211,7 +210,11 @@ const TestTake = ({ user, msgAlert, test}) => {
                 </Grid.Row>
             </Grid>
         </Segment>
-    )}}
+        </div>
+        <Divider section/>
+        </>
+        
+    ))
 
 
   return(
@@ -223,6 +226,7 @@ const TestTake = ({ user, msgAlert, test}) => {
             trigger={<Button floated="right" 
             >Take Test</Button>}
             size='large'
+            closeOnDimmerClick = {false}
         >
             <Modal.Content scrolling>
                 
@@ -244,17 +248,18 @@ const TestTake = ({ user, msgAlert, test}) => {
         {questionsJSX}
       </Segment>
       <Form 
-              onSubmit={ handleCreateResult(test) }
+              onSubmit={ handleCreateResult }
             >
       <Button type='submit' color='green'>Submit</Button>
+      { (result.correct + result.wrong) == 0 ?
+      <Button color='red' floated="right" onClick={() => setOpen(false)}>
+          Cancel
+      </Button>
+      :
+      null
+      }
       </Form>
-      
       </Modal.Content>
-            <Modal.Actions>
-                {/* <Button color='black' onClick={() => setOpen(false)}>
-                    Close
-                </Button> */}
-            </Modal.Actions>
         </Modal>
     </>
   )

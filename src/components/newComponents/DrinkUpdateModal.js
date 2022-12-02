@@ -84,7 +84,6 @@ const DrinkUpdateModal = (props) => {
         updateDrink(user, drink, props.drink.id)
             .then(() => {
                 setOpen(false)
-                triggerRefresh()
                 msgAlert({
                     heading: 'Success',
                     message: 'Updated Drink',

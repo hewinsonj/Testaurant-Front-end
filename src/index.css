@@ -6,7 +6,10 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   background-color: black;
+  font-family: 'Arvo', serif;
+
 }
+
 
 #crooked {
   justify-content: center;
@@ -15,8 +18,12 @@ body {
   -webkit-transform: rotate(15deg); 
   -moz-transform: rotate(15deg);    
   transform: rotate(15deg);
-  margin: 30% 0 0 9%;
+  margin: 60% 0 0 9%;
   font-size: 3rem;
+}
+
+.hideMe {
+  margin: 13rem 0 3rem 0;
 }
 
 #bigBody {

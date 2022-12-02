@@ -91,7 +91,7 @@ const AddItem = (props) => {
                         label='Generate Random Activity'
                         onClick= { handleActivity }> 
                 <Icon name='random' /></Button> */}
-                <Button type='submit' color='green'>Submit</Button>
+                <Button type='submit' color='orange'>Submit</Button>
             </Form>
         </Container>
     )

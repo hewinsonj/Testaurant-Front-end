@@ -45,14 +45,14 @@ useEffect(() => {
                 <Divider />
 
                 <Grid columns={3}>
-                    <Grid.Column width={4}>
+                    <Grid.Column width={3}>
                         <ChangePasswordModal user={user} msgAlert={msgAlert} />
                     </Grid.Column>
-                    <Grid.Column width={7}>
+                    <Grid.Column width={11}>
                             <Segment>
-                                <h2 id='yourActs'>Your results dog</h2>
+                                <h2 id='yourActs'>Your Results</h2>
                             </Segment>       
-                            <Segment>
+                            <Segment color='grey' inverted>
                             {allResults ? 
                             allResults.slice(0).reverse().filter(result => result.owner === user.id).map((result) => (
                                 

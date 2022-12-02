@@ -84,7 +84,6 @@ const FoodUpdateModal = (props) => {
         updateFood(user, food, props.food.id)
             .then(() => {
                 setOpen(false)
-                triggerRefresh()
                 msgAlert({
                     heading: 'Success',
                     message: 'Updated Food',
