@@ -27,7 +27,7 @@ const EmployeePage = ({ user, msgAlert }) => {
 
     // const genderOptions = () => {
     // for (let i = 0; i < allTests.length; i++) {
-    //     { {key}: 'm', text: 'Male', value: 'male' },
+    //     { key: 'm', text: 'Male', value: 'male' },
     //     { key: 'f', text: 'Female', value: 'female' },
     //     { key: 'o', text: 'Other', value: 'other' },
     //   } return 
@@ -93,7 +93,7 @@ const EmployeePage = ({ user, msgAlert }) => {
                                 <Form>
                                     <Form.Field
                                         control={Select}
-                                        // options={genderOptions}
+                                        // options= {gender}
                                         placeholder='select a test'
                                         search
                                         searchInput={{ id: 'form-select-control-gender' }}

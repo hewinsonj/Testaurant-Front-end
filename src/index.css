@@ -8,6 +8,17 @@ body {
   background-color: black;
 }
 
+#crooked {
+  justify-content: center;
+  align-content: center;
+  text-align: center;
+  -webkit-transform: rotate(15deg); 
+  -moz-transform: rotate(15deg);    
+  transform: rotate(15deg);
+  margin: 30% 0 0 9%;
+  font-size: 3rem;
+}
+
 #bigBody {
   background-color: bisque;
 }
