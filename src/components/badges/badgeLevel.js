@@ -1,6 +1,6 @@
 
 //function to determine the level of a badge
-
+//great use of switch case!
 const badgeLevel = (count) => {
     let level = ''
     switch (true) {

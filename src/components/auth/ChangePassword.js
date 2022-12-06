@@ -5,7 +5,7 @@ import messages from '../shared/AutoDismissAlert/messages'
 // import Form from 'react-bootstrap/Form'
 // import Button from 'react-bootstrap/Button'
 import {  Button, Segment, Form, Container, Input } from 'semantic-ui-react'
-
+//you did great with comments in other files, try to keep it up through your entire repo
 const ChangePassword = (props) => {
 	// constructor(props) {
 	// 	super(props)

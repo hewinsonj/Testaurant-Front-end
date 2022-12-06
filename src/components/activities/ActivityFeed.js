@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+//get rid of or comment out any unused code
 import { Icon, Item, Button, Grid, Comment, Form, Modal, Search, Header, Segment, Label } from 'semantic-ui-react'
 import { useNavigate } from 'react-router-dom'
 import { Link } from 'react-router-dom'

@@ -1,3 +1,4 @@
+//be consistent with your choices through your code
 import ActivitySegment from "./ActivitySegment"
 import LoadingScreen from "../shared/LoadingPage"
 import { Container } from "semantic-ui-react"

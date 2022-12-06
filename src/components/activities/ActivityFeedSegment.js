@@ -68,6 +68,7 @@ const ActivityFeedSegment = ({ activity, msgAlert, user, mine}) => {
 
     return (
         <Segment id='actListItems'>
+            //be careful of your indentation
             <Container fluid>
             <Grid>
                 <Grid.Column width={2} verticalAlign='center'>

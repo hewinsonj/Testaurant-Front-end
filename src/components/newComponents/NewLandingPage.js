@@ -96,7 +96,7 @@ export default class NewLandingPage extends Component {
                                     Results
                                 </Link>
                             </Menu.Item>
-
+//be careful of whitespace
                    
 
 

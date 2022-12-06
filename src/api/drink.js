@@ -31,7 +31,7 @@ export const searchDrinks = (searchText) => {
         data: searchText 
         })
     }
-
+//get rid of commented out code when you can 
 //get the logged-in user's activities
 //data returned: res.data.activities has all of the user's activities
 //res.data.completedCounts is an object w/ the number of completed activities per category (ex: res.data.completedCounts.eduction will be 2 if the user has completed 2 activities)
