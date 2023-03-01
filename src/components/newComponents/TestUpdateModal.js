@@ -67,6 +67,7 @@ const TestUpdateModal = (props) => {
                 return true
             }
         }
+        console.log(test.question_new, "question new")
     }
 
     const handleChangeOther = (e , target) => {

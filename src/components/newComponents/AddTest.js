@@ -4,7 +4,7 @@ import LoadingScreen from '../shared/LoadingPage'
 
 const AddTest = (props) => {
 
-    const { heading, test, allQuestions, handleSubmit, handleChange, handleChangeOther } = props
+    const { heading, test, allQuestions, handleSubmit, handleChange, handleChangeOther, handleChecked } = props
 
     return (
         <Container className="justify-content-center" >
@@ -37,6 +37,7 @@ const AddTest = (props) => {
                                             label={question.question_str}
                                             value= {question.id}
                                             onChange= { handleChange }
+                                            
                                         />
                                     ))
                                     :
