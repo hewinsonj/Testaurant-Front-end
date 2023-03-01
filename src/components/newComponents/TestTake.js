@@ -405,8 +405,8 @@ const TestTake = ({ user, msgAlert, test}) => {
                             onChange= { handleChange } 
                             value= {responses.answer}
                           />
-                          <h3>Save after every question</h3>
-                          <Button type='submit' color='green' >Save</Button>
+                          {/* <h3>Save after every question</h3> */}
+                          <Button type='submit' color='green' >Submit Answer</Button>
                         </Form>
                       </Grid.Row>
                   </Grid>

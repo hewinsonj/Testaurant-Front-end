@@ -93,6 +93,7 @@ const TestUpdateModal = (props) => {
                 return true
             }
         }
+        console.log(test.question_new, "question new")
     }
 >>>>>>> 27bdab7 (cleaned up)
 

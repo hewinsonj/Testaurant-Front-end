@@ -395,6 +395,8 @@ const CreateTest = (props) => {
     //------------------- End handleChange refactor -----------------
 =======
             //handle the checkbox
+            console.log(updatedName, "this is the name")
+            console.log(target.checked, "target.checked??????")
             if (updatedName === 'question_ids' && target.checked) {
                 
                 updatedValue = (prevTest.question_ids).push(parseInt(target.id))

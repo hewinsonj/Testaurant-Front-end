@@ -67,6 +67,10 @@ export const updateTest = (user, updatesToTest, testId) => {
 		url: `${apiUrl}/test_thiss/${testId}/`,
 		data: {
 			test_this: updatesToTest
+            // "test_this": {
+            //     "name": test.name,
+            //     "question_new": test.question_new,
+            // },
 		}
 	})
 }
