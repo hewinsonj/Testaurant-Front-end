@@ -45,10 +45,13 @@ export const createTest = (user, test) => {
         },
         url: apiUrl + '/test_thiss/',
         data: {
-            "test_this": {
-                "name": test.name,
-                "question_new": test.question_new,
-            },
+            test_this : test
+            
+            // : {
+            //     name: test.name,
+            //     question_new: test.question_new
+            // },
+            // owner: user.id
         }
     })
 }
