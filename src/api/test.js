@@ -45,13 +45,13 @@ export const createTest = (user, test) => {
         },
         url: apiUrl + '/test_thiss/',
         data: {
-            test_this : test
+            // test_this : test,
+            owner: user.id,
+            test_this: {
+                name: test.name,
+                question_new: test.question_new
+            },
             
-            // : {
-            //     name: test.name,
-            //     question_new: test.question_new
-            // },
-            // owner: user.id
         }
     })
 }
@@ -68,11 +68,13 @@ export const updateTest = (user, updatesToTest, testId) => {
 		},
 		url: `${apiUrl}/test_thiss/${testId}/`,
 		data: {
-			test_this: updatesToTest
+			test_this: updatesToTest,
+            owner: user.id
             // "test_this": {
             //     "name": test.name,
             //     "question_new": test.question_new,
             // },
+            
 		}
 	})
 }

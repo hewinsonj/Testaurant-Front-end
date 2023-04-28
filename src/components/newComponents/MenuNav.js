@@ -1,37 +1,45 @@
-import React, { Component } from 'react'
-import { Menu } from 'semantic-ui-react'
-import FoodIndexPage from './FoodIndexPage'
-import DrinkIndexPage from './DrinkIndexPage'
+import React, { Component } from "react";
+import { Menu } from "semantic-ui-react";
+import FoodIndexPage from "./FoodIndexPage";
+import DrinkIndexPage from "./DrinkIndexPage";
 
 export default class MenuNav extends Component {
-  state = { activeItem: 'food', setNewFood: false, setNewDrink: false }
+  state = { activeItem: "food", setNewFood: false, setNewDrink: false };
 
-  handleItemClick = (e, { name }) => this.setState({ activeItem: name })
+  handleItemClick = (e, { name }) => this.setState({ activeItem: name });
 
   render() {
-    const { activeItem } = this.state
-    const activitiesJSX = (activeItem === 'food') ? 
-        <FoodIndexPage user={this.props.user} setNewFood={this.props.setNewFood} msgAlert={this.props.msgAlert}/>
-        :
-        <DrinkIndexPage user={this.props.user} setNewDrink={this.props.setNewDrink} msgAlert={this.props.msgAlert}/>
+    const { activeItem } = this.state;
+    const activitiesJSX =
+      activeItem === "food" ? (
+        <FoodIndexPage
+          user={this.props.user}
+          setNewFood={this.props.setNewFood}
+          msgAlert={this.props.msgAlert}
+        />
+      ) : (
+        <DrinkIndexPage
+          user={this.props.user}
+          setNewDrink={this.props.setNewDrink}
+          msgAlert={this.props.msgAlert}
+        />
+      );
     return (
       <>
         <Menu tabular>
           <Menu.Item
-            name='food'
-            active={activeItem === 'food'}
+            name="food"
+            active={activeItem === "food"}
             onClick={this.handleItemClick}
-          >
-          </Menu.Item>
+          ></Menu.Item>
           <Menu.Item
-            name='drinks'
-            active={activeItem === 'drinks'}
+            name="drinks"
+            active={activeItem === "drinks"}
             onClick={this.handleItemClick}
-          >
-          </Menu.Item>  
+          ></Menu.Item>
         </Menu>
         {activitiesJSX}
       </>
-    )
+    );
   }
 }

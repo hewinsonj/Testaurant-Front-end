@@ -1,211 +1,202 @@
-import React, { useState } from "react"
-import {  Button, Segment, Grid, Form, Modal, Divider } from 'semantic-ui-react'
-import LoadingScreen from "../shared/LoadingPage"
-import { createResult } from "../../api/result"
+import React, { useState } from "react";
+import { Button, Segment, Grid, Form, Modal, Divider } from "semantic-ui-react";
+import LoadingScreen from "../shared/LoadingPage";
+import { createResult } from "../../api/result";
 
-const TestTake = ({ user, msgAlert, test}) => {
-
+const TestTake = ({ user, msgAlert, test }) => {
   const defaultResult = {
-      score: '',
-      correct: 0,
-      wrong: 0,
-      total: '',
-      percent: 0,
-      time: '',
-      the_test: null
-  }
+    score: "",
+    correct: 0,
+    wrong: 0,
+    total: "",
+    percent: 0,
+    time: "",
+    the_test: null,
+  };
   const defaultResponses = {
-    answer: '',
+    answer: "",
     index: 0,
-  }
+  };
 
-  const defaultIndex =  {
-    count: 0
-  }
+  const defaultIndex = {
+    count: 0,
+  };
 
-  const defaultValue = 1
- 
-    const [updated, setUpdated] = useState(false)
-    const [deleted, setDeleted] = useState(false)
-    const [open, setOpen] = React.useState(false)
-    const [result, setResult] = useState(defaultResult)
-    const [responses, setResponses] = useState(defaultResponses)
-    const [value, setValue] = useState(defaultValue)
-    const [index, setIndex] = useState(defaultIndex)
+  const defaultValue = 1;
 
+  // const [updated, setUpdated] = useState(false)
+  // const [deleted, setDeleted] = useState(false)
+  const [open, setOpen] = React.useState(false);
+  const [result, setResult] = useState(defaultResult);
+  const [responses, setResponses] = useState(defaultResponses);
+  const [value, setValue] = useState(defaultValue);
+  const [index, setIndex] = useState(defaultIndex);
 
-    const handleChange = (e , target) => {
-      setResponses(prevResponse => {
-          const { name, value } = target
-          const updatedName = name
-          let updatedValue = value
-          const updatedResponse = { [updatedName]: updatedValue }
+  const handleChange = (e, target) => {
+    setResponses((prevResponse) => {
+      const { name, value } = target;
+      const updatedName = name;
+      let updatedValue = value;
+      const updatedResponse = { [updatedName]: updatedValue };
 
-          return { ...prevResponse, ...updatedResponse}
-      })
-  }
-
+      return { ...prevResponse, ...updatedResponse };
+    });
+  };
 
   const handleCheckAnswer = () => {
-    if(responses.answer === test.question_new[index.count].answer){
-
-      result.correct += 1
-
+    if (responses.answer === test.question_new[index.count].answer) {
+      result.correct += 1;
     } else {
-      result.wrong += 1
+      result.wrong += 1;
     }
-    index.count += 1
-    setResponses(defaultResponses)
-    console.log(index.count, 'responses . index')
-  }
-
-  
+    index.count += 1;
+    setResponses(defaultResponses);
+    console.log(index.count, "responses . index");
+  };
 
   const handleCreateResult = (e) => {
-    e.preventDefault()
-    if(result.correct == 0){
-      result.correct = '0'
-    } else if (result.wrong == 0){
-      result.wrong = '0'
+    e.preventDefault();
+    if (result.correct == 0) {
+      result.correct = "0";
+    } else if (result.wrong == 0) {
+      result.wrong = "0";
     }
-    result.correct = `${result.correct}`
-    result.percent = (((result.correct)/parseInt(test.question_new.length)) * 100)
-    result.percent = `${result.percent}`+'%'
-    result.wrong = `${result.wrong}`
-    result.time = ` mins` 
-    result.total = '' + (test.question_new.length)
-    result.score = `${result.correct}` + ' out of ' + `${result.total}`
-    result.the_test = test.id
-    if(result.correct !== '0' || result.wrong !== '0'){
+    result.correct = `${result.correct}`;
+    result.percent =
+      (result.correct / parseInt(test.question_new.length)) * 100;
+    result.percent = `${result.percent}` + "%";
+    result.wrong = `${result.wrong}`;
+    result.time = ` mins`;
+    result.total = "" + test.question_new.length;
+    result.score = `${result.correct}` + " out of " + `${result.total}`;
+    result.the_test = test.id;
+    if (result.correct !== "0" || result.wrong !== "0") {
       createResult(user, result)
-      .then(() => {
+        .then(() => {
           msgAlert({
-              heading: 'Success',
-              message: 'Created Result',
-              variant: 'success'
-          })
-      })
-      .then(() => {
-          setOpen(false)
-      })
-      .catch((error) => {
+            heading: "Success",
+            message: "Created Result",
+            variant: "success",
+          });
+        })
+        .then(() => {
+          setOpen(false);
+        })
+        .catch((error) => {
           msgAlert({
-              heading: 'Failure',
-              message: 'Create Result Failure' + error,
-              variant: 'danger'
-          })
-      })
+            heading: "Failure",
+            message: "Create Result Failure" + error,
+            variant: "danger",
+          });
+        });
     }
-}
+  };
 
   if (!test) {
-    return (
-      <LoadingScreen />
-    )
+    return <LoadingScreen />;
   }
 
   const questionsJSX = test.question_new.slice(0).map((question) => (
+    <>
+      <div class="hideMe">
+        <Segment inverted>
+          <Grid centered stretched>
+            <Grid.Row padded>
+              <Segment fluid>
+                <Grid textAlign="center" columns={4}>
+                  <Grid.Row>
+                    <Grid.Column floated="left" width={10}>
+                      <h2>{question.question_str}</h2>
+                    </Grid.Column>
+                    <Grid.Column width={6}>
+                      <h2>
+                        Question's Answered: {result.correct + result.wrong}
+                      </h2>
+                    </Grid.Column>
+                  </Grid.Row>
+                  <Segment>
+                    <Grid.Column>
+                      <h2>{question.option1}</h2>
+                    </Grid.Column>
+                  </Segment>
+                  <Segment>
+                    <Grid.Column>
+                      <h2>{question.option2}</h2>
+                    </Grid.Column>
+                  </Segment>
+                  <Segment>
+                    <Grid.Column>
+                      <h2>{question.option3}</h2>
+                    </Grid.Column>
+                  </Segment>
+                  <Segment>
+                    <Grid.Column>
+                      <h2>{question.option4}</h2>
+                    </Grid.Column>
+                  </Segment>
+                  <Grid.Row>
+                    <Form onSubmit={handleCheckAnswer}>
+                      <Form.Input
+                        required
+                        name="answer"
+                        placeholder="your answer"
+                        onChange={handleChange}
+                        value={responses.answer}
+                      />
+                      {/* <h3>Save after every question</h3> */}
+                      <Button type="submit" color="green">
+                        Submit Answer
+                      </Button>
+                    </Form>
+                  </Grid.Row>
+                </Grid>
+              </Segment>
+            </Grid.Row>
+          </Grid>
+        </Segment>
+      </div>
+      <Divider section />
+    </>
+  ));
 
-      <>
-        <div class='hideMe'>
-          <Segment inverted >
-            <Grid centered stretched>
-              <Grid.Row padded>
-                <Segment fluid >
-                  <Grid textAlign="center" columns={4}>
-                      <Grid.Row >
-                        <Grid.Column floated='left' width={10}>
-                          <h2>{question.question_str}</h2>
-                        </Grid.Column>
-                        <Grid.Column width={6}>
-                          <h2>Question's Answered: {result.correct + result.wrong}</h2>
-                        </Grid.Column>
-                      </Grid.Row>
-                      <Segment>
-                        <Grid.Column>
-                          <h2>{question.option1}</h2>
-                        </Grid.Column>
-                      </Segment>
-                      <Segment>
-                        <Grid.Column>
-                          <h2>{question.option2}</h2>
-                        </Grid.Column>
-                      </Segment>
-                      <Segment>
-                        <Grid.Column>
-                          <h2>{question.option3}</h2>
-                        </Grid.Column>
-                      </Segment>
-                      <Segment>
-                        <Grid.Column>
-                          <h2>{question.option4}</h2>
-                        </Grid.Column>
-                      </Segment>
-                      <Grid.Row>
-                        <Form onSubmit= { handleCheckAnswer }>
-                          <Form.Input 
-                            required 
-                            name='answer'
-                            placeholder='your answer'
-                            onChange= { handleChange } 
-                            value= {responses.answer}
-                          />
-                          {/* <h3>Save after every question</h3> */}
-                          <Button type='submit' color='green' >Submit Answer</Button>
-                        </Form>
-                      </Grid.Row>
-                  </Grid>
-                </Segment>
-              </Grid.Row>
-            </Grid>
-          </Segment>
-        </div>
-        <Divider section/>
-      </>
-        
-    ))
-
-  return(
-    <>  
+  return (
+    <>
       <Modal
         onClose={() => setOpen(false)}
         onOpen={() => setOpen(true)}
         open={open}
-        trigger={<Button floated="right" 
-        >Take Test</Button>}
-        size='large'
-        closeOnDimmerClick = {false}
+        trigger={<Button floated="right">Take Test</Button>}
+        size="large"
+        closeOnDimmerClick={false}
       >
         <Modal.Content scrolling>
-          <Segment    
-              inverted
-              verticalAlign='middle' 
-              id="segment"
-          >
+          <Segment inverted verticalAlign="middle" id="segment">
             <Segment>
               <Grid padded textAlign="center">
-                <h2>{test.name} </h2>                
+                <h2>{test.name} </h2>
               </Grid>
             </Segment>
             {questionsJSX}
           </Segment>
-          <Form 
-            onSubmit={ handleCreateResult }
-          >
-            <Button type='submit' color='green'>Submit</Button>
+          <Form onSubmit={handleCreateResult}>
+            <Button type="submit" color="green">
+              Submit
+            </Button>
 
-            { (result.correct + result.wrong) == 0 ?
-              <Button color='red' floated="right" onClick={() => setOpen(false)}>
-                  Cancel
+            {result.correct + result.wrong == 0 ? (
+              <Button
+                color="red"
+                floated="right"
+                onClick={() => setOpen(false)}
+              >
+                Cancel
               </Button>
-            :
-              null
-            }
+            ) : null}
           </Form>
         </Modal.Content>
       </Modal>
     </>
-  )
-}
+  );
+};
 
-export default TestTake
+export default TestTake;
