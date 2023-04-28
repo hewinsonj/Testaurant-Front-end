@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react'
-import {Button, Modal} from 'semantic-ui-react'
-import { updateTest } from '../../api/test'
-import { getAllQuestions } from '../../api/question'
-import AddTest from './AddTest'
+import React, { useState, useEffect } from "react";
+import { Button, Modal } from "semantic-ui-react";
+import { updateTest } from "../../api/test";
+import { getAllQuestions } from "../../api/question";
+import AddTest from "./AddTest";
 
 const TestUpdateModal = (props) => {
 
@@ -17,9 +17,9 @@ const TestUpdateModal = (props) => {
     const [idStorage, setIdStorage] = useState(props.tempQuestion)
     const [allQuestions, setAllQuestions] = useState(props.allQuestions)
 
-    const tempQuestion = {
-        question_ids: [],
-    }
+  const tempQuestion = {
+    question_ids: [],
+  };
 
     // useEffect(() => {
     //     // handleChecked();
@@ -113,12 +113,13 @@ const TestUpdateModal = (props) => {
         })
     }
 
-    const handleUpdateTest = (e) => {
-        e.preventDefault()
+  const handleUpdateTest = (e) => {
+    e.preventDefault();
+    console.log(test, "this is the updated test");
 
-        allQuestions.slice(0).map((question) => (
-            findQuestionObject( question, idStorage)
-        ))
+    allQuestions
+      .slice(0)
+      .map((question) => findQuestionObject(question, idStorage));
 
         updateTest(user, test, props.test.id)
 
@@ -197,4 +198,4 @@ const TestUpdateModal = (props) => {
     )
 }
 
-export default TestUpdateModal
+export default TestUpdateModal;

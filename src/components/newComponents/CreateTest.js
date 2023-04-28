@@ -492,17 +492,17 @@ const CreateTest = (props) => {
       }
 >>>>>>> 27bdab7 (cleaned up)
 
-    return (
-        <AddTest
-            test={ test }
-            handleChange={ handleChange }
-            handleChangeOther={handleChangeOther}
-            heading="Create a new Test!"
-            handleSubmit={ handleCreateTest }
-            allQuestions={allQuestions}
-            user={user}
-        />
-    )
-}
+  return (
+    <AddTest
+      test={test}
+      handleChange={handleChange}
+      handleChangeOther={handleChangeOther}
+      heading="Create a new Test!"
+      handleSubmit={handleCreateTest}
+      allQuestions={allQuestions}
+      user={user}
+    />
+  );
+};
 
 export default CreateTest;

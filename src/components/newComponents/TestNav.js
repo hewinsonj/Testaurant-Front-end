@@ -67,37 +67,39 @@ componentDidMount() {
 >>>>>>> 27bdab7 (cleaned up)
  
   render() {
-    const { activeItem, allTests, allQuestions } = this.state
-    const contentJSX = activeItem === 'Questions' ? 
-<<<<<<< HEAD
-        <QuestionIndex  user={this.props.user} setNewQuestion={this.props.setNewQuestion} msgAlert={this.props.msgAlert} allQuestions={this.props.allQuestions}/>
-        :
-        <TestIndex  user={this.props.user} setNewQuestion={this.props.setNewQuestion} msgAlert={this.props.msgAlert} setNewTest={this.props.setNewTest} allTests={this.props.allTests} allQuestions={this.props.allQuestions}/>
-=======
->>>>>>> 27bdab7 (cleaned up)
-
-          <QuestionIndex  user={this.props.user} setNewQuestion={this.props.setNewQuestion} msgAlert={this.props.msgAlert}/>
-        :
-          <TestIndex  user={this.props.user} setNewQuestion={this.props.setNewQuestion} msgAlert={this.props.msgAlert} setNewTest={this.props.setNewTest}/>
+    const { activeItem } = this.state;
+    const contentJSX =
+      activeItem === "Questions" ? (
+        <QuestionIndex
+          user={this.props.user}
+          setNewQuestion={this.props.setNewQuestion}
+          msgAlert={this.props.msgAlert}
+        />
+      ) : (
+        <TestIndex
+          user={this.props.user}
+          setNewQuestion={this.props.setNewQuestion}
+          msgAlert={this.props.msgAlert}
+          setNewTest={this.props.setNewTest}
+        />
+      );
 
     return (
       <>
         <Menu tabular>
           <Menu.Item
-            name='Tests'
-            active={activeItem === 'Tests'}
+            name="Tests"
+            active={activeItem === "Tests"}
             onClick={this.handleItemClick}
-          >
-          </Menu.Item>
+          ></Menu.Item>
           <Menu.Item
-            name='Questions'
-            active={activeItem === 'Questions'}
+            name="Questions"
+            active={activeItem === "Questions"}
             onClick={this.handleItemClick}
-          >
-          </Menu.Item>  
+          ></Menu.Item>
         </Menu>
         {contentJSX}
       </>
-    )
+    );
   }
 }

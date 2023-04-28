@@ -28,7 +28,7 @@ import EmployeePage from './components/newComponents/EmployeePage'
 const App = () => {
 
   const [user, setUser] = useState(null)
-  const [viewedUser, setViewedUser] = useState(null)
+//   const [viewedUser, setViewedUser] = useState(null)
   const [msgAlerts, setMsgAlerts] = useState([])
   const [newQuestion, setNewQuestion] = useState(false)
   const [newTest, setNewTest] = useState(false)

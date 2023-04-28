@@ -1,7 +1,7 @@
-import React from 'react'
-import {  Segment, Grid } from 'semantic-ui-react'
-import TestShow from './TestShow'
-import TestTake from './TestTake'
+import React from "react";
+import { Segment, Grid } from "semantic-ui-react";
+import TestShow from "./TestShow";
+import TestTake from "./TestTake";
 
 const TestSegment = ({ test, msgAlert, user, allQuestions}) => {
     
@@ -30,4 +30,4 @@ const TestSegment = ({ test, msgAlert, user, allQuestions}) => {
     )
 }
 
-export default TestSegment
+export default TestSegment;

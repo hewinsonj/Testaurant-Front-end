@@ -96,4 +96,4 @@ const TestIndex = ({ user, msgAlert, newTest, setNewTest}) => {
 	)
 }
 
-export default TestIndex
+export default TestIndex;
