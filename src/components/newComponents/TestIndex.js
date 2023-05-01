@@ -21,7 +21,7 @@ const TestIndex = ({ user, msgAlert, newTest, setNewTest }) => {
         });
       });
   }, []);
-  console.log(allTests, "All the damn tests");
+  console.log(allTests, "All the tests from TestIndex");
   return (
     <>
       <div>
