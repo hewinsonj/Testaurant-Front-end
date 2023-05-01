@@ -1,10 +1,8 @@
 // import _ from 'lodash'
 // import React,{ useReducer, useEffect, useRef } from 'react'
 // import { Search, Grid, Header, Segment } from 'semantic-ui-react'
-// import { getAllActivities } from '../../api/activity' 
+// import { getAllActivities } from '../../api/activity'
 // import messages from '../shared/AutoDismissAlert/messages'
-
-
 
 // const source = _.times(5, () => ({
 //   activity: '',
@@ -36,7 +34,6 @@
 // const activities = props.activities
 // const user = props.activity
 // const msgAlert = props.msgAlert
-
 
 //   const [state, dispatch] = React.useReducer(Reducer, initialState)
 //   const { loading, results, value } = state
@@ -129,7 +126,6 @@
 // // ];
 // // const Search = ({name, age}) => {
 
-
 // //     const resRender = ({ name, age }) => (
 // //       <span key="name">
 // //         {name} is {age} yo
@@ -145,6 +141,5 @@
 // //       />
 // //     );
 // //   }}
-
 
 // // export default Search

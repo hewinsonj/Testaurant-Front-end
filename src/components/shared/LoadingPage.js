@@ -1,11 +1,10 @@
-import {Icon} from 'semantic-ui-react'
+import { Icon } from "semantic-ui-react";
 
 const LoadingScreen = () => (
-    <div style={{textAlign: 'center'}}>
-        <h2>One moment please my dude...</h2>
-        <Icon loading name='spinner' />
-    </div>
+  <div style={{ textAlign: "center" }}>
+    <h2>One moment please</h2>
+    <Icon loading name="spinner" size="massive" />
+  </div>
+);
 
-)
-
-export default LoadingScreen
+export default LoadingScreen;

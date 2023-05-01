@@ -8,6 +8,7 @@ import AddTestModal from './AddTestModal'
 
 const TestIndex = ({ user, msgAlert, newTest, setNewTest}) => {
 
+<<<<<<< HEAD
     const [allTests, setAllTests] = useState(null)
 
     const [allQuestions, setAllQuestions] = useState(null)
@@ -95,5 +96,56 @@ const TestIndex = ({ user, msgAlert, newTest, setNewTest}) => {
 		</>
 	)
 }
+=======
+  useEffect(() => {
+    getAllTests(user)
+      .then((res) => {
+        setAllTests(res.data.test_thiss);
+      })
+      .catch((error) => {
+        msgAlert({
+          heading: "Error",
+          message: "Could not get tests",
+          variant: "danger",
+        });
+      });
+  }, []);
+  console.log(allTests, "All the tests from TestIndex");
+  return (
+    <>
+      <div>
+        <Segment raised inverted fluid>
+          <Grid centered>
+            <Segment raised>
+              <Grid.Row>
+                <AddTestModal user={user} msgAlert={msgAlert} />
+              </Grid.Row>
+              <h1 id="commFeed">All Tests</h1>
+              <div className="scrolling-group">
+                {allTests ? (
+                  allTests
+                    .slice(0)
+                    .reverse()
+                    .map((test) => (
+                      <TestSegment
+                        key={test.id}
+                        test={test}
+                        user={user}
+                        msgAlert={msgAlert}
+                        setNewTest={setNewTest}
+                      />
+                    ))
+                ) : (
+                  <LoadingScreen />
+                )}
+              </div>
+            </Segment>
+          </Grid>
+        </Segment>
+      </div>
+    </>
+  );
+};
+>>>>>>> 87a2380 (formated more files with Prettier)
 
 export default TestIndex;
