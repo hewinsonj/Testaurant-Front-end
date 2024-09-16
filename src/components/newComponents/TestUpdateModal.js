@@ -8,35 +8,35 @@ import AddTest from './AddTest'
 
 const TestUpdateModal = (props) => {
 
-    const { heading, user, msgAlert, setNewTest, activeItem, question, } = props
+    const { heading, user, msgAlert, setNewTest, activeItem, question } = props
 
     const [open, setOpen] = useState(false)
     const [test, setTest] = useState(props.test)
     const [idStorage, setIdStorage] = useState(props.tempQuestion)
-    const [allQuestions, setAllQuestions] = useState(null)
+    const [allQuestions, setAllQuestions] = useState(props.allQuestions)
 
 
     const tempQuestion = {
         question_ids: [],
     }
 
-    useEffect(() => {
-        
-        getAllQuestions(user)
-            .then(res => {
-                setAllQuestions(res.data.question_news)
-            })
-            .then(() => {
-                handleChecked()
-            })
-            .catch(error => {
-                msgAlert({
-                    'heading': 'Error',
-                    'message': 'Could not get questions',
-                    'variant': 'danger'
-                })
-            })
-    },[])
+    // useEffect(() => {
+    //     // handleChecked();
+    //     getAllQuestions(user)
+    //         .then(res => {
+    //             setAllQuestions(res.data.question_news)
+    //         })
+    //         .then(() => {
+    //             // handleChecked()
+    //         })
+    //         .catch(error => {
+    //             msgAlert({
+    //                 'heading': 'Error',
+    //                 'message': 'Could not get questions',
+    //                 'variant': 'danger'
+    //             })
+    //         })
+    // },[])
 
     const handleChange = (e , target) => {
         
@@ -71,20 +71,20 @@ const TestUpdateModal = (props) => {
     // console.log("this is the test from testAdd", test)
 
 
-    const handleChecked = (test , question) => {
-        for (let i = 0; i < test.question_new.length; i++) {
-            if(test.question_new[i].id === question.id){
+    // const handleChecked = (test , question) => {
+    //     for (let i = 0; i < test.question_new.length; i++) {
+    //         if(test.question_new[i].id === question.id){
 
-                // idStorage.question_ids.push(parseInt(question.id)
+    //             // idStorage.question_ids.push(parseInt(question.id)
 
-                // console.log('working')
+    //             // console.log('working')
 
-                return true
+    //             return true
                 
-            }
-        } console.log('not working')
+    //         }
+    //     } console.log('not working')
         
-    }
+    // }
     // console.log(test, 'this is test.question_new.id -------------------------------------')
     // console.log(question, 'this is question-------------------------------------')
 
@@ -144,13 +144,13 @@ const TestUpdateModal = (props) => {
         for (let i = 0; i < tempQuestion.question_ids.length; i++) {
           if(idStorage.question_ids[i] == question.id){
             props.test.question_new.push(question.id)
-           console.log('this function works')
+        //    console.log('this function works')
           }
         } return 
         
       }
     
-      console.log(props.test, 'this is the damn temp q')
+    //   console.log(props.test, 'this is the damn temp q')
       
     // console.log('these are the question objects', test.question_new)
     // console.log('this is the tempQuestion', idStorage.question_ids)
@@ -176,7 +176,7 @@ const TestUpdateModal = (props) => {
                     handleSubmit={ handleUpdateTest }
                     allQuestions={allQuestions}
                     user={user}
-                    handleChecked={handleChecked}
+                    // handleChecked={handleChecked}
                     // isChecked={isChecked}
                 />
             </Modal.Content>

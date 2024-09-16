@@ -54,9 +54,11 @@ const CreateQuestion = (props) => {
                     variant: 'success'
                 })
             })
+            // 
             .then(() => {
                 setOpen(false)
             })
+            
             .then(() => setNewQuestion(prev => !prev))
             .catch((error) => {
                 msgAlert({

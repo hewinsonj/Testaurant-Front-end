@@ -25,7 +25,7 @@ const QuestionIndex = ({ user, msgAlert, newQuestion, setNewQuestion }) => {
                 })
             })
     },[])
-   console.log('these are the questions', allQuestions)
+//    console.log('these are the questions', allQuestions)
 	return (
 		<>
         <div >

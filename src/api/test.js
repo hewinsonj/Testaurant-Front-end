@@ -85,6 +85,7 @@ export const createTest = (user, test) => {
             "test_this": {
                 "name": test.name,
                 "question_new": test.question_new,
+                "owner": user.id,
             },
         }
     })
@@ -104,7 +105,7 @@ export const createTest = (user, test) => {
 //update an activity
 //nothing returned
 export const updateTest = (user, updatesToTest, testId) => {
-    console.log(updatesToTest, 'test right before my update api request')
+    // console.log(updatesToTest, 'test right before my update api request')
 	return axios({
 		method: 'PATCH',
         headers: {

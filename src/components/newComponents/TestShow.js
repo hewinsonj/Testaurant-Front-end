@@ -9,14 +9,14 @@ import LoadingScreen from "../shared/LoadingPage"
 
 
 
-const TestShow = ({ user, msgAlert, test}) => {
+const TestShow = ({test, msgAlert, user, allQuestions}) => {
 
     const [updated, setUpdated] = useState(false)
     const [deleted, setDeleted] = useState(false)
     const navigate = useNavigate()
     const [open, setOpen] = React.useState(false)
     const [noteModalShow, setNoteModalShow] = useState(false)
-    const [allQuestions, setAllQuestions] = useState(null)
+    // const [allQuestions, setAllQuestions] = useState(null)
 
 
     // useEffect(() => {
@@ -87,20 +87,22 @@ const TestShow = ({ user, msgAlert, test}) => {
     // console.log('this is the test', test)
 
     // console.log(allQuestions, "this is all of the questions")
-    useEffect(() => {
+  //   useEffect(() => {
         
-      getAllQuestions(user)
-          .then(res => {
-              setAllQuestions(res.data.question_news)
-          })
-          .catch(error => {
-              msgAlert({
-                  'heading': 'Error',
-                  'message': 'Could not get questions',
-                  'variant': 'danger'
-              })
-          })
-  },[])
+  //     getAllQuestions(user)
+  //         .then(res => {
+  //             setAllQuestions(res.data.question_news)
+  //         })
+  //         .catch(error => {
+  //             msgAlert({
+  //                 'heading': 'Error',
+  //                 'message': 'Could not get questions',
+  //                 'variant': 'danger'
+  //             })
+  //         })
+  // },[])
+
+
 
 
 

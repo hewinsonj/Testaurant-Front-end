@@ -30,6 +30,8 @@ import TestTakePage from './components/newComponents/TestTakePage'
 import ResultsPage from './components/newComponents/ResultsPage'
 import TheLandingDisplay from './components/newComponents/TheLandingDisplay'
 import EmployeePage from './components/newComponents/EmployeePage'
+// import { getAllTests } from './api/test'
+// import { getAllQuestions } from './api/question'
 
 // import CreateActivity from './components/activities/CreateActivity'
 // import UpdateActivity from './components/activities/UpdateActivity'
