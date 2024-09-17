@@ -66,53 +66,53 @@ const QuestionIndex = ({ user, msgAlert, newQuestion, setNewQuestion }) => {
     </>
   );
 };
-    useEffect(() => {
+//     useEffect(() => {
         
-        getAllQuestions(user)
-            .then(res => {
-                setAllQuestions(res.data.question_news)
-            })
-            .catch(error => {
-                msgAlert({
-                    'heading': 'Error',
-                    'message': 'Could not get questions',
-                    'variant': 'danger'
-                })
-            })
-    },[])
-//    console.log('these are the questions', allQuestions)
-	return (
-		<>
-        <div >
-		    <Segment 
-                raised
-                inverted  
-                verticalAlign='middle' 
-                fluid
-            >
-                <Grid centered textAlign='center'>
-                    <Segment raised verticalAlign='middle' textAlign='center'>
-                        <Grid.Row>
-                            <AddQuestionModal user={user} msgAlert={msgAlert} setNewQuestion={setNewQuestion}/>
-                        </Grid.Row>
-                        <Grid.Row centered textAlign='center' verticalAlign='middle'>
-                            <h1 >All Questions</h1>
-                        </Grid.Row>
-                        <div className='scrolling-group'>
-                            {allQuestions ? 
-                                allQuestions.slice(0).reverse().map((question) => (
-                                    <QuestionSegment key={question.id} question={question} user={user} msgAlert={msgAlert}/>
-                                ))
-                            :
-                                <LoadingScreen />
-                            }
-                        </div>
-                    </Segment>
-                </Grid>
-		    </Segment>
-        </div>
-		</>
-	)
-}
+//         getAllQuestions(user)
+//             .then(res => {
+//                 setAllQuestions(res.data.question_news)
+//             })
+//             .catch(error => {
+//                 msgAlert({
+//                     'heading': 'Error',
+//                     'message': 'Could not get questions',
+//                     'variant': 'danger'
+//                 })
+//             })
+//     },[])
+// //    console.log('these are the questions', allQuestions)
+// 	return (
+// 		<>
+//         <div >
+// 		    <Segment 
+//                 raised
+//                 inverted  
+//                 verticalAlign='middle' 
+//                 fluid
+//             >
+//                 <Grid centered textAlign='center'>
+//                     <Segment raised verticalAlign='middle' textAlign='center'>
+//                         <Grid.Row>
+//                             <AddQuestionModal user={user} msgAlert={msgAlert} setNewQuestion={setNewQuestion}/>
+//                         </Grid.Row>
+//                         <Grid.Row centered textAlign='center' verticalAlign='middle'>
+//                             <h1 >All Questions</h1>
+//                         </Grid.Row>
+//                         <div className='scrolling-group'>
+//                             {allQuestions ? 
+//                                 allQuestions.slice(0).reverse().map((question) => (
+//                                     <QuestionSegment key={question.id} question={question} user={user} msgAlert={msgAlert}/>
+//                                 ))
+//                             :
+//                                 <LoadingScreen />
+//                             }
+//                         </div>
+//                     </Segment>
+//                 </Grid>
+// 		    </Segment>
+//         </div>
+// 		</>
+// 	)
+// };
 
 export default QuestionIndex;
