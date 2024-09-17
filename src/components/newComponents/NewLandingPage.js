@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { Grid, Menu, Segment, Label, Input } from "semantic-ui-react";
 import LoadingScreen from "../shared/LoadingPage";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 export default class NewLandingPage extends Component {
   state = { activeItem: "home" };
@@ -9,6 +9,7 @@ export default class NewLandingPage extends Component {
   handleItemClick = (e, { name }) => this.setState({ activeItem: name });
   render() {
     const { activeItem } = this.state;
+    // const navigate = useNavigate();
 
     return (
       <>
@@ -76,9 +77,10 @@ export default class NewLandingPage extends Component {
               <Menu.Item
                 name="sign-out"
                 active={activeItem === "sign-out"}
-                onClick={this.handleItemClick}
+                // onClick={this.handleItemClick, navigate(`/sign-out`)}
               >
-                <Link to="sign-out">Sign out</Link>
+                  <Link to="sign-out">Sign out</Link>
+                  {/* <Navigate to="/sign-out">Sign Out</Navigate> */}
               </Menu.Item>
             </Menu.Menu>
           )}

@@ -96,7 +96,7 @@ const TestShow = ({ user, msgAlert, test}) => {
         onClose={() => setOpen(false)}
         onOpen={() => setOpen(true)}
         open={open}
-        trigger={<Button floated="right">Show Test</Button>}
+        trigger={<Button> Show Test</Button>}
         size="large"
       >
         <Modal.Content scrolling>

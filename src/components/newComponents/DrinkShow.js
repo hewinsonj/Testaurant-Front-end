@@ -43,7 +43,7 @@ const DrinkShow = ({ user, msgAlert, drink }) => {
         onClose={() => setOpen(false)}
         onOpen={() => setOpen(true)}
         open={open}
-        trigger={<Button floated="right">Show Drink Item</Button>}
+        trigger={<Button >Show Drink Item</Button>}
         size="large"
       >
         <Modal.Content scrolling>

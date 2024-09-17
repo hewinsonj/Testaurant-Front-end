@@ -43,7 +43,7 @@ const QuestionShow = ({ user, msgAlert, question }) => {
         onClose={() => setOpen(false)}
         onOpen={() => setOpen(true)}
         open={open}
-        trigger={<Button floated="right">Show Full Question</Button>}
+        trigger={<Button >Show Full Question</Button>}
         size="large"
       >
         <Modal.Content scrolling>

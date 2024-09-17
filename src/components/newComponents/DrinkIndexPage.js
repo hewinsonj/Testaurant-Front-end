@@ -26,18 +26,17 @@ const DrinkIndexPage = ({ user, msgAlert }) => {
   return (
     <>
       <div>
-        <Container>
+        
           <Segment raised inverted verticalAlign="middle" fluid>
             <Grid centered textAlign="center" fluid>
-              <Grid.Row>
-                <Segment raised verticalAlign="middle" textAlign="center">
+              <Grid.Column width={10}>
+                <Segment raised verticalAlign="middle" textAlign="center" inverted>
                   <Grid.Row>
                     <AddDrinkModal user={user} msgAlert={msgAlert} />
                   </Grid.Row>
-                  <Grid.Row centered textAlign="center" verticalAlign="middle">
-                    <h1>All Drinks</h1>
-                  </Grid.Row>
-                  <div className="scrolling-group">
+                <h1>All Drinks</h1>
+                <Grid columns={2}>
+                  {/* <div className="scrolling-group"> */}
                     {allDrinks ? (
                       allDrinks
                         .slice(0)
@@ -53,12 +52,13 @@ const DrinkIndexPage = ({ user, msgAlert }) => {
                     ) : (
                       <LoadingScreen />
                     )}
-                  </div>
+                  {/* </div> */}
+                </Grid>
                 </Segment>
-              </Grid.Row>
+              </Grid.Column>
             </Grid>
           </Segment>
-        </Container>
+        
       </div>
     </>
   );

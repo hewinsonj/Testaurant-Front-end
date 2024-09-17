@@ -116,30 +116,34 @@ const TestIndex = ({ user, msgAlert, newTest, setNewTest}) => {
       <div>
         <Segment raised inverted fluid>
           <Grid centered>
-            <Segment raised>
-              <Grid.Row>
-                <AddTestModal user={user} msgAlert={msgAlert} />
-              </Grid.Row>
-              <h1 id="commFeed">All Tests</h1>
-              <div className="scrolling-group">
-                {allTests ? (
-                  allTests
-                    .slice(0)
-                    .reverse()
-                    .map((test) => (
-                      <TestSegment
-                        key={test.id}
-                        test={test}
-                        user={user}
-                        msgAlert={msgAlert}
-                        setNewTest={setNewTest}
-                      />
-                    ))
-                ) : (
-                  <LoadingScreen />
-                )}
-              </div>
-            </Segment>
+            <Grid.Column width={10}>
+              <Segment raised inverted>
+                <Grid.Row>
+                  <AddTestModal user={user} msgAlert={msgAlert} />
+                </Grid.Row>
+                <h1 id="commFeed">All Tests</h1>
+                <Grid columns={2}>
+                  {/* <div className="scrolling-group"> */}
+                  {allTests ? (
+                    allTests
+                      .slice(0)
+                      .reverse()
+                      .map((test) => (
+                        <TestSegment
+                          key={test.id}
+                          test={test}
+                          user={user}
+                          msgAlert={msgAlert}
+                          setNewTest={setNewTest}
+                        />
+                      ))
+                  ) : (
+                    <LoadingScreen />
+                  )}
+                  {/* </div> */}
+                </Grid>
+              </Segment>
+            </Grid.Column>
           </Grid>
         </Segment>
       </div>

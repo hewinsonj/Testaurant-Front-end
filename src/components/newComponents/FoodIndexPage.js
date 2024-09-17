@@ -26,19 +26,20 @@ const FoodIndexPage = ({ user, msgAlert, setNewFood }) => {
   return (
     <>
       <div>
-        <Container>
-          <Segment raised inverted verticalAlign="middle" fluid>
+        
+          <Segment raised inverted >
             <Grid centered textAlign="center" fluid>
-              <Grid.Row>
-                <Segment raised verticalAlign="middle" textAlign="center">
+              <Grid.Column width={10}>
+              
+                <Segment raised inverted verticalAlign="middle" textAlign="center">
                   <Grid.Row>
                     <AddFoodModal user={user} msgAlert={msgAlert} />
                   </Grid.Row>
-                  <Grid.Row centered textAlign="center" verticalAlign="middle">
+                  
                     <h1>All Foods</h1>
-                  </Grid.Row>
-                  <Grid.Row>
-                    <div className="scrolling-group">
+                 
+                  <Grid columns={2}>
+                    {/* <div className="scrolling-group"> */}
                       {allFoods ? (
                         allFoods
                           .slice(0)
@@ -54,13 +55,14 @@ const FoodIndexPage = ({ user, msgAlert, setNewFood }) => {
                       ) : (
                         <LoadingScreen />
                       )}
-                    </div>
-                  </Grid.Row>
+                    {/* </div> */}
+                 </Grid>
                 </Segment>
-              </Grid.Row>
+                
+              </Grid.Column>
             </Grid>
           </Segment>
-        </Container>
+       
       </div>
     </>
   );

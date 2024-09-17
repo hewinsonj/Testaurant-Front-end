@@ -27,7 +27,8 @@ const QuestionIndex = ({ user, msgAlert, newQuestion, setNewQuestion }) => {
       <div>
         <Segment raised inverted verticalAlign="middle" fluid>
           <Grid centered textAlign="center">
-            <Segment raised verticalAlign="middle" textAlign="center">
+            <Grid.Column width={10}>
+            <Segment raised verticalAlign="middle" textAlign="center" inverted>
               <Grid.Row>
                 <AddQuestionModal
                   user={user}
@@ -35,10 +36,11 @@ const QuestionIndex = ({ user, msgAlert, newQuestion, setNewQuestion }) => {
                   setNewQuestion={setNewQuestion}
                 />
               </Grid.Row>
-              <Grid.Row centered textAlign="center" verticalAlign="middle">
+              {/* <Grid.Row centered textAlign="center" verticalAlign="middle"> */}
                 <h1>All Questions</h1>
-              </Grid.Row>
-              <div className="scrolling-group">
+              {/* </Grid.Row> */}
+              {/* <div className="scrolling-group"> */}
+              <Grid columns={2}>
                 {allQuestions ? (
                   allQuestions
                     .slice(0)
@@ -54,8 +56,10 @@ const QuestionIndex = ({ user, msgAlert, newQuestion, setNewQuestion }) => {
                 ) : (
                   <LoadingScreen />
                 )}
-              </div>
-            </Segment>
+                {/* </div> */}
+              </Grid>
+              </Segment>
+            </Grid.Column>
           </Grid>
         </Segment>
       </div>
