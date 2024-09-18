@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { Divider, Segment, Grid, Container } from "semantic-ui-react";
 import { getAllResults } from "../../api/result";
+import { getAllTests } from "../../api/test";
 import LoadingScreen from "../shared/LoadingPage";
 import ResultsSegment from "./ResultsSegment";
 import ChangePasswordModal from "./ChangePasswordModal";
 
 const UserPage = ({ user, msgAlert }) => {
   const [allResults, setAllResults] = useState([]);
+  const [allTests, setAllTests] = useState([]);
 
   useEffect(() => {
     getAllResults(user)
@@ -17,6 +19,25 @@ const UserPage = ({ user, msgAlert }) => {
         msgAlert({
           heading: "Error",
           message: "Could not get Results",
+          variant: "danger",
+        });
+      });
+  }, []);
+
+  useEffect(() => {
+    getAllTests(user)
+      .then((res) => {
+        setAllTests(res.data.test_thiss);
+      })
+      .then(() => {
+        console.log(allTests, "ALL TESTS");
+      })
+
+      
+      .catch((error) => {
+        msgAlert({
+          heading: "Error",
+          message: "Could not get tests",
           variant: "danger",
         });
       });
@@ -47,6 +68,7 @@ const UserPage = ({ user, msgAlert }) => {
                         result={result}
                         user={user}
                         msgAlert={msgAlert}
+                        allTests={allTests}
                       />
                     ))
                 ) : (

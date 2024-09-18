@@ -2,8 +2,8 @@ import React, { Component } from 'react'
 import { Menu } from 'semantic-ui-react'
 import QuestionIndex from './QuestionIndex'
 import TestIndex from './TestIndex'
-// import { getAllTests } from '../../api/test'
-// import { getAllQuestions } from '../../api/question'
+import { getAllTests } from '../../api/test'
+import { getAllQuestions } from '../../api/question'
 import { Link } from 'react-router-dom'
 
 export default class TestNav extends Component {

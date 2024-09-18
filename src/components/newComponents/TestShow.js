@@ -14,7 +14,7 @@ const TestShow = ({test, msgAlert, user, allQuestions}) => {
     const [deleted, setDeleted] = useState(false)
     // const navigate = useNavigate()
     const [open, setOpen] = React.useState(false)
-    // const [noteModalShow, setNoteModalShow] = useState(false)
+
     // const [allQuestions, setAllQuestions] = useState(null)
 
 

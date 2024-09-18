@@ -93,8 +93,8 @@ import AddTestModal from './AddTestModal'
 
 const TestIndex = ({ user, msgAlert, newTest, setNewTest}) => {
 
-    const [allTests, setAllTests] = useState(null)
 
+    const [allTests, setAllTests] = useState(null)
     const [allQuestions, setAllQuestions] = useState(null)
 
     useEffect(() => {
@@ -162,4 +162,5 @@ const TestIndex = ({ user, msgAlert, newTest, setNewTest}) => {
 	)
 }
 
-export default TestIndex
+
+export default TestIndex;
