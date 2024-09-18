@@ -6,26 +6,18 @@ import { getAllQuestions } from "../../api/question";
 import TestUpdateModal from "./TestUpdateModal";
 import LoadingScreen from "../shared/LoadingPage";
 
-<<<<<<< HEAD
 
 
 const TestShow = ({test, msgAlert, user, allQuestions}) => {
-=======
-const TestShow = ({ user, msgAlert, test}) => {
->>>>>>> 27bdab7 (cleaned up)
 
     const [updated, setUpdated] = useState(false)
     const [deleted, setDeleted] = useState(false)
-    const navigate = useNavigate()
+    // const navigate = useNavigate()
     const [open, setOpen] = React.useState(false)
-<<<<<<< HEAD
     const [noteModalShow, setNoteModalShow] = useState(false)
     // const [allQuestions, setAllQuestions] = useState(null)
 
 
-=======
-    const [allQuestions, setAllQuestions] = useState(null)
->>>>>>> 27bdab7 (cleaned up)
   
     const handleDeleteTest = () => {
       deleteTest(user, test.id)
@@ -61,15 +53,11 @@ const TestShow = ({ user, msgAlert, test}) => {
     }
   };
 
-<<<<<<< HEAD
   
     // console.log('this is the test', test)
 
     // console.log(allQuestions, "this is all of the questions")
   //   useEffect(() => {
-=======
-    useEffect(() => {
->>>>>>> 8a48fff (about to refactor)
         
   //     getAllQuestions(user)
   //         .then(res => {

@@ -33,23 +33,26 @@ const TestTake = ({ user, msgAlert, test }) => {
     const [index, setIndex] = useState(defaultIndex)
 
 
-    const handleChange = (e , target) => {
-      setResponses(prevResponse => {
-          const { name, value } = target
-          const updatedName = name
-          let updatedValue = value
-          const updatedResponse = { [updatedName]: updatedValue }
-<<<<<<< HEAD
-          console.log('this is the reponses as you make em', responses)
->>>>>>> 8a48fff (about to refactor)
-=======
->>>>>>> 27bdab7 (cleaned up)
+  //   const handleChange = (e , target) => {
+  //     setResponses(prevResponse => {
+  //         const { name, value } = target
+  //         const updatedName = name
+  //         let updatedValue = value
+  //         const updatedResponse = { [updatedName]: updatedValue }
+  //     });
 
-//           return { ...prevResponse, ...updatedResponse}
-//       })
-//   }
+  //         return { ...prevResponse, ...updatedResponse}
+  //     }
+  // }
 
-<<<<<<< HEAD
+  const handleChange = (e, target) => {
+    const { name, value } = target;
+    setResponses((prevResponse) => ({
+      ...prevResponse,
+      [name]: value,
+    }));
+  };
+
 //   // const pushIt = (target, i) => {
 //   //   for(let i = 0; i < test.question_new.length; i ++){
 //   //     if(responses.answers[i]){
@@ -114,7 +117,7 @@ const TestTake = ({ user, msgAlert, test }) => {
 //     // console.log(result, 'this be the result')
 
 //     // -------------------------------------------------------------
-=======
+
 
   const handleCheckAnswer = () => {
     if (responses.answer === test.question_new[index.count].answer) {
@@ -167,21 +170,17 @@ const TestTake = ({ user, msgAlert, test }) => {
 
 // handleCancel()
 
-
-=======
->>>>>>> 27bdab7 (cleaned up)
   if (!test) {
     return (
       <LoadingScreen />
     )
   }
-<<<<<<< HEAD
+
 // let minutes = 0
 //   const minAdd = () => {
 //     minutes += 1
 //     console.log(minutes, 'mins')
 //     return minutes
->>>>>>> 8a48fff (about to refactor)
 // }
 
 
@@ -201,7 +200,6 @@ const TestTake = ({ user, msgAlert, test }) => {
 
 //   // const countMin = setInterval(minAdd, 60000)
   
-<<<<<<< HEAD
 //   const zero = clearInterval()
 
 //   // let value = 1
@@ -263,13 +261,6 @@ const TestTake = ({ user, msgAlert, test }) => {
 //             size='large'
 //         >
 //             <Modal.Content scrolling>
-=======
-  // const zero = clearInterval()
-
-  // let value = 1
-  console.log('right here', responses.answer)
-=======
->>>>>>> 27bdab7 (cleaned up)
 
   const questionsJSX = test.question_new.slice(0).map((question) => (
 

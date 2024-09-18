@@ -2,18 +2,14 @@ import React, { Component } from 'react'
 import { Menu } from 'semantic-ui-react'
 import QuestionIndex from './QuestionIndex'
 import TestIndex from './TestIndex'
-<<<<<<< HEAD
 import { getAllTests } from '../../api/test'
 import { getAllQuestions } from '../../api/question'
 import { Link } from 'react-router-dom'
-=======
->>>>>>> 27bdab7 (cleaned up)
 
 export default class TestNav extends Component {
   state = { activeItem: 'Tests', setNewQuestion: false, setNewTest: false }
   
   handleItemClick = (e, { name }) => this.setState({ activeItem: name })
-<<<<<<< HEAD
   
 
 
@@ -63,8 +59,6 @@ componentDidMount() {
 
 
 
-=======
->>>>>>> 27bdab7 (cleaned up)
  
   render() {
     const { activeItem } = this.state;

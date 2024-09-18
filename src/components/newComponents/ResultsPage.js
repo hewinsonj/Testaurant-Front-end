@@ -3,10 +3,12 @@ import { useNavigate } from "react-router-dom";
 import { Button, Divider, Segment, Grid, Feed, Icon, Image, Progress, Modal, Container} from "semantic-ui-react";
 import LoadingScreen from "../shared/LoadingPage";
 import { getAllResults } from "../../api/result";
+import { getAllTests } from "../../api/test";
 import ResultsSegment from "./ResultsSegment";
 
 const ResultsPage = ({ user, msgAlert, newTest, setNewTest }) => {
-  const [allResults, setAllResults] = useState([]);
+  const [allResults, setAllResults] = useState(null);
+  const [allTests, setAllTests] = useState(null);
 
   useEffect(() => {
     getAllResults(user)
@@ -21,6 +23,51 @@ const ResultsPage = ({ user, msgAlert, newTest, setNewTest }) => {
         });
       });
   }, []);
+
+  useEffect(() => {
+    getAllTests(user)
+      .then((res) => {
+        setAllTests(res.data.test_thiss);
+      })
+      .then(() => {
+        console.log(allTests, "ALL TESTS");
+      })
+
+      
+      .catch((error) => {
+        msgAlert({
+          heading: "Error",
+          message: "Could not get tests",
+          variant: "danger",
+        });
+      });
+  }, []);
+
+
+  // useEffect(() => {
+  //   // Function to fetch both results and tests
+  //   const fetchData = async () => {
+  //     try {
+  //       // Fetch all results
+  //       const resultsResponse = await getAllResults(user);
+  //       setAllResults(resultsResponse.data.results);
+  
+  //       // Fetch all tests
+  //       const testsResponse = await getAllTests(user);
+  //       setAllTests(testsResponse.data.test_thiss);
+        
+  //     } catch (error) {
+  //       msgAlert({
+  //         heading: "Error",
+  //         message: "Could not get data",
+  //         variant: "danger",
+  //       });
+  //     }
+  //   };
+  
+    // Call the fetch function
+  //   fetchData();
+  // }, [user, msgAlert]);
 
   return (
     <>
@@ -40,6 +87,7 @@ const ResultsPage = ({ user, msgAlert, newTest, setNewTest }) => {
                         result={result}
                         user={user}
                         msgAlert={msgAlert}
+                        allTests={allTests}
                       />
                     ))
                 ) : (

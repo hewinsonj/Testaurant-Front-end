@@ -74,36 +74,5 @@ const CreateQuestion = (props) => {
         />
     )
 }
-    createQuestion(user, question)
-      .then(() => {
-        msgAlert({
-          heading: "Success",
-          message: "Created Question",
-          variant: "success",
-        });
-      })
-      .then(() => {
-        setOpen(false);
-      })
-      .then(() => setNewQuestion((prev) => !prev))
-      .catch((error) => {
-        msgAlert({
-          heading: "Failure",
-          message: "Create Question Failure" + error,
-          variant: "danger",
-        });
-      });
-  };
-
-  console.log(user, "this be the user");
-  return (
-    <AddItem
-      question={question}
-      handleChange={handleChange}
-      heading="Create a new Question!"
-      handleSubmit={handleCreateQuestion}
-    />
-  );
-};
 
 export default CreateQuestion;

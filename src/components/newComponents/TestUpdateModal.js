@@ -6,12 +6,8 @@ import AddTest from "./AddTest";
 
 const TestUpdateModal = (props) => {
 
-<<<<<<< HEAD
     const { heading, user, msgAlert, setNewTest, activeItem, question } = props
 
-=======
-    const { user, msgAlert, setNewTest, } = props
->>>>>>> 27bdab7 (cleaned up)
     const [open, setOpen] = useState(false)
     const [test, setTest] = useState(props.test)
     const [idStorage, setIdStorage] = useState(props.tempQuestion)
@@ -66,7 +62,6 @@ const TestUpdateModal = (props) => {
         })
     }
 
-<<<<<<< HEAD
     // const handleChecked = (test , question) => {
     //     for (let i = 0; i < test.question_new.length; i++) {
     //         if(test.question_new[i].id === question.id){
@@ -86,16 +81,6 @@ const TestUpdateModal = (props) => {
 
 
 
-=======
-    const handleChecked = (test , question) => {
-        for (let i = 0; i < test.question_new.length; i++) {
-            if(test.question_new[i].id === question.id){
-                return true
-            }
-        }
-        console.log(test.question_new, "question new")
-    }
->>>>>>> 27bdab7 (cleaned up)
 
     const handleChangeOther = (e , target) => {
         setTest(prevTest => {
@@ -147,22 +132,16 @@ const TestUpdateModal = (props) => {
         for (let i = 0; i < tempQuestion.question_ids.length; i++) {
           if(idStorage.question_ids[i] == question.id){
             props.test.question_new.push(question.id)
-<<<<<<< HEAD
         //    console.log('this function works')
-=======
->>>>>>> 27bdab7 (cleaned up)
           }
         } 
         return 
       }
-<<<<<<< HEAD
     
     //   console.log(props.test, 'this is the damn temp q')
       
     // console.log('these are the question objects', test.question_new)
     // console.log('this is the tempQuestion', idStorage.question_ids)
-=======
->>>>>>> 27bdab7 (cleaned up)
 
     return (
         <Modal
@@ -186,12 +165,8 @@ const TestUpdateModal = (props) => {
                     handleSubmit={ handleUpdateTest }
                     allQuestions={allQuestions}
                     user={user}
-<<<<<<< HEAD
                     // handleChecked={handleChecked}
                     // isChecked={isChecked}
-=======
-                    handleChecked={handleChecked}
->>>>>>> 27bdab7 (cleaned up)
                 />
             </Modal.Content>
         </Modal>
