@@ -126,11 +126,11 @@ const TestIndex = ({ user, msgAlert, newTest, setNewTest}) => {
                 })
             })
     },[])
-   console.log(allTests, 'All the damn tests')
+   console.log(allTests, 'All the tests')
 	return (
 		<>
         <div >
-		    <Segment 
+		    {/* <Segment 
                 raised
                 inverted 
                 fluid
@@ -156,7 +156,51 @@ const TestIndex = ({ user, msgAlert, newTest, setNewTest}) => {
                         </div>
                     </Segment>
                 </Grid>
-		    </Segment>
+		    </Segment> */}
+
+
+<Segment raised inverted verticalAlign="middle" fluid>
+            <Grid centered textAlign="center" fluid>
+              <Grid.Column width={10}>
+                <Segment raised verticalAlign="middle" textAlign="center" inverted>
+                  <Grid.Row>
+                  <AddTestModal user={user} msgAlert={msgAlert} 
+                        // setNewTest={setNewTest}
+                        />
+                  </Grid.Row>
+                <h1>All Tests</h1>
+                <Grid columns={2}>
+                  {/* <div className="scrolling-group"> */}
+                    {/* {allDrinks ? (
+                      allDrinks
+                        .slice(0)
+                        .reverse()
+                        .map((drink) => (
+                          <DrinkSegment
+                            key={drink.id}
+                            drink={drink}
+                            user={user}
+                            msgAlert={msgAlert}
+                          />
+                        ))
+                    ) : (
+                      <LoadingScreen />
+                    )} */}
+
+
+                        {allTests ? 
+                            allTests.slice(0).map((test) => (
+                                <TestSegment key={test.id} test={test} user={user} msgAlert={msgAlert} setNewTest={setNewTest} allQuestions={allQuestions}/>
+                            ))
+                            :
+                            <LoadingScreen />
+                        }
+                  {/* </div> */}
+                </Grid>
+                </Segment>
+              </Grid.Column>
+            </Grid>
+          </Segment>
         </div>
 		</>
 	)

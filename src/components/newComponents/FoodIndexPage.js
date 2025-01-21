@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { Grid, Segment, Container } from "semantic-ui-react";
-
 import { getAllFoods, deleteFood } from "../../api/food";
 import AddFoodModal from "./AddFoodModal";
 import FoodSegment from "./FoodSegment";
@@ -12,6 +11,7 @@ const FoodIndexPage = ({ user, msgAlert, setNewFood }) => {
   useEffect(() => {
     getAllFoods(user)
       .then((res) => {
+        console.log(res.data.foods, "foods")
         setAllFoods(res.data.foods);
       })
       .catch((error) => {

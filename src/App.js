@@ -52,7 +52,7 @@ const App = () => {
   };
 
   return (
-    <Fragment>
+    <Fragment user={user}>
       <NewLandingPage
         user={user}
         msgAlert={msgAlert}
