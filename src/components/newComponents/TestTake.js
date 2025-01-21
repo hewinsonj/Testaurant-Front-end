@@ -260,19 +260,39 @@ const TestTake = ({ user, msgAlert, test }) => {
   };
 
   const handleSubmit = () => {
+    // Check the answer for the current question (last question)
+    const currentQuestion = test.question_new[currentQuestionIndex];
+    if (answers[currentQuestionIndex] === currentQuestion.answer) {
+      setResult((prevResult) => ({
+        ...prevResult,
+        correct: prevResult.correct + 1,
+      }));
+    } else {
+      setResult((prevResult) => ({
+        ...prevResult,
+        wrong: prevResult.wrong + 1,
+      }));
+    }
+  
+    // Calculate the final results
     const totalQuestions = test.question_new.length;
-    const percentage = Math.round((result.correct / totalQuestions) * 100);
+    const percentage = Math.round(
+      ((result.correct + (answers[currentQuestionIndex] === currentQuestion.answer ? 1 : 0)) /
+        totalQuestions) *
+        100
+    );
   
     const finalResult = {
-      score: `${result.correct} out of ${totalQuestions}`,
-      correct: String(result.correct),
-      wrong: String(result.wrong),
+      score: `${result.correct + (answers[currentQuestionIndex] === currentQuestion.answer ? 1 : 0)} out of ${totalQuestions}`,
+      correct: String(result.correct + (answers[currentQuestionIndex] === currentQuestion.answer ? 1 : 0)),
+      wrong: String(result.wrong + (answers[currentQuestionIndex] !== currentQuestion.answer ? 1 : 0)),
       total: String(totalQuestions),
       percent: `${percentage}%`,
       time: ` mins`, // Assuming the time is calculated elsewhere
       the_test: String(test.id), // Assuming `test.id` is numeric
     };
   
+    // Submit the result
     createResult(user, finalResult)
       .then(() => {
         msgAlert({
