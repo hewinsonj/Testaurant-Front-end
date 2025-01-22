@@ -1,6 +1,17 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Button, Divider, Segment, Grid, Feed, Icon, Image, Progress, Modal, Container} from "semantic-ui-react";
+import {
+  Button,
+  Divider,
+  Segment,
+  Grid,
+  Feed,
+  Icon,
+  Image,
+  Progress,
+  Modal,
+  Container,
+} from "semantic-ui-react";
 import LoadingScreen from "../shared/LoadingPage";
 import { getAllResults } from "../../api/result";
 import { getAllTests } from "../../api/test";
@@ -33,7 +44,6 @@ const ResultsPage = ({ user, msgAlert, newTest, setNewTest }) => {
         console.log(allTests, "ALL TESTS");
       })
 
-      
       .catch((error) => {
         msgAlert({
           heading: "Error",
@@ -43,7 +53,6 @@ const ResultsPage = ({ user, msgAlert, newTest, setNewTest }) => {
       });
   }, []);
 
-
   // useEffect(() => {
   //   // Function to fetch both results and tests
   //   const fetchData = async () => {
@@ -51,11 +60,11 @@ const ResultsPage = ({ user, msgAlert, newTest, setNewTest }) => {
   //       // Fetch all results
   //       const resultsResponse = await getAllResults(user);
   //       setAllResults(resultsResponse.data.results);
-  
+
   //       // Fetch all tests
   //       const testsResponse = await getAllTests(user);
   //       setAllTests(testsResponse.data.test_thiss);
-        
+
   //     } catch (error) {
   //       msgAlert({
   //         heading: "Error",
@@ -64,8 +73,8 @@ const ResultsPage = ({ user, msgAlert, newTest, setNewTest }) => {
   //       });
   //     }
   //   };
-  
-    // Call the fetch function
+
+  // Call the fetch function
   //   fetchData();
   // }, [user, msgAlert]);
 
@@ -75,7 +84,7 @@ const ResultsPage = ({ user, msgAlert, newTest, setNewTest }) => {
         <Segment raised color="black" inverted>
           <Grid centered>
             <Segment raised color="grey" inverted>
-              <h1 id="commFeed">All Results</h1>
+              <h1 id="commFeed">Your Test Results</h1>
               <div className="scrolling-group">
                 {allResults ? (
                   allResults
@@ -91,7 +100,7 @@ const ResultsPage = ({ user, msgAlert, newTest, setNewTest }) => {
                       />
                     ))
                 ) : (
-                  <LoadingScreen/>
+                  <LoadingScreen />
                 )}
               </div>
             </Segment>

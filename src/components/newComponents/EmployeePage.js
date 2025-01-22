@@ -6,18 +6,34 @@ import { getAllTests } from "../../api/test";
 
 const EmployeePage = ({ user, msgAlert }) => {
   const [allEmployees, setAllEmployees] = useState([]);
+  const [filterEmployees, setFilterEmployees] = useState([]);
   const [allTests, setAllTests] = useState(null);
 
   const options = [
     { key: "m", text: "Big Test", value: "big_test" },
     { key: "f", text: "You Better Not FAIL This One", value: "you_better" },
-    { key: "o", text: "Dont Even Worry About This Little Thing", value: "dont_worry" },
+    { key: "o", text: "Dont Even Worry About This Little Thing", value: "dont_worry",
+    },
   ];
+
+  const handleChange = (e) => {
+    const value = e.target.value.toLowerCase(); // Convert the input value to lowercase
+    let employees = allEmployees;
+    setFilterEmployees(
+      employees.filter(
+        (a) =>
+          a.email.toLowerCase().includes(value) 
+        // ||
+        //   a.type.toLowerCase().includes(value)
+      )
+    );
+  };
 
   useEffect(() => {
     getAllTests(user)
       .then((res) => {
         setAllTests(res.data.test_thiss);
+        console.log(res.data.test_thiss, "ALL TESTS")
       })
       .catch((error) => {
         msgAlert({
@@ -31,7 +47,9 @@ const EmployeePage = ({ user, msgAlert }) => {
   useEffect(() => {
     getAllEmployees(user)
       .then((res) => {
+        console.log(res.data.users, "USERS")
         setAllEmployees(res.data.users);
+        setFilterEmployees(res.data.users);
       })
       .catch((error) => {
         msgAlert({
@@ -42,7 +60,7 @@ const EmployeePage = ({ user, msgAlert }) => {
       });
   }, []);
 
-  const Index = allEmployees.map((employee) => (
+  const Index = filterEmployees.map((employee) => (
     <Grid centered stretched>
       <div id="empContainer">
         <Grid.Row padded>
@@ -73,8 +91,8 @@ const EmployeePage = ({ user, msgAlert }) => {
                 </h3>
               </Grid.Column>
               <Grid.Column>
-                <h3>Hire Date: </h3>
-                <h3>10/10/10</h3>
+                {/* <h3>Hire Date: </h3>
+                <h3>10/10/10</h3> */}
               </Grid.Column>
             </Grid>
           </Segment>
@@ -92,7 +110,10 @@ const EmployeePage = ({ user, msgAlert }) => {
               <h1>All Employees</h1>
               <div className="headerSearch">
                 <Form>
-                  <Form.Input placeholder="Type  here  to  filter  results  by  employee  name "></Form.Input>
+                  <Form.Input
+                    placeholder="Type  here  to  filter  results  by  employee  name "
+                    onChange={handleChange}
+                  ></Form.Input>
                 </Form>
               </div>
             </Segment>
