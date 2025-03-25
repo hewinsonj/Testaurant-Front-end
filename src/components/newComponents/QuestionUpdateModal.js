@@ -69,7 +69,7 @@ const QuestionUpdateModal = (props) => {
       onOpen={() => setOpen(true)}
       open={open}
       trigger={
-        <Button color="black" onClick={() => setQuestion(props.question)}>
+        <Button color="black" fluid onClick={() => setQuestion(props.question)}>
           Update Question
         </Button>
       }

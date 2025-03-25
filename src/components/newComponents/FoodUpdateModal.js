@@ -109,7 +109,7 @@ const FoodUpdateModal = (props) => {
       onOpen={() => setOpen(true)}
       open={open}
       trigger={
-        <Button color="black" onClick={() => setFood(props.food)}>
+        <Button color="black" fluid onClick={() => setFood(props.food)}>
           Update Food
         </Button>
       }

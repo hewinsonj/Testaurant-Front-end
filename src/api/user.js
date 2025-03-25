@@ -13,6 +13,26 @@ export const getAllEmployees = (user) => {
         }
     })
 }
+export const updateEmployee = (user, employeeId, updatedData) => {
+  return axios({
+    url: `${apiUrl}/users/${employeeId}/`,
+    method: "PATCH",
+    headers: {
+      Authorization: `Token ${user.token}`,
+    },
+    data: updatedData,
+  })
+}
+
+export const deleteEmployee = (user, employeeId) => {
+    return axios({
+      url: `${apiUrl}/users/${employeeId}/`,
+      method: "DELETE",
+      headers: {
+        Authorization: `Token ${user.token}`,
+      },
+    })
+  }
 
 export const getUserInfo = (currentUser, userId) => {
     return axios({

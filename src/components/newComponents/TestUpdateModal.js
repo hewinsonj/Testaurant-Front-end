@@ -185,8 +185,7 @@ const TestUpdateModal = (props) => {
   const [open, setOpen] = useState(false);
   const [test, setTest] = useState(initialTest);
   const [idStorage, setIdStorage] = useState({
-    question_ids: relevantQuestions.map((q) => q.id), // Using 
-    // relevantQuestions as defaults
+    question_ids: Array.isArray(relevantQuestions) ? relevantQuestions.map((q) => q.id) : [],
   });
 
   const handleChange = (e, { name, id, checked }) => {
@@ -250,7 +249,7 @@ const TestUpdateModal = (props) => {
       onOpen={() => setOpen(true)}
       open={open}
       trigger={
-        <Button color="black" onClick={() => setTest(initialTest)}>
+        <Button color="black" fluid onClick={() => setTest(initialTest)}>
           Update Test
         </Button>
       }

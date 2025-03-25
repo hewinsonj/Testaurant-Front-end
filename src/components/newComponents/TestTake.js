@@ -201,7 +201,6 @@
 
 // export default TestTake;
 
-
 import React, { useState } from "react";
 import { Button, Segment, Grid, Form, Modal } from "semantic-ui-react";
 import LoadingScreen from "../shared/LoadingPage";
@@ -260,39 +259,32 @@ const TestTake = ({ user, msgAlert, test }) => {
   };
 
   const handleSubmit = () => {
-    // Check the answer for the current question (last question)
-    const currentQuestion = test.question_new[currentQuestionIndex];
-    if (answers[currentQuestionIndex] === currentQuestion.answer) {
-      setResult((prevResult) => ({
-        ...prevResult,
-        correct: prevResult.correct + 1,
-      }));
-    } else {
-      setResult((prevResult) => ({
-        ...prevResult,
-        wrong: prevResult.wrong + 1,
-      }));
-    }
-  
-    // Calculate the final results
     const totalQuestions = test.question_new.length;
-    const percentage = Math.round(
-      ((result.correct + (answers[currentQuestionIndex] === currentQuestion.answer ? 1 : 0)) /
-        totalQuestions) *
-        100
-    );
-  
+
+    let correctCount = 0;
+    let wrongCount = 0;
+
+    test.question_new.forEach((question, index) => {
+      if (answers[index] === question.answer) {
+        correctCount++;
+      } else {
+        wrongCount++;
+      }
+    });
+
+    const percentage = Math.round((correctCount / totalQuestions) * 100);
+
     const finalResult = {
-      score: `${result.correct + (answers[currentQuestionIndex] === currentQuestion.answer ? 1 : 0)} out of ${totalQuestions}`,
-      correct: String(result.correct + (answers[currentQuestionIndex] === currentQuestion.answer ? 1 : 0)),
-      wrong: String(result.wrong + (answers[currentQuestionIndex] !== currentQuestion.answer ? 1 : 0)),
+      score: `${correctCount} out of ${totalQuestions}`,
+      correct: String(correctCount),
+      wrong: String(wrongCount),
       total: String(totalQuestions),
       percent: `${percentage}%`,
-      time: ` mins`, // Assuming the time is calculated elsewhere
-      the_test: String(test.id), // Assuming `test.id` is numeric
+      time: ` mins`, // you can plug in a timer later
+      the_test: String(test.id),
+      owner: user.id,
     };
-  
-    // Submit the result
+
     createResult(user, finalResult)
       .then(() => {
         msgAlert({
@@ -310,6 +302,59 @@ const TestTake = ({ user, msgAlert, test }) => {
         });
       });
   };
+  // const handleSubmit = () => {
+  //   // Check the answer for the current question (last question)
+  //   const currentQuestion = test.question_new[currentQuestionIndex];
+  //   if (answers[currentQuestionIndex] === currentQuestion.answer) {
+  //     setResult((prevResult) => ({
+  //       ...prevResult,
+  //       correct: prevResult.correct + 1,
+  //     }));
+  //   } else {
+  //     setResult((prevResult) => ({
+  //       ...prevResult,
+  //       wrong: prevResult.wrong + 1,
+  //     }));
+  //   }
+
+  //   // Calculate the final results
+  //   const totalQuestions = test.question_new.length;
+  //   const percentage = Math.round(
+  //     ((result.correct + (answers[currentQuestionIndex] === currentQuestion.answer ? 1 : 0)) /
+  //       totalQuestions) *
+  //       100
+  //   );
+
+  //   const finalResult = {
+  //     score: `${result.correct + (answers[currentQuestionIndex] === currentQuestion.answer ? 1 : 0)} out of ${totalQuestions}`,
+  //     correct: String(result.correct + (answers[currentQuestionIndex] === currentQuestion.answer ? 1 : 0)),
+  //     wrong: String(result.wrong + (answers[currentQuestionIndex] !== currentQuestion.answer ? 1 : 0)),
+  //     total: String(totalQuestions),
+  //     percent: `${percentage}%`,
+  //     time: ` mins`, // Assuming the time is calculated elsewhere
+  //     the_test: String(test.id),
+  //     owner: user.id , // Assuming `test.id` is numeric
+  //   };
+
+  //   // Submit the result
+  //   createResult(user, finalResult)
+  //     .then(() => {
+  //       msgAlert({
+  //         heading: "Success",
+  //         message: "Result submitted successfully!",
+  //         variant: "success",
+  //       });
+  //       setOpen(false);
+  //     })
+  //     .catch((error) => {
+  //       msgAlert({
+  //         heading: "Error",
+  //         message: "Failed to submit result: " + error.message,
+  //         variant: "danger",
+  //       });
+  //     });
+  // };
+
   if (!test) {
     return <LoadingScreen />;
   }
@@ -322,7 +367,11 @@ const TestTake = ({ user, msgAlert, test }) => {
         onClose={() => setOpen(false)}
         onOpen={() => setOpen(true)}
         open={open}
-        trigger={<Button floated="right">Take Test</Button>}
+        trigger={
+          <Button color="green" fluid style={{ marginTop: "0.5rem" }}>
+            Take Test
+          </Button>
+        }
         size="large"
         closeOnDimmerClick={false}
       >
@@ -331,7 +380,8 @@ const TestTake = ({ user, msgAlert, test }) => {
             <Grid padded textAlign="center">
               <h2>{test.name}</h2>
               <p>
-                Question {currentQuestionIndex + 1} of {test.question_new.length}
+                Question {currentQuestionIndex + 1} of{" "}
+                {test.question_new.length}
               </p>
             </Grid>
           </Segment>
@@ -353,27 +403,32 @@ const TestTake = ({ user, msgAlert, test }) => {
               )}
             </Form>
           </Segment>*/}
-          
+
           <Segment>
-  <h3>{currentQuestion.question_str}</h3>
-  <Form>
-    {[currentQuestion.option1, currentQuestion.option2, currentQuestion.option3, currentQuestion.option4].map(
-      (option, index) => (
-        <Form.Radio
-          key={index}
-          label={option}
-          name={`question-${currentQuestionIndex}`}
-          value={option}
-          checked={answers[currentQuestionIndex] === option}
-          onChange={(e, { value }) => setAnswers((prevAnswers) => ({
-            ...prevAnswers,
-            [currentQuestionIndex]: value,
-          }))}
-        />
-      )
-    )}
-  </Form>
-</Segment>
+            <h3>{currentQuestion.question_str}</h3>
+            <Form>
+              {[
+                currentQuestion.option1,
+                currentQuestion.option2,
+                currentQuestion.option3,
+                currentQuestion.option4,
+              ].map((option, index) => (
+                <Form.Radio
+                  key={index}
+                  label={option}
+                  name={`question-${currentQuestionIndex}`}
+                  value={option}
+                  checked={answers[currentQuestionIndex] === option}
+                  onChange={(e, { value }) =>
+                    setAnswers((prevAnswers) => ({
+                      ...prevAnswers,
+                      [currentQuestionIndex]: value,
+                    }))
+                  }
+                />
+              ))}
+            </Form>
+          </Segment>
 
           <Grid columns={2} textAlign="center">
             <Grid.Column>
