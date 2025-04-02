@@ -549,8 +549,8 @@ const FoodShow = ({ user, msgAlert, food }) => {
                             </Grid.Row>
                             <Grid.Row>
                               <h3>
-                                Contains Gluten:{" "}
-                                {food.con_gluten === true ? (
+                                Contains Dairy:{" "}
+                                {food.con_dairy === true ? (
                                   <div>
                                     <Segment color="red" inverted>
                                       <Icon name="warning" />

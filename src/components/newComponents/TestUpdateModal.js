@@ -246,7 +246,22 @@ const TestUpdateModal = (props) => {
         setOpen(false);
         setTest(initialTest); // Reset to initial state
       }}
-      onOpen={() => setOpen(true)}
+      // onOpen={() => setOpen(true)}
+      onOpen={() => {
+        setTest(initialTest);
+      
+        setIdStorage((prev) => {
+          const existingIds = Array.isArray(initialTest.question_new)
+            ? initialTest.question_new.map((q) => (typeof q === "object" ? q.id : q))
+            : [];
+      
+          const mergedIds = Array.from(new Set([...prev.question_ids, ...existingIds]));
+      
+          return { question_ids: mergedIds };
+        });
+      
+        setOpen(true);
+      }}
       open={open}
       trigger={
         <Button color="black" fluid onClick={() => setTest(initialTest)}>

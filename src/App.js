@@ -58,6 +58,8 @@ const App = () => {
         msgAlert={msgAlert}
         setNewQuestion={setNewQuestion}
         setNewTest={setNewTest}
+        setUser={setUser}
+
       />
 
       <Routes>
@@ -173,7 +175,7 @@ const App = () => {
         />
         <Route
           path="/results/"
-          element={<ResultsPage msgAlert={msgAlert} user={user} />}
+          element={<ResultsPage msgAlert={msgAlert} user={user} setUset={setUser}/>}
         />
         <Route
           path="/employees/"

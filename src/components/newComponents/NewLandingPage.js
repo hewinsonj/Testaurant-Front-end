@@ -1,272 +1,110 @@
-// // import React, { Component } from "react";
-// // import { Grid, Menu, Segment, Label, Input } from "semantic-ui-react";
-// // import LoadingScreen from "../shared/LoadingPage";
-// // import { Link, useNavigate } from "react-router-dom";
-
-// // export default class NewLandingPage extends Component {
-// //   state = { activeItem: "home" };
-
-// //   handleItemClick = (e, { name }) => this.setState({ activeItem: name });
-// //   render() {
-// //     const { activeItem } = this.state;
-  
-
-// //     return (
-// //       <>
-// //         <Menu tabular inverted id="header" size="massive" position="right">
-// //           {!this.props.user ? (
-// //             <Menu.Menu floated="right">
-// //               <Menu.Item
-// //                 name="sign-up"
-// //                 active={activeItem === "sign-up"}
-// //                 onClick={this.handleItemClick}
-// //               >
-// //                 <Link to="sign-up">Create Account</Link>
-// //               </Menu.Item>
-// //               <Menu.Item
-// //                 name="sign-in"
-// //                 active={activeItem === "sign-in"}
-// //                 onClick={this.handleItemClick}
-// //               >
-// //                 <Link to="sign-in">Sign in</Link>
-// //               </Menu.Item>
-// //             </Menu.Menu>
-// //           ) : (
-// //             <Menu.Menu>
-// //               <Menu.Item
-// //                 name="testaurant"
-// //                 active={activeItem === "testaurant"}
-// //                 onClick={this.handleItemClick}
-// //               >
-// //                 <Link to="my-profile">
-// //                   <h1>Testaurant</h1>
-// //                 </Link>
-// //               </Menu.Item>
-
-// //               <Menu.Item
-// //                 name="tests"
-// //                 active={activeItem === "tests"}
-// //                 onClick={this.handleItemClick}
-// //               >
-// //                 <Link to="test-nav">Tests</Link>
-// //               </Menu.Item>
-
-// //               <Menu.Item
-// //                 name="menu"
-// //                 active={activeItem === "menu"}
-// //                 as
-// //                 onClick={this.handleItemClick}
-// //               >
-// //                 <Link to="menu-nav">Menu</Link>
-// //               </Menu.Item>
-
-// //               <Menu.Item
-// //                 name="employees"
-// //                 active={activeItem === "employees"}
-// //                 onClick={this.handleItemClick}
-// //               >
-// //                 <Link to="employees">Employees</Link>
-// //               </Menu.Item>
-
-// //               <Menu.Item
-// //                 name="results"
-// //                 active={activeItem === "results"}
-// //                 onClick={this.handleItemClick}
-// //               >
-// //                 <Link to="results">Results</Link>
-// //               </Menu.Item>
-// //               <Menu.Item
-// //                 name="sign-out"
-// //                 active={activeItem === "sign-out"}
-// //                 // onClick={this.handleItemClick, navigate(`/sign-out`)}
-// //               >
-// //                   <Link to="sign-out">Sign out</Link>
-// //                   {/* <Navigate to="/sign-out">Sign Out</Navigate> */}
-// //               </Menu.Item>
-// //             </Menu.Menu>
-// //           )}
-// //         </Menu>
-// //       </>
-// //     );
-// //   }
-// // }
-
-
-// import React, { useState } from "react";
-// import { Grid, Menu, Segment, Label, Input } from "semantic-ui-react";
-// import { Link, useNavigate } from "react-router-dom";
-
-// const NewLandingPage = ({ user }) => {
-//   const [activeItem, setActiveItem] = useState("home");
-//   const navigate = useNavigate();
-
-//   const handleItemClick = (e, { name }) => {
-//     setActiveItem(name);
-//   };
-
-//   return (
-//     <>
-//       <Menu tabular inverted id="header" size="massive" position="right">
-//         {!user ? (
-//           <Menu.Menu floated="right">
-//             <Menu.Item
-//               name="sign-up"
-//               active={activeItem === "sign-up"}
-//               onClick={handleItemClick}
-//             >
-//               <Link to="sign-up">Create Account</Link>
-//             </Menu.Item>
-//             <Menu.Item
-//               name="sign-in"
-//               active={activeItem === "sign-in"}
-//               onClick={handleItemClick}
-//             >
-//               <Link to="sign-in">Sign in</Link>
-//             </Menu.Item>
-//           </Menu.Menu>
-//         ) : (
-//           <Menu.Menu>
-//             <Menu.Item
-//               name="testaurant"
-//               active={activeItem === "testaurant"}
-//               onClick={handleItemClick}
-//             >
-//               <Link to="my-profile">
-//                 <h1>Testaurant</h1>
-//               </Link>
-//             </Menu.Item>
-
-//             <Menu.Item
-//               name="tests"
-//               active={activeItem === "tests"}
-//               onClick={handleItemClick}
-//             >
-//               <Link to="test-nav">Tests</Link>
-//             </Menu.Item>
-
-//             <Menu.Item
-//               name="menu"
-//               active={activeItem === "menu"}
-//               onClick={handleItemClick}
-//             >
-//               <Link to="menu-nav">Menu</Link>
-//             </Menu.Item>
-
-//             <Menu.Item
-//               name="employees"
-//               active={activeItem === "employees"}
-//               onClick={handleItemClick}
-//             >
-//               <Link to="employees">Employees</Link>
-//             </Menu.Item>
-
-//             <Menu.Item
-//               name="results"
-//               active={activeItem === "results"}
-//               onClick={handleItemClick}
-//             >
-//               <Link to="results">Results</Link>
-//             </Menu.Item>
-
-//             <Menu.Item
-//               name="sign-out"
-//               active={activeItem === "sign-out"}
-//               onClick={handleItemClick}
-//             >
-//               <Link to="sign-out">Sign out</Link>
-//             </Menu.Item>
-//           </Menu.Menu>
-//         )}
-//       </Menu>
-//     </>
-//   );
-// };
-
-// export default NewLandingPage;
-
-
 import React, { useState } from "react";
-import { Menu, Icon, Sticky, Modal, Button, Form } from "semantic-ui-react";
+import { Menu, Sticky } from "semantic-ui-react";
 import { Link, useNavigate } from "react-router-dom";
+import { signIn, changePassword } from "../../api/auth";
 
-const NewLandingPage = ({ user }) => {
+const NewLandingPage = ({ user, setUser, msgAlert }) => {
   const [activeItem, setActiveItem] = useState("home");
   const navigate = useNavigate();
 
-  // Function to handle menu clicks
   const handleItemClick = (e, { name }) => {
     setActiveItem(name);
+    navigate(`/${name}`);
+  };
 
-    // Programmatic navigation based on the name
-    switch (name) {
-      case "home":
-        navigate("/");
-        break;
-      case "tests":
-        navigate("/test-nav");
-        break;
-      case "menu":
-        navigate("/menu-nav");
-        break;
-      case "employees":
-        navigate("/employees");
-        break;
-      case "results":
-        navigate("/results");
-        break;
-      case "sign-out":
-        navigate("/sign-out");
-        break;
-      case "sign-in":
-        navigate("/sign-in");
-        break;
-      case "sign-up":
-        navigate("/sign-up");
-        break;
-      default:
-        break;
-    }
+  const guestLogin = () => {
+    const guestCredentials = {
+      email: "guestemployee@gmail.com",
+      password: "guestemployee",
+    };
+
+    signIn(guestCredentials)
+      .then((res) => setUser(res.data.user))
+      .then(() => navigate("/results"))
+      .catch((error) => {
+        msgAlert({
+          heading: "Guest Sign In Failed",
+          message: "Could not log in as guest: " + error.message,
+          variant: "danger",
+        });
+      });
+  };
+  const guestMLogin = () => {
+    const guestCredentials = {
+      email: "guestmanager@gmail.com",
+      password: "guestmanager",
+    };
+
+    signIn(guestCredentials)
+      .then((res) => setUser(res.data.user))
+      .then(() => navigate("/results"))
+      .catch((error) => {
+        msgAlert({
+          heading: "Guest Sign In Failed",
+          message: "Could not log in as guest: " + error.message,
+          variant: "danger",
+        });
+      });
   };
 
   return (
-    <Sticky>
+    <Sticky floated="right">
       <Menu tabular inverted id="header" size="massive">
         {!user ? (
           <Menu.Menu position="right">
             <Menu.Item
-              name="sign-up"
-              active={activeItem === "sign-up"}
-              onClick={handleItemClick}
-            >
-              <Link to="sign-up">Create Account</Link>
-            </Menu.Item>
-            <Menu.Item
               name="sign-in"
               active={activeItem === "sign-in"}
               onClick={handleItemClick}
+              as={Link}
+              to="/sign-in"
             >
-              <Link to="sign-in">Sign In</Link>
+              Sign In
+            </Menu.Item>
+            <Menu.Item
+              name="sign-up"
+              active={activeItem === "sign-up"}
+              onClick={handleItemClick}
+              as={Link}
+              to="/sign-up"
+            >
+              Create Account
+            </Menu.Item>
+
+            <Menu.Item
+              name="guestEmployee"
+              active={activeItem === "guestEmployee"}
+              onClick={guestLogin}
+            >
+              Guest Employee Sign In
+            </Menu.Item>
+            <Menu.Item
+              name="guestManager"
+              active={activeItem === "guestManager"}
+              onClick={guestMLogin}
+            >
+              Guest Manager Sign In
             </Menu.Item>
           </Menu.Menu>
         ) : (
-          <Menu.Menu>
+          <Menu.Menu floated="right">
             <Menu.Item
-              name="home"
-              active={activeItem === "home"}
+              name=""
+              active={activeItem === ""}
               onClick={handleItemClick}
             >
               <h1>Testaurant</h1>
             </Menu.Item>
             <Menu.Item
-              name="tests"
-              active={activeItem === "tests"}
+              name="test-nav"
+              active={activeItem === "test-nav"}
               onClick={handleItemClick}
             >
               Tests
             </Menu.Item>
             <Menu.Item
-              name="menu"
-              active={activeItem === "menu"}
+              name="menu-nav"
+              active={activeItem === "menu-nav"}
               onClick={handleItemClick}
             >
               Menu
@@ -292,7 +130,17 @@ const NewLandingPage = ({ user }) => {
             >
               Sign Out
             </Menu.Item>
+            <Menu.Item
+              name="change-password"
+              active={activeItem === "change-password"}
+              onClick={handleItemClick}
+            >
+              Change Password
+            </Menu.Item>
           </Menu.Menu>
+        )}{" "}
+        {user?.first_name && (
+          <Menu.Item position="right">Welcome, {user.first_name}!</Menu.Item>
         )}
       </Menu>
     </Sticky>

@@ -17,7 +17,7 @@ const SignIn = (props) => {
 
     signIn(credentials)
       .then((res) => setUser(res.data.user))
-      .then(() => navigate("/my-profile"))
+      .then(() => navigate("/results"))
       .then(() => activeItem === "testaurant")
       .catch((error) => {
         setEmail("");

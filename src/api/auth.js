@@ -6,9 +6,16 @@ export const signUp = (credentials) => {
 		method: 'POST',
 		url: apiUrl + '/sign-up/',
 		data: {
-				"email": credentials.email,
-				"password": credentials.password,
-				"password_confirmation": credentials.password_confirmation,
+			email: credentials.email,
+			password: credentials.password,
+			password_confirmation: credentials.password_confirmation,
+			first_name: credentials.first_name,
+			last_name: credentials.last_name,
+			role: credentials.role,
+			hire_date: credentials.hire_date || null,
+			is_superuser: credentials.is_superuser || false,
+			is_active: credentials.is_active !== undefined ? credentials.is_active : true,
+			is_staff: credentials.is_staff || false,
 		},
 	})
 }

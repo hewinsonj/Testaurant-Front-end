@@ -66,6 +66,11 @@ const FoodUpdateModal = (props) => {
       } else if (updatedName === "con_gluten" && !target.checked) {
         updatedValue = false;
       }
+      if (updatedName === "con_dairy" && target.checked) {
+        updatedValue = true;
+      } else if (updatedName === "con_dairy" && !target.checked) {
+        updatedValue = false;
+      }
 
       const updatedFood = { [updatedName]: updatedValue };
 

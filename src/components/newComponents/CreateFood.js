@@ -17,72 +17,18 @@ const CreateFood = (props) => {
     con_wheat: false,
     con_sesame: false,
     con_gluten: false,
+    con_dairy: false,
   };
   const [food, setFood] = useState(defaultFood);
 
-  const handleChange = (e, target) => {
-    setFood((prevFood) => {
-      const { name, value } = target;
-      const updatedName = name;
-      let updatedValue = value;
-      // handle number type
-      if (target.type === "number") {
-        // change from string to actual number
-        updatedValue = parseInt(e.target.value);
-      }
-
-      //handle the checkbox
-      if (updatedName === "con_peanut" && target.checked) {
-        updatedValue = true;
-      } else if (updatedName === "con_peanut" && !target.checked) {
-        updatedValue = false;
-      }
-      if (updatedName === "con_egg" && target.checked) {
-        updatedValue = true;
-      } else if (updatedName === "con_egg" && !target.checked) {
-        updatedValue = false;
-      }
-      if (updatedName === "con_tree_nut" && target.checked) {
-        updatedValue = true;
-      } else if (updatedName === "con_tree_nut" && !target.checked) {
-        updatedValue = false;
-      }
-      if (updatedName === "con_shellfish" && target.checked) {
-        updatedValue = true;
-      } else if (updatedName === "con_shellfish" && !target.checked) {
-        updatedValue = false;
-      }
-      if (updatedName === "con_soy" && target.checked) {
-        updatedValue = true;
-      } else if (updatedName === "con_soy" && !target.checked) {
-        updatedValue = false;
-      }
-      if (updatedName === "con_fish" && target.checked) {
-        updatedValue = true;
-      } else if (updatedName === "con_fish" && !target.checked) {
-        updatedValue = false;
-      }
-      if (updatedName === "con_wheat" && target.checked) {
-        updatedValue = true;
-      } else if (updatedName === "con_wheat" && !target.checked) {
-        updatedValue = false;
-      }
-      if (updatedName === "con_sesame" && target.checked) {
-        updatedValue = true;
-      } else if (updatedName === "con_sesame" && !target.checked) {
-        updatedValue = false;
-      }
-      if (updatedName === "con_gluten" && target.checked) {
-        updatedValue = true;
-      } else if (updatedName === "con_gluten" && !target.checked) {
-        updatedValue = false;
-      }
-
-      const updatedFood = { [updatedName]: updatedValue };
-
-      return { ...prevFood, ...updatedFood };
-    });
+  const handleChange = (e, { name, value, checked, type }) => {
+    setFood((prevFood) => ({
+      ...prevFood,
+      [name]: type === "checkbox" ? checked : value,
+    }));
   };
+
+  console.log("Food object being submitted:", food);
   const handleCreateFood = (e) => {
     e.preventDefault();
 

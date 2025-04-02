@@ -101,6 +101,14 @@ const AddFoodForm = (props) => {
           defaultChecked={food.con_gluten}
           onChange={handleChange}
         />
+        <Form.Checkbox
+          required
+          name="con_dairy"
+          id="con_dairy"
+          label="con_dairy"
+          defaultChecked={food.con_dairy}
+          onChange={handleChange}
+        />
         <Button type="submit" color="orange">
           Submit
         </Button>

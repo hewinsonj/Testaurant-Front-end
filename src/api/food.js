@@ -54,6 +54,7 @@ export const createFood = (user, food) => {
                 "con_wheat": food.con_wheat,
                 "con_sesame": food.con_sesame,
                 "con_gluten": food.con_gluten,
+                "con_dairy": food.con_dairy,
             }
         }
     })

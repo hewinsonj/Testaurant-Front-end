@@ -1,208 +1,70 @@
-// import { Grid, Segment, List, Button, Modal } from 'semantic-ui-react'
-// import LoadingScreen from '../shared/LoadingPage'
-// import { getAllTests } from '../../api/test'
-// import { getAllQuestions } from '../../api/question'
-// import AddTestModal from './AddTestModal'
-// import TestUpdateModal from './TestUpdateModal'
-// import React, { useState, useEffect } from 'react'
-// import { deleteTest } from "../../api/test";
-// import TestTake from "./TestTake";
-
-
-// const AssignTestModal = ({ user, msgAlert, newTest, setNewTest }) => {
-//   const [allTests, setAllTests] = useState([])
-//   const [allQuestions, setAllQuestions] = useState([])
-//   const [selectedTest, setSelectedTest] = useState(null)
-//     const [open, setOpen] = useState(false);
-//     //   const [test, setTest] = useState(initialTest);
-    
-  
-
-//   useEffect(() => {
-//     getAllTests(user)
-//       .then(res => {
-//         console.log("✅ Fetched Tests:", res.data.test_thiss)
-//         setAllTests(res.data.test_thiss)
-//       })
-//       .catch(error => {
-//         msgAlert({
-//           heading: 'Error',
-//           message: 'Could not get tests',
-//           variant: 'danger',
-//         })
-//       })
-//   }, [])
-
-//   useEffect(() => {
-//     getAllQuestions(user)
-//       .then(res => {
-//         console.log("✅ Fetched Questions:", res.data.question_news)
-//         setAllQuestions(res.data.question_news)
-//       })
-//       .catch(error => {
-//         msgAlert({
-//           heading: 'Error',
-//           message: 'Could not get questions',
-//           variant: 'danger',
-//         })
-//       })
-//   }, [])
-
-//   const findRelevantQuestions = (test, allQuestions) => {
-//     if (!test || !Array.isArray(test.question_new) || !Array.isArray(allQuestions)) return []
-
-//     return allQuestions.filter((question) =>
-//       test.question_new.some((testQuestion) =>
-//         typeof testQuestion === 'object'
-//           ? testQuestion.id === question.id
-//           : testQuestion === question.id
-//       )
-//     )
-//   }
-
-//   // const relevantQuestions =
-//   //   selectedTest && allQuestions.length
-//   //     ? findRelevantQuestions(selectedTest, allQuestions)
-//   //     : []
-
-//   const relevantQuestions = (() => {
-//     if (selectedTest && Array.isArray(allQuestions)) {
-//       const result = findRelevantQuestions(selectedTest, allQuestions)
-//       return Array.isArray(result) ? result : []
-//     }
-//     return []
-//   })()
-
-//   // console.log("📦 selectedTest:", selectedTest)
-//   // console.log("📦 relevantQuestions:", relevantQuestions)
-//   // console.log("📦 allQuestions:", allQuestions)
-
-//   return (
-//     <Modal
-//       onClose={() => {
-//         setOpen(false);
-//         // setTest(initialTest); // Reset to initial state
-//       }}
-//       onOpen={() => setOpen(true)}
-//       open={open}
-//       trigger={
-//         <Button fluid color="orange" style={{ marginBottom: "1rem" }}>
-//           Assign Test
-//         </Button>
-//       }
-//     >
-//       <Modal.Content>
-
-//     <Segment raised><AddTestModal user={user} msgAlert={msgAlert} setNewTest={setNewTest} />
-//       <Grid columns={3} divided padded>
-//         {/* Column 1: Test list and create button */}
-//         <Grid.Column width={5}>
-//           <h3>All Tests</h3>
-          
-//           <List divided selection>
-//             {Array.isArray(allTests) &&
-//               allTests
-//                 .slice()
-//                 .reverse()
-//                 .map((test) => (
-//                   <List.Item key={test.id} onClick={() => setSelectedTest(test)}>
-//                     <List.Content>
-//                       <List.Header>
-//                         {test.name ? test.name.slice(0, 100) : 'Untitled Test'}
-//                       </List.Header>
-//                     </List.Content>
-//                   </List.Item>
-//                 ))}
-//           </List>
-//         </Grid.Column>
-
-//         {/* Column 2: Selected test details */}
-//         <Grid.Column width={7}>
-//           {selectedTest ? (
-//             <Segment>
-//               <h2>{selectedTest.name}</h2>
-//               <p><strong>Question Count:</strong> {relevantQuestions.length}</p>
-//               <p><strong>Questions:</strong></p>
-//               <ul>
-//               {Array.isArray(relevantQuestions) && relevantQuestions.length > 0 ? (
-//                 relevantQuestions.map((q) => (
-//                   <li key={q.id}>
-//                     (Q) {q.question_str} (A) {q.answer}
-//                   </li>
-//                 ))
-//               ) : (
-//                 <li>No questions linked to this test</li>
-//               )}
-//             </ul>
-//             </Segment>
-//           ) : (
-//             <p>Select a test to view details</p>
-//           )}
-//         </Grid.Column>
-
-//         {/* Column 3: Update + Delete */}
-//         <Grid.Column width={4}>
-//           <Segment>
-//             {selectedTest && (
-//               <>
-       
-//               </>
-//             )}
-//           </Segment>
-//         </Grid.Column>
-//       </Grid>
-//     </Segment>
-
-//       </Modal.Content>
-//     </Modal>
-//   )
-// }
-
-// export default AssignTestModal
-
-
-import React, { useState } from "react"
+import React, { useState } from "react";
 import {
   Button,
   Modal,
-  Dropdown,
   Header,
   Segment,
   Icon,
-} from "semantic-ui-react"
-import { updateEmployee } from "../../api/user"
+  List,
+  Form,
+  Grid,
+} from "semantic-ui-react";
+import { updateEmployee } from "../../api/user";
 
-const AssignTestModal = ({ user, employee, tests, msgAlert }) => {
-  const [open, setOpen] = useState(false)
-  const [selectedTests, setSelectedTests] = useState([])
+const AssignTestModal = ({ user, employee, tests, msgAlert, allQuestions }) => {
+  const [open, setOpen] = useState(false);
+  const [selectedTests, setSelectedTests] = useState([]);
+  const [hoveredTestId, setHoveredTestId] = useState(null);
 
-  const testOptions = tests.map((test) => ({
-    key: test.id,
-    text: test.name,
-    value: test.id,
-  }))
+  const toggleTestSelection = (testId) => {
+    console.log("Toggling test selection for:", testId);
+    setSelectedTests((prevSelected) =>
+      prevSelected.includes(testId)
+        ? prevSelected.filter((id) => id !== testId)
+        : [...prevSelected, testId]
+    );
+  };
 
   const handleSubmit = () => {
-    const updatedFields = {
-      assigned_tests: selectedTests,
-    }
-
+    console.log("Submitting selected tests:", selectedTests);
+    const updatedFields = { assigned_tests: selectedTests };
     updateEmployee(user, employee.id, updatedFields)
       .then(() => {
         msgAlert({
           heading: "Success",
           message: "Test(s) assigned to employee.",
           variant: "success",
-        })
-        setOpen(false)
+        });
+        setOpen(false);
       })
       .catch((error) => {
         msgAlert({
           heading: "Error",
           message: "Failed to assign test(s): " + error.message,
           variant: "danger",
-        })
-      })
+        });
+      });
+  };
+
+  // When the modal opens, preselect tests already assigned to the employee.
+  const handleOpen = () => {
+    console.log("Modal opened");
+    const preselected = employee.assigned_tests.map((test) =>
+      typeof test === "object" && test.id ? test.id : test
+    );
+    console.log("Preselected tests:", preselected);
+    setSelectedTests(preselected);
+    setOpen(true);
+    console.log("All questions from parent:", allQuestions);
+  };
+
+  const selectedTestDetails = selectedTests.map((id) =>
+    tests.find((t) => t.id === id)
+  );
+
+  const hoveredTest = tests.find((t) => t.id === hoveredTestId);
+  if (hoveredTest) {
+    console.log("Hovered test:", hoveredTest);
   }
 
   return (
@@ -215,23 +77,118 @@ const AssignTestModal = ({ user, employee, tests, msgAlert }) => {
         </Button>
       }
       onClose={() => setOpen(false)}
-      onOpen={() => setOpen(true)}
+      onOpen={handleOpen}
+      size="large"
     >
       <Header icon="tasks" content={`Assign Test(s) to ${employee.email}`} />
       <Modal.Content>
-        <Segment basic>
-          <Dropdown
-            placeholder="Select Test(s)"
-            fluid
-            multiple
-            search
-            selection
-            options={testOptions}
-            onChange={(e, { value }) => setSelectedTests(value)}
-            value={selectedTests}
-          />
-        </Segment>
+        <Grid columns={2} divided stackable>
+          {/* Left column: Test selection checkboxes */}
+          <Grid.Column width={8}>
+            <Segment basic>
+              <Header as="h4">Select Tests</Header>
+              <Form>
+                {tests.map((test) => (
+                  <Form.Checkbox
+                    key={test.id}
+                    label={
+                      <label>
+                        <strong>{test.name}</strong>{" "}
+                        <span style={{ color: "gray", fontSize: "0.9em" }}>
+                          ({test.question_new?.length || 0} question
+                          {test.question_new?.length === 1 ? "" : "s"})
+                        </span>
+                      </label>
+                    }
+                    checked={selectedTests.includes(test.id)}
+                    onChange={() => toggleTestSelection(test.id)}
+                    onMouseEnter={() => {
+                      console.log("Hovering over test:", test.id);
+                      setHoveredTestId(test.id);
+                    }}
+                    // onMouseLeave={() => {
+                    //   console.log("Mouse left test:", test.id);
+                    //   setHoveredTestId(null);
+                    // }}
+                  />
+                ))}
+              </Form>
+            </Segment>
+          </Grid.Column>
+
+          {/* Right column: Preview panel */}
+          <Grid.Column width={8}>
+            <Segment
+              basic
+              color="blue"
+              style={{ maxHeight: "250px", overflowY: "auto" }}
+            >
+              {" "}
+              <Header as="h4">Preview Panel</Header>
+              {hoveredTest ? (
+                <>
+                  <Header as="h5" >Test: {hoveredTest.name}</Header>
+                  <p>
+                    <strong>Questions:</strong>{" "}
+                    {hoveredTest.question_new?.length || 0}
+                  </p>
+                  <List bulleted>
+                    {hoveredTest.question_new?.map((qId, idx) => {
+                      console.log("qId is:", qId, "| type:", typeof qId);
+                      let question = allQuestions.find((q) => q.id == qId);
+                      console.log(
+                        "Matching by direct ID => question found:",
+                        question
+                      );
+                      if (!question && qId?.id) {
+                        question = allQuestions.find((q) => q.id == qId.id);
+                        console.log(
+                          "Trying qId.id => question found:",
+                          question
+                        );
+                      }
+                      return (
+                        <List.Item key={idx}>
+                          {question?.question_str || "Loading..."}
+                        </List.Item>
+                      );
+                    })}
+                  </List>
+                </>
+              ) : (
+                <p style={{ color: "gray" }}>
+                  Hover over a test to preview its questions
+                </p>
+              )}
+            </Segment>
+          </Grid.Column>
+        </Grid>
+
+        {/* Selected tests summary */}
+        {selectedTests.length > 0 && (
+          <Segment style={{ marginTop: "2rem" }}>
+            <Header as="h4" content="Selected Test(s)" />
+            <List divided relaxed>
+              {selectedTestDetails.map((test) => (
+                <List.Item key={test.id}>
+                  <List.Icon
+                    name="clipboard list"
+                    size="large"
+                    verticalAlign="middle"
+                  />
+                  <List.Content>
+                    <List.Header>{test.name}</List.Header>
+                    <List.Description>
+                      {test.question_new?.length || 0} question(s)
+                    </List.Description>
+                  </List.Content>
+                </List.Item>
+              ))}
+            </List>
+          </Segment>
+        )}
       </Modal.Content>
+
       <Modal.Actions>
         <Button color="red" onClick={() => setOpen(false)}>
           <Icon name="remove" /> Cancel
@@ -241,7 +198,7 @@ const AssignTestModal = ({ user, employee, tests, msgAlert }) => {
         </Button>
       </Modal.Actions>
     </Modal>
-  )
-}
+  );
+};
 
-export default AssignTestModal
+export default AssignTestModal;

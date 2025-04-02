@@ -22,6 +22,14 @@ export const getAllResults = (user) => {
         }
     })
 }
+  
+  export const getMyResults = (user) => {
+    return axios({
+      method: 'GET',
+      url: apiUrl + '/results/mine/',
+      headers: { Authorization: `Token ${user.token}` },
+    })
+  }
 
 // For Search Bar to filter all Activities
 export const searchResults = (searchText) => { 
