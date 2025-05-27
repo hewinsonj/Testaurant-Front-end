@@ -5,6 +5,8 @@ import AddDrinkForm from "./AddDrinkForm";
 const CreateDrink = (props) => {
   const { user, msgAlert, setOpen } = props;
 
+  const [errorMsg, setErrorMsg] = useState("");
+
   const defaultDrink = {
     name: "",
     ingredients: "",
@@ -20,73 +22,36 @@ const CreateDrink = (props) => {
     con_wheat: false,
     con_sesame: false,
     con_gluten: false,
+    con_dairy: false,
+    is_vegan: false,
+    is_vegetarian: false,
   };
   const [drink, setDrink] = useState(defaultDrink);
 
-  const handleChange = (e, target) => {
+  const handleChange = (e, { name, value, checked, type }) => {
     setDrink((prevDrink) => {
-      const { name, value } = target;
-      const updatedName = name;
-      let updatedValue = value;
-      // handle number type
-      if (target.type === "number") {
-        // change from string to actual number
-        updatedValue = parseInt(e.target.value);
-      }
-      //handle the checkbox
-      if (updatedName === "con_peanut" && target.checked) {
-        updatedValue = true;
-      } else if (updatedName === "con_peanut" && !target.checked) {
-        updatedValue = false;
-      }
-      if (updatedName === "con_egg" && target.checked) {
-        updatedValue = true;
-      } else if (updatedName === "con_egg" && !target.checked) {
-        updatedValue = false;
-      }
-      if (updatedName === "con_tree_nut" && target.checked) {
-        updatedValue = true;
-      } else if (updatedName === "con_tree_nut" && !target.checked) {
-        updatedValue = false;
-      }
-      if (updatedName === "con_shellfish" && target.checked) {
-        updatedValue = true;
-      } else if (updatedName === "con_shellfish" && !target.checked) {
-        updatedValue = false;
-      }
-      if (updatedName === "con_soy" && target.checked) {
-        updatedValue = true;
-      } else if (updatedName === "con_soy" && !target.checked) {
-        updatedValue = false;
-      }
-      if (updatedName === "con_fish" && target.checked) {
-        updatedValue = true;
-      } else if (updatedName === "con_fish" && !target.checked) {
-        updatedValue = false;
-      }
-      if (updatedName === "con_wheat" && target.checked) {
-        updatedValue = true;
-      } else if (updatedName === "con_wheat" && !target.checked) {
-        updatedValue = false;
-      }
-      if (updatedName === "con_sesame" && target.checked) {
-        updatedValue = true;
-      } else if (updatedName === "con_sesame" && !target.checked) {
-        updatedValue = false;
-      }
-      if (updatedName === "con_gluten" && target.checked) {
-        updatedValue = true;
-      } else if (updatedName === "con_gluten" && !target.checked) {
-        updatedValue = false;
-      }
+      const updatedState = {
+        ...prevDrink,
+        [name]: type === "checkbox" ? checked : value,
+      };
 
-      const updatedDrink = { [updatedName]: updatedValue };
 
-      return { ...prevDrink, ...updatedDrink };
+
+      return updatedState;
     });
   };
   const handleCreateDrink = (e) => {
     e.preventDefault();
+
+    if (drink.con_dairy && (drink.is_vegan || drink.is_vegetarian)) {
+      setErrorMsg("Drink cannot be marked vegan or vegetarian if it contains dairy.");
+      return;
+    }
+
+    if (drink.con_egg && drink.is_vegan) {
+      setErrorMsg("Drink cannot be marked vegan if it contains egg.");
+      return;
+    }
 
     createDrink(user, drink)
       .then(() => {
@@ -114,6 +79,7 @@ const CreateDrink = (props) => {
       handleChange={handleChange}
       heading="Create a new Drink Item!"
       handleSubmit={handleCreateDrink}
+      errorMsg={errorMsg}
     />
   );
 };

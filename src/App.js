@@ -52,7 +52,7 @@ const App = () => {
   };
 
   return (
-    <Fragment user={user}>
+    <>
       <NewLandingPage
         user={user}
         msgAlert={msgAlert}
@@ -192,7 +192,7 @@ const App = () => {
           deleteAlert={deleteAlert}
         />
       ))}
-    </Fragment>
+    </>
   );
 };
 

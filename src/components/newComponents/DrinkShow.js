@@ -43,7 +43,7 @@ const DrinkShow = ({ user, msgAlert, drink }) => {
         onClose={() => setOpen(false)}
         onOpen={() => setOpen(true)}
         open={open}
-        trigger={<Button >Show Drink Item</Button>}
+        trigger={<Button>Show Drink Item</Button>}
         size="large"
       >
         <Modal.Content scrolling>
@@ -249,6 +249,66 @@ const DrinkShow = ({ user, msgAlert, drink }) => {
                               <h3>
                                 Contains Sesame:{" "}
                                 {drink.con_sesame === true ? (
+                                  <div>
+                                    <Segment color="red" inverted>
+                                      <Icon name="warning" />
+                                      True
+                                      <Icon name="warning" />
+                                    </Segment>
+                                  </div>
+                                ) : (
+                                  <div>
+                                    <Icon name="window close outline" />
+                                    False
+                                    <Icon name="window close outline" />
+                                  </div>
+                                )}
+                              </h3>
+                            </Grid.Row>
+                            <Grid.Row>
+                              <h3>
+                                Contains Dairy:{" "}
+                                {drink.con_dairy === true ? (
+                                  <div>
+                                    <Segment color="red" inverted>
+                                      <Icon name="warning" />
+                                      True
+                                      <Icon name="warning" />
+                                    </Segment>
+                                  </div>
+                                ) : (
+                                  <div>
+                                    <Icon name="window close outline" />
+                                    False
+                                    <Icon name="window close outline" />
+                                  </div>
+                                )}
+                              </h3>
+                            </Grid.Row>
+                            <Grid.Row>
+                              <h3>
+                                Is Vegan:{" "}
+                                {drink.is_vegan === true ? (
+                                  <div>
+                                    <Segment color="red" inverted>
+                                      <Icon name="warning" />
+                                      True
+                                      <Icon name="warning" />
+                                    </Segment>
+                                  </div>
+                                ) : (
+                                  <div>
+                                    <Icon name="window close outline" />
+                                    False
+                                    <Icon name="window close outline" />
+                                  </div>
+                                )}
+                              </h3>
+                            </Grid.Row>
+                            <Grid.Row>
+                              <h3>
+                                Is Vegiterian:{" "}
+                                {drink.is_vegetarian === true ? (
                                   <div>
                                     <Segment color="red" inverted>
                                       <Icon name="warning" />

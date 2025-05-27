@@ -154,6 +154,8 @@ const FoodIndexPage = ({ user, msgAlert, setNewFood }) => {
                 {selectedFood.con_sesame && <li>Sesame</li>}
                 {selectedFood.con_gluten && <li>Gluten</li>}
                 {selectedFood.con_dairy && <li>Dairy</li>}
+                {selectedFood.is_vegan && <li>Vegan</li>}
+                {selectedFood.is_vegetarian && <li>Vegetarian</li>}
               </ul>
             </Segment>
           ) : (

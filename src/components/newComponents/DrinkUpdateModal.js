@@ -66,6 +66,17 @@ const DrinkUpdateModal = (props) => {
       } else if (updatedName === "con_gluten" && !target.checked) {
         updatedValue = false;
       }
+      if (updatedName === "con_dairy" && target.checked) {
+        updatedValue = true;
+      } else if (updatedName === "con_dairy" && !target.checked) {
+        updatedValue = false;
+      }
+      if (updatedName === "is_vegan") {
+        updatedValue = target.checked;
+      }
+      if (updatedName === "is_vegetarian") {
+        updatedValue = target.checked;
+      }
 
       const updatedDrink = { [updatedName]: updatedValue };
 
@@ -75,6 +86,24 @@ const DrinkUpdateModal = (props) => {
 
   const handleUpdateDrink = (e) => {
     e.preventDefault();
+
+    if (drink.con_dairy && (drink.is_vegan || drink.is_vegetarian)) {
+      msgAlert({
+        heading: "Invalid Entry",
+        message: "Drink cannot be marked vegan or vegetarian if it contains dairy.",
+        variant: "danger",
+      });
+      return;
+    }
+
+    if (drink.con_egg && drink.is_vegan) {
+      msgAlert({
+        heading: "Invalid Entry",
+        message: "Drink cannot be marked vegan if it contains egg.",
+        variant: "danger",
+      });
+      return;
+    }
 
     //close form if no change was made
     if (drink == props.drink) {

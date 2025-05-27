@@ -71,6 +71,12 @@ const FoodUpdateModal = (props) => {
       } else if (updatedName === "con_dairy" && !target.checked) {
         updatedValue = false;
       }
+      if (updatedName === "is_vegan") {
+        updatedValue = target.checked;
+      }
+      if (updatedName === "is_vegetarian") {
+        updatedValue = target.checked;
+      }
 
       const updatedFood = { [updatedName]: updatedValue };
 
@@ -80,6 +86,24 @@ const FoodUpdateModal = (props) => {
 
   const handleUpdateFood = (e) => {
     e.preventDefault();
+
+    if (food.con_dairy && (food.is_vegan || food.is_vegetarian)) {
+      msgAlert({
+        heading: "Invalid Entry",
+        message: "Food cannot be marked vegan or vegetarian if it contains dairy.",
+        variant: "danger",
+      });
+      return;
+    }
+
+    if (food.con_egg && food.is_vegan) {
+      msgAlert({
+        heading: "Invalid Entry",
+        message: "Food cannot be marked vegan if it contains egg.",
+        variant: "danger",
+      });
+      return;
+    }
 
     //close form if no change was made
     if (food == props.food) {

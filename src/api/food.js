@@ -55,6 +55,8 @@ export const createFood = (user, food) => {
                 "con_sesame": food.con_sesame,
                 "con_gluten": food.con_gluten,
                 "con_dairy": food.con_dairy,
+                "is_vegan": food.is_vegan,
+                "is_vegetarian": food.is_vegetarian,
             }
         }
     })

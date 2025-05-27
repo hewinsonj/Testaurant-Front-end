@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { Grid, Segment, List, Button, Form } from "semantic-ui-react";
+import { Grid, Segment, Button } from "semantic-ui-react";
 import { getAllEmployees } from "../../api/user";
 import { getAllTests } from "../../api/test";
 import { getAllQuestions } from "../../api/question";
 import AssignTestModal from "./AssignTestModal";
 import UpdateEmployeeModal from "../auth/UpdateEmployeeModal";
 import DeleteEmployeeButton from "../auth/DeleteEmployeeButton";
+import SearchList from "./SearchList";
+import NewEmployeeModal from "./NewEmployeeModal";
 
 const EmployeePage = ({ user, msgAlert }) => {
   const [allEmployees, setAllEmployees] = useState([]);
@@ -13,6 +15,7 @@ const EmployeePage = ({ user, msgAlert }) => {
   const [selectedEmployee, setSelectedEmployee] = useState(null);
   const [allTests, setAllTests] = useState([]);
   const [allQuestions, setAllQuestions] = useState([]);
+  const [newEmpModalOpen, setNewEmpModalOpen] = useState(false);
 
   useEffect(() => {
     getAllEmployees(user)
@@ -63,59 +66,44 @@ const EmployeePage = ({ user, msgAlert }) => {
     });
   };
 
-  const handleChange = (e) => {
-    const value = e.target.value.toLowerCase();
-
-    const filtered = allEmployees.filter((emp) => {
-      const fullName = `${emp.first_name || ""} ${
-        emp.last_name || ""
-      }`.toLowerCase();
-      return fullName.includes(value);
-    });
-
-    setFilteredEmployees(filtered);
-  };
-
   return (
     <Segment raised>
       <Grid columns={3} divided padded>
         {/* Column 1: Employee list + search */}
         <Grid.Column width={5}>
+          <Button
+            primary
+            fluid
+            style={{ marginBottom: '1em' }}
+            onClick={() => setNewEmpModalOpen(true)}
+          >
+            + New Employee
+          </Button>
           <h3>All Employees</h3>
-          <Form>
-            <Form.Input
-              placeholder="Search by employee name"
-              onChange={handleChange}
-            />{" "}
-          </Form>
-          <List divided selection>
-            {filteredEmployees
-              .slice()
-              .reverse()
-              .map((emp) => (
-                <List.Item
-                  key={emp.id}
-                  onClick={() => setSelectedEmployee(emp)}
-                >
-                  <List.Content>
-                    <List.Header>
-                      {emp.first_name || emp.last_name
-                        ? `${emp.first_name || ""} ${
-                            emp.last_name || ""
-                          }`.trim()
-                        : emp.email.slice(0, 100)}
-                    </List.Header>
-                  </List.Content>
-                </List.Item>
-              ))}
-          </List>
+          <SearchList
+            data={filteredEmployees}
+            onSearch={(val) => {
+              const filtered = allEmployees.filter((emp) => {
+                const fullName = `${emp.first_name || ""} ${emp.last_name || ""}`.toLowerCase();
+                return fullName.includes(val);
+              });
+              setFilteredEmployees(filtered);
+            }}
+            onSelect={(emp) => setSelectedEmployee(emp)}
+            searchPlaceholder="Search by employee name"
+            extractLabel={(emp) =>
+              emp.first_name || emp.last_name
+                ? `${emp.first_name || ""} ${emp.last_name || ""}`.trim()
+                : emp.email.slice(0, 100)
+            }
+          />
         </Grid.Column>
 
         {/* Column 2: Selected employee details */}
         <Grid.Column width={7}>
           {selectedEmployee ? (
             <Segment>
-              <h2>Employee Info</h2>
+              {/* <h2>Employee Info</h2> */}
               <p>
                 <strong>Email:</strong>{" "}
                 {selectedEmployee.email || <i>(none)</i>}
@@ -201,6 +189,24 @@ const EmployeePage = ({ user, msgAlert }) => {
           </Segment>
         </Grid.Column>
       </Grid>
+      <NewEmployeeModal
+        open={newEmpModalOpen}
+        onClose={() => setNewEmpModalOpen(false)}
+        refreshEmployees={() => {
+          getAllEmployees(user)
+            .then((res) => {
+              setAllEmployees(res.data.users);
+              setFilteredEmployees(res.data.users);
+            })
+            .catch((error) => {
+              msgAlert({
+                heading: "Failure",
+                message: "Could not fetch employees: " + error,
+                variant: "danger",
+              });
+            });
+        }}
+      />
     </Segment>
   );
 };

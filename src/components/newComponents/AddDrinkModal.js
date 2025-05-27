@@ -20,7 +20,7 @@ const AddDrinkModal = ({ user, msgAlert, setNewDrink, activeItem }) => {
         }
       >
         <Modal.Header>
-          <Grid centered padded="true">
+          <Grid centered padded>
             Create Drink Item
           </Grid>
         </Modal.Header>

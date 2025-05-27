@@ -1,13 +1,13 @@
 import React from "react";
-import { Button, Form, Container, Icon } from "semantic-ui-react";
+import { Button, Form, Container, Icon, Message } from "semantic-ui-react";
 
 const AddDrinkForm = (props) => {
-  const { drink, handleChange, handleSubmit, heading } = props;
+  const { drink, handleChange, handleSubmit, heading, errorMsg } = props;
 
   return (
     <Container className="justify-content-center">
       <h3>{heading}</h3>
-      <Form onSubmit={handleSubmit}>
+      <Form onSubmit={handleSubmit} error={!!errorMsg}>
         <Form.Group widths="equal">
           <Form.Input
             required
@@ -15,7 +15,6 @@ const AddDrinkForm = (props) => {
             id="name"
             label="Name"
             placeholder="Name of Drink Item"
-            defaultValue={drink.name}
             value={drink.name}
             onChange={handleChange}
           />
@@ -26,7 +25,6 @@ const AddDrinkForm = (props) => {
           id="ingredients"
           label="Ingredients"
           placeholder="Ingredients"
-          defaultValue={drink.ingredients}
           value={drink.ingredients}
           onChange={handleChange}
         />
@@ -36,7 +34,6 @@ const AddDrinkForm = (props) => {
           id="prep_instructs"
           label="Prep Instructions"
           placeholder="Prep Instructions"
-          defaultValue={drink.prep_instructs}
           value={drink.prep_instructs}
           onChange={handleChange}
         />
@@ -46,7 +43,6 @@ const AddDrinkForm = (props) => {
           id="garnishes"
           label="Garnishes"
           placeholder="Garnishes"
-          defaultValue={drink.garnishes}
           value={drink.garnishes}
           onChange={handleChange}
         />
@@ -56,7 +52,6 @@ const AddDrinkForm = (props) => {
           id="glassware"
           label="Glassware"
           placeholder="Glassware"
-          defaultValue={drink.glassware}
           value={drink.glassware}
           onChange={handleChange}
         />
@@ -140,6 +135,33 @@ const AddDrinkForm = (props) => {
           defaultChecked={drink.con_gluten}
           // value= { drink.con_gluten}
           onChange={handleChange}
+        />
+        <Form.Checkbox
+          required
+          name="con_dairy"
+          id="con_dairy"
+          label="con_dairy"
+          defaultChecked={drink.con_dairy}
+          onChange={handleChange}
+        />
+        <Form.Checkbox
+          name="is_vegan"
+          id="is_vegan"
+          label="is_vegan"
+          defaultChecked={drink.is_vegan}
+          onChange={handleChange}
+        />
+        <Form.Checkbox
+          name="is_vegetarian"
+          id="is_vegetarian"
+          label="is_vegetarian"
+          defaultChecked={drink.is_vegetarian}
+          onChange={handleChange}
+        />
+        <Message
+          error
+          header="Invalid Entry"
+          content={errorMsg}
         />
         <Button type="submit" color="orange">
           Submit

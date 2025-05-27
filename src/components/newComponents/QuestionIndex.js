@@ -1,62 +1,88 @@
-import React, { useState, useEffect } from 'react';
-import { Grid, Segment, List, Button } from 'semantic-ui-react';
-import { getAllQuestions } from '../../api/question';
-import LoadingScreen from '../shared/LoadingPage';
-import AddQuestionModal from './AddQuestionModal';
+import React, { useState, useEffect } from "react";
+import { Grid, Segment, List, Button } from "semantic-ui-react";
+import { getAllQuestions } from "../../api/question";
+import LoadingScreen from "../shared/LoadingPage";
+import AddQuestionModal from "./AddQuestionModal";
 import QuestionUpdateModal from "./QuestionUpdateModal";
-
+import SearchList from "./SearchList";
 
 const QuestionIndex = ({ user, msgAlert, newQuestion, setNewQuestion }) => {
-//   const [allQuestions, setAllQuestions] = useState(null);
+  //   const [allQuestions, setAllQuestions] = useState(null);
   const [allQuestions, setAllQuestions] = useState([]); // instead of null
+  const [originalQuestions, setOriginalQuestions] = useState([]);
+  const [filteredQuestions, setFilteredQuestions] = useState([]);
   const [selectedQuestion, setSelectedQuestion] = useState(null);
-  
 
   useEffect(() => {
     getAllQuestions(user)
-      .then(res => {
-        setAllQuestions(res.data.question_news);
+      .then((res) => {
+        const enrichedQuestions = res.data.question_news.map((q) => ({
+          ...q,
+          employees: res.data.users || [],
+        }));
+        setAllQuestions(enrichedQuestions);
+        setOriginalQuestions(enrichedQuestions);
+        setFilteredQuestions(enrichedQuestions);
       })
-      .catch(error => {
+      .catch((error) => {
         msgAlert({
-          heading: 'Error',
-          message: 'Could not get questions',
-          variant: 'danger',
+          heading: "Error",
+          message: "Could not get questions",
+          variant: "danger",
         });
       });
   }, []);
 
-//   if (!allQuestions) return <LoadingScreen />;
+  //   if (!allQuestions) return <LoadingScreen />;
 
   return (
-    <Segment raised >
-             <AddQuestionModal
-              user={user}
-              msgAlert={msgAlert}
-              setNewQuestion={setNewQuestion}
-            />
+    <Segment raised>
+      <AddQuestionModal
+        user={user}
+        msgAlert={msgAlert}
+        setNewQuestion={setNewQuestion}
+      />
       <Grid columns={3} divided padded>
-        
         {/* Column 1: List of questions */}
         <Grid.Column width={5}>
           <h3>All Questions</h3>
-          <List divided selection>
-            {allQuestions
-              .slice()
-              .reverse()
-              .map((question) => (
-                <List.Item
-                  key={question.id}
-                  onClick={() => setSelectedQuestion(question)}
-                >
-                  <List.Content>
-                    <List.Header>
-  {question.question_str ? `${question.question_str.slice(0, 60)}...` : "No text"}
-</List.Header>
-                  </List.Content>
-                </List.Item>
-              ))}
-          </List>
+          <SearchList
+            data={filteredQuestions}
+            onSearch={(val) => {
+              const lowerVal = val.toLowerCase();
+              const filtered = originalQuestions.filter((q) => {
+                const textMatch = q.question_str
+                  ?.toLowerCase()
+                  .includes(lowerVal);
+                const emp = q.employees?.find((e) => e.id === q.owner);
+                const empMatch = emp
+                  ? `${emp.first_name || ""} ${emp.last_name || ""}`
+                      .toLowerCase()
+                      .includes(lowerVal)
+                  : false;
+                return textMatch || empMatch;
+              });
+              setFilteredQuestions(filtered);
+            }}
+            onSelect={(question) => setSelectedQuestion(question)}
+            searchPlaceholder="Search questions or creator"
+            extractLabel={(q) =>
+              q.question_str ? `${q.question_str.slice(0, 60)}...` : "No text"
+            }
+            extractUpdatedAt={(q) => q.updated_at || null}
+            extractOwner={(q) => {
+              const owner = q.employees.find((emp) => emp.id === q.owner);
+              return owner
+                ? `${owner.first_name} ${owner.last_name}`
+                : "Unknown";
+            }}
+            sortOptions={[
+              { key: "updated_at", label: "Last Updated", style: { display: "inline-block", marginRight: "0.5rem" } },
+              { key: "creator", label: "Creator", style: { display: "inline-block", marginRight: "0.5rem" } },
+            ]}
+            defaultSortKey="updated_at"
+            buttonContainerStyle={{ height: "2.5rem", overflow: "hidden" }}
+          />
         </Grid.Column>
 
         {/* Column 2: Selected question details */}
@@ -88,19 +114,18 @@ const QuestionIndex = ({ user, msgAlert, newQuestion, setNewQuestion }) => {
         {/* Column 3: Actions */}
         <Grid.Column width={4}>
           <Segment>
-       
             {selectedQuestion && (
               <>
                 <QuestionUpdateModal
-                question={selectedQuestion}
-                user={user}
-                msgAlert={msgAlert}
+                  question={selectedQuestion}
+                  user={user}
+                  msgAlert={msgAlert}
                 />
                 <Button
                   color="red"
                   fluid
-                  style={{ marginTop: '0.5rem' }}
-                  onClick={() => console.log('Handle delete')}
+                  style={{ marginTop: "0.5rem" }}
+                  onClick={() => console.log("Handle delete")}
                 >
                   Delete
                 </Button>

@@ -58,6 +58,9 @@ export const createDrink = (user, drink) => {
                 "con_wheat": drink.con_wheat,
                 "con_sesame": drink.con_sesame,
                 "con_gluten":  drink.con_gluten,
+                "con_dairy": drink.con_dairy,
+                "is_vegan": drink.is_vegan,
+                "is_vegetarian": drink.is_vegetarian,
             }
         }
     })

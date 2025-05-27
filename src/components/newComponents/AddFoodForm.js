@@ -1,12 +1,12 @@
-import React from "react";
-import { Button, Form, Container } from "semantic-ui-react";
+import React, { useState } from "react";
+import { Button, Form, Container, Icon, Message } from "semantic-ui-react";
 
 const AddFoodForm = (props) => {
-  const { food, handleChange, handleSubmit, heading } = props;
+  const { food, handleChange, handleSubmit, heading, errorMsg } = props;
   return (
     <Container className="justify-content-center">
       <h3>{heading}</h3>
-      <Form onSubmit={handleSubmit}>
+      <Form onSubmit={handleSubmit} error={!!errorMsg}>
         <Form.Group widths="equal">
           <Form.Input
             required
@@ -108,6 +108,25 @@ const AddFoodForm = (props) => {
           label="con_dairy"
           defaultChecked={food.con_dairy}
           onChange={handleChange}
+        />
+        <Form.Checkbox
+          name="is_vegan"
+          id="is_vegan"
+          label="is_vegan"
+          defaultChecked={food.is_vegan}
+          onChange={handleChange}
+        />
+        <Form.Checkbox
+          name="is_vegetarian"
+          id="is_vegetarian"
+          label="is_vegetarian"
+          defaultChecked={food.is_vegetarian}
+          onChange={handleChange}
+        />
+        <Message
+          error
+          header="Invalid Entry"
+          content={errorMsg}
         />
         <Button type="submit" color="orange">
           Submit

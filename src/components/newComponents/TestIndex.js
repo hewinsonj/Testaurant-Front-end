@@ -1,245 +1,71 @@
-// import React, { useState, useEffect } from 'react'
-// import { Grid, Segment } from 'semantic-ui-react'
-// import LoadingScreen from '../shared/LoadingPage'
-// import { getAllTests } from '../../api/test'
-// import { getAllQuestions } from '../../api/question'
-// import TestSegment from './TestSegment'
-// import AddTestModal from './AddTestModal'
-
-// const TestIndex = ({ user, msgAlert, newTest, setNewTest }) => {
-//   const [allTests, setAllTests] = useState(null)
-//   const [allQuestions, setAllQuestions] = useState(null)
-
-//   useEffect(() => {
-//     getAllTests(user)
-//       .then(res => {
-//         setAllTests(res.data.test_thiss)
-//       })
-//       .catch(error => {
-//         msgAlert({
-//           heading: 'Error',
-//           message: 'Could not get tests',
-//           variant: 'danger',
-//         })
-//       })
-//   }, [])
-
-//   useEffect(() => {
-//     getAllQuestions(user)
-//       .then(res => {
-//         setAllQuestions(res.data.question_news)
-//       })
-//       .catch(error => {
-//         msgAlert({
-//           heading: 'Error',
-//           message: 'Could not get questions',
-//           variant: 'danger',
-//         })
-//       })
-//   }, [])
-
-//   return (
-//     <Segment raised inverted verticalAlign="middle" fluid>
-//       <Grid centered textAlign="center" fluid>
-//         <Grid.Column width={10}>
-//           <Segment raised verticalAlign="middle" textAlign="center" inverted>
-//             <Grid.Row>
-//               <AddTestModal user={user} msgAlert={msgAlert} />
-//             </Grid.Row>
-//             <h1>All Tests</h1>
-//             <Grid columns={2}>
-//               {allTests ? (
-//                 allTests
-//                   .slice()
-//                   .reverse()
-//                   .map(test => (
-//                     <TestSegment
-//                       key={test.id}
-//                       test={test}
-//                       user={user}
-//                       msgAlert={msgAlert}
-//                       setNewTest={setNewTest}
-//                       allQuestions={allQuestions}
-//                     />
-//                   ))
-//               ) : (
-//                 <LoadingScreen />
-//               )}
-//             </Grid>
-//           </Segment>
-//         </Grid.Column>
-//       </Grid>
-//     </Segment>
-//   )
-// }
-
-// // export default TestIndex
-
-// import React, { useState, useEffect } from 'react'
-// import { Grid, Segment, List, Button } from 'semantic-ui-react'
-// import LoadingScreen from '../shared/LoadingPage'
-// import { getAllTests } from '../../api/test'
-// import { getAllQuestions } from '../../api/question'
-// import AddTestModal from './AddTestModal'
-// import TestUpdateModal from './TestUpdateModal'
-
-// const TestIndex = ({ user, msgAlert, newTest, setNewTest }) => {
-//   const [allTests, setAllTests] = useState([])
-//   const [allQuestions, setAllQuestions] = useState([])
-//   const [selectedTest, setSelectedTest] = useState(null)
-
-//   useEffect(() => {
-//     getAllTests(user)
-//       .then(res => {
-//         setAllTests(res.data.test_thiss)
-//       })
-//       .catch(error => {
-//         msgAlert({
-//           heading: 'Error',
-//           message: 'Could not get tests',
-//           variant: 'danger',
-//         })
-//       })
-//   }, [])
-
-//   useEffect(() => {
-//     getAllQuestions(user)
-//       .then(res => {
-//         setAllQuestions(res.data.question_news)
-//       })
-//       .catch(error => {
-//         msgAlert({
-//           heading: 'Error',
-//           message: 'Could not get questions',
-//           variant: 'danger',
-//         })
-//       })
-//   }, [])
-
-//   const handleDelete = (id) => {
-//     // you'll probably call your deleteTest function here
-//     console.log('Delete test with id:', id)
-//   }
-
-//   return (
-//     <Segment raised>          
-//     <AddTestModal user={user} msgAlert={msgAlert} setNewTest={setNewTest} />
-//       <Grid columns={3} divided padded>
-//         {/* Column 1: Test list and create button */}
-//         <Grid.Column width={5}>
-//           <h3>All Tests</h3>
-
-//           <List divided selection>
-//             {allTests
-//               .slice()
-//               .reverse()
-//               .map((test) => (
-//                 <List.Item key={test.id} onClick={() => setSelectedTest(test)}>
-//                   <List.Content>
-//                     <List.Header>{test.name.slice(0, 100)}</List.Header>
-//                   </List.Content>
-//                 </List.Item>
-//               ))}
-//           </List>
-//         </Grid.Column>
-
-//         {/* Column 2: Selected test details */}
-//         <Grid.Column width={7}>
-//           {selectedTest ? (
-//             <Segment>
-//               <h2>{selectedTest.name}</h2>
-//               <p><strong>Question Count:</strong> {selectedTest.question_new.length}</p>
-//               <p><strong>Questions:</strong></p>
-//               <ul>
-//                 {selectedTest.question_new.map((q) => {
-//                   const fullQuestion = allQuestions?.find((x) => x.id === q)
-//                   return (
-//                     <li key={q}>
-//                       {fullQuestion ? fullQuestion.question : 'Loading...'}
-//                     </li>
-//                   )
-//                 })}
-//               </ul>
-//             </Segment>
-//           ) : (
-//             <p>Select a test to view details</p>
-//           )}
-//         </Grid.Column>
-
-//         {/* Column 3: Update + Delete */}
-//         <Grid.Column width={4}>
-//           <Segment>
-//             {selectedTest && (
-//               <>
-//                 <TestUpdateModal
-//                   user={user}
-//                   test={selectedTest}
-//                   msgAlert={msgAlert}
-//                   allQuestions={allQuestions}
-//                 />
-//                 <Button
-//                   color="red"
-//                   fluid
-//                   style={{ marginTop: '0.5rem' }}
-//                   onClick={() => handleDelete(selectedTest.id)}
-//                 >
-//                   Delete
-//                 </Button>
-//               </>
-//             )}
-//           </Segment>
-//         </Grid.Column>
-//       </Grid>
-//     </Segment>
-//   )
-// }
-
-// export default TestIndeximport React, { useState, useEffect } from 'react'
-import { Grid, Segment, List, Button } from 'semantic-ui-react'
-import LoadingScreen from '../shared/LoadingPage'
-import { getAllTests } from '../../api/test'
-import { getAllQuestions } from '../../api/question'
-import AddTestModal from './AddTestModal'
-import TestUpdateModal from './TestUpdateModal'
-import React, { useState, useEffect } from 'react'
+import { Grid, Segment, List, Button, Form } from "semantic-ui-react";
+import LoadingScreen from "../shared/LoadingPage";
+import { getAllTests } from "../../api/test";
+import { getAllQuestions } from "../../api/question";
+import { getAllEmployees } from "../../api/user";
+import AddTestModal from "./AddTestModal";
+import TestUpdateModal from "./TestUpdateModal";
+import React, { useState, useEffect } from "react";
 import { deleteTest } from "../../api/test";
 import TestTake from "./TestTake";
-
+import SearchList from "./SearchList";
 
 const TestIndex = ({ user, msgAlert, newTest, setNewTest }) => {
-  const [allTests, setAllTests] = useState([])
-  const [allQuestions, setAllQuestions] = useState([])
-  const [selectedTest, setSelectedTest] = useState(null)
+  const [allTests, setAllTests] = useState([]);
+  const [filteredTests, setFilteredTests] = useState([]);
+  const [allQuestions, setAllQuestions] = useState([]);
+  const [employees, setEmployees] = useState([]);
+  const [selectedTest, setSelectedTest] = useState(null);
+  const [sortMethod, setSortMethod] = useState("created");
+  const [sortAsc, setSortAsc] = useState(true);
 
   useEffect(() => {
-    getAllTests(user)
-      .then(res => {
-        console.log("✅ Fetched Tests:", res.data.test_thiss)
-        setAllTests(res.data.test_thiss)
+    getAllEmployees(user)
+      .then((res) => {
+        if (res.data?.users) {
+          setEmployees(res.data.users);
+          getAllTests(user)
+            .then((res) => {
+              console.log("✅ Fetched Tests:", res.data.test_thiss);
+              const testsWithEmployees = res.data.test_thiss.map(test => ({
+                ...test,
+                employees: res.data.users,
+              }));
+              setAllTests(testsWithEmployees);
+              setFilteredTests(testsWithEmployees);
+            })
+            .catch((error) => {
+              msgAlert({
+                heading: "Error",
+                message: "Could not get tests",
+                variant: "danger",
+              });
+            });
+        }
       })
-      .catch(error => {
+      .catch(() => {
         msgAlert({
-          heading: 'Error',
-          message: 'Could not get tests',
-          variant: 'danger',
-        })
-      })
-  }, [])
+          heading: "Error",
+          message: "Could not get Employees",
+          variant: "danger",
+        });
+      });
+  }, [user]);
 
   useEffect(() => {
     getAllQuestions(user)
-      .then(res => {
-        console.log("✅ Fetched Questions:", res.data.question_news)
-        setAllQuestions(res.data.question_news)
+      .then((res) => {
+        console.log("✅ Fetched Questions:", res.data.question_news);
+        setAllQuestions(res.data.question_news);
       })
-      .catch(error => {
+      .catch((error) => {
         msgAlert({
-          heading: 'Error',
-          message: 'Could not get questions',
-          variant: 'danger',
-        })
-      })
-  }, [])
+          heading: "Error",
+          message: "Could not get questions",
+          variant: "danger",
+        });
+      });
+  }, []);
 
   const handleDeleteTest = () => {
     deleteTest(user, selectedTest.id)
@@ -260,18 +86,22 @@ const TestIndex = ({ user, msgAlert, newTest, setNewTest }) => {
       });
   };
 
-
   const findRelevantQuestions = (test, allQuestions) => {
-    if (!test || !Array.isArray(test.question_new) || !Array.isArray(allQuestions)) return []
+    if (
+      !test ||
+      !Array.isArray(test.question_new) ||
+      !Array.isArray(allQuestions)
+    )
+      return [];
 
     return allQuestions.filter((question) =>
       test.question_new.some((testQuestion) =>
-        typeof testQuestion === 'object'
+        typeof testQuestion === "object"
           ? testQuestion.id === question.id
           : testQuestion === question.id
       )
-    )
-  }
+    );
+  };
 
   // const relevantQuestions =
   //   selectedTest && allQuestions.length
@@ -280,38 +110,69 @@ const TestIndex = ({ user, msgAlert, newTest, setNewTest }) => {
 
   const relevantQuestions = (() => {
     if (selectedTest && Array.isArray(allQuestions)) {
-      const result = findRelevantQuestions(selectedTest, allQuestions)
-      return Array.isArray(result) ? result : []
+      const result = findRelevantQuestions(selectedTest, allQuestions);
+      return Array.isArray(result) ? result : [];
     }
-    return []
-  })()
+    return [];
+  })();
 
-  // console.log("📦 selectedTest:", selectedTest)
-  // console.log("📦 relevantQuestions:", relevantQuestions)
-  // console.log("📦 allQuestions:", allQuestions)
+  const getOwnerName = (test) => {
+    if (user?.role === "manager" && Array.isArray(employees)) {
+      const owner = employees.find((emp) => emp.id === test.owner);
+      return owner ? `${owner.first_name} ${owner.last_name}` : "Unknown";
+    }
+    return "";
+  };
+
+  const sortedTests = [...filteredTests].sort((a, b) => {
+    let result = 0;
+    if (sortMethod === "creator") {
+      const aName = getOwnerName(a).toLowerCase();
+      const bName = getOwnerName(b).toLowerCase();
+      result = aName.localeCompare(bName);
+    } else {
+      result = new Date(a.created_at) - new Date(b.created_at);
+    }
+    return sortAsc ? result : -result;
+  });
 
   return (
-    <Segment raised><AddTestModal user={user} msgAlert={msgAlert} setNewTest={setNewTest} />
+    <Segment raised>
+      <AddTestModal user={user} msgAlert={msgAlert} setNewTest={setNewTest} />
       <Grid columns={3} divided padded>
         {/* Column 1: Test list and create button */}
         <Grid.Column width={5}>
           <h3>All Tests</h3>
-          
-          <List divided selection>
-            {Array.isArray(allTests) &&
-              allTests
-                .slice()
-                .reverse()
-                .map((test) => (
-                  <List.Item key={test.id} onClick={() => setSelectedTest(test)}>
-                    <List.Content>
-                      <List.Header>
-                        {test.name ? test.name.slice(0, 100) : 'Untitled Test'}
-                      </List.Header>
-                    </List.Content>
-                  </List.Item>
-                ))}
-          </List>
+
+          <SearchList
+            data={sortedTests.map(test => ({
+              ...test,
+              employees: employees,
+            }))}
+            onSearch={(val) => {
+              const lowerVal = val.toLowerCase();
+              const filtered = allTests.filter((test) => {
+                const nameMatch = test.name?.toLowerCase().includes(lowerVal);
+                const emp = employees.find((e) => e.id === test.owner);
+                const empMatch = emp
+                  ? `${emp.first_name || ""} ${emp.last_name || ""}`
+                      .toLowerCase()
+                      .includes(lowerVal)
+                  : false;
+                return nameMatch || empMatch;
+              });
+              setFilteredTests(filtered);
+            }}
+            onSelect={(test) => setSelectedTest(test)}
+            searchPlaceholder="Search by test name or creator"
+            extractLabel={(test) => test.name || "Untitled Test"}
+            reversed={false}
+            sortOptions={[
+              { key: "updated_at", label: "Last Updated" },
+              { key: "creator", label: "Creator" },
+            ]}
+            defaultSortKey="updated_at"
+          />
         </Grid.Column>
 
         {/* Column 2: Selected test details */}
@@ -319,19 +180,41 @@ const TestIndex = ({ user, msgAlert, newTest, setNewTest }) => {
           {selectedTest ? (
             <Segment>
               <h2>{selectedTest.name}</h2>
-              <p><strong>Question Count:</strong> {relevantQuestions.length}</p>
-              <p><strong>Questions:</strong></p>
+              <p>
+                <strong>Date Created:</strong>{" "}
+                {new Date(selectedTest.created_at).toLocaleDateString(undefined, {
+                  year: "numeric",
+                  month: "long",
+                  day: "numeric",
+                })}
+              </p>
+              <p>
+                <strong>Last Updated:</strong>{" "}
+                {new Date(selectedTest.updated_at).toLocaleDateString(undefined, {
+                  year: "numeric",
+                  month: "long",
+                  day: "numeric",
+                })}
+              </p>
+              <h3>Created by: {getOwnerName(selectedTest)}</h3>
+              <p>
+                <strong>Question Count:</strong> {relevantQuestions.length}
+              </p>
+              <p>
+                <strong>Questions:</strong>
+              </p>
               <ul>
-              {Array.isArray(relevantQuestions) && relevantQuestions.length > 0 ? (
-                relevantQuestions.map((q) => (
-                  <li key={q.id}>
-                    (Q) {q.question_str} (A) {q.answer}
-                  </li>
-                ))
-              ) : (
-                <li>No questions linked to this test</li>
-              )}
-            </ul>
+                {Array.isArray(relevantQuestions) &&
+                relevantQuestions.length > 0 ? (
+                  relevantQuestions.map((q) => (
+                    <li key={q.id}>
+                      (Q) {q.question_str} (A) {q.answer}
+                    </li>
+                  ))
+                ) : (
+                  <li>No questions linked to this test</li>
+                )}
+              </ul>
             </Segment>
           ) : (
             <p>Select a test to view details</p>
@@ -343,28 +226,33 @@ const TestIndex = ({ user, msgAlert, newTest, setNewTest }) => {
           <Segment>
             {selectedTest && (
               <>
-               <TestUpdateModal
+                <TestUpdateModal
                   user={user}
                   test={selectedTest}
-                   msgAlert={msgAlert}
-                   allQuestions={allQuestions}
-                 />
+                  msgAlert={msgAlert}
+                  allQuestions={allQuestions}
+                />
                 <Button
                   color="red"
                   fluid
-                  style={{ marginTop: '0.5rem' }}
+                  style={{ marginTop: "0.5rem" }}
                   onClick={() => handleDeleteTest(selectedTest)}
                 >
                   Delete
                 </Button>
-                <TestTake  test={selectedTest} user={user} msgAlert={msgAlert} allQuestions={allQuestions}/>
+                <TestTake
+                  test={selectedTest}
+                  user={user}
+                  msgAlert={msgAlert}
+                  allQuestions={allQuestions}
+                />
               </>
             )}
           </Segment>
         </Grid.Column>
       </Grid>
     </Segment>
-  )
-}
+  );
+};
 
-export default TestIndex
+export default TestIndex;

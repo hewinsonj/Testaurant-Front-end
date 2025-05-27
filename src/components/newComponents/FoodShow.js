@@ -547,7 +547,27 @@ const FoodShow = ({ user, msgAlert, food }) => {
                                 )}
                               </h3>
                             </Grid.Row>
+
                             <Grid.Row>
+                              <h3>
+                                Contains Sesame:{" "}
+                                {food.con_sesame === true ? (
+                                  <div>
+                                    <Segment color="red" inverted>
+                                      <Icon name="warning" />
+                                      True
+                                      <Icon name="warning" />
+                                    </Segment>
+                                  </div>
+                                ) : (
+                                  <div>
+                                    <Icon name="window close outline" />
+                                    False
+                                    <Icon name="window close outline" />
+                                  </div>
+                                )}
+                              </h3>
+                            </Grid.Row>                            <Grid.Row>
                               <h3>
                                 Contains Dairy:{" "}
                                 {food.con_dairy === true ? (
@@ -569,8 +589,28 @@ const FoodShow = ({ user, msgAlert, food }) => {
                             </Grid.Row>
                             <Grid.Row>
                               <h3>
-                                Contains Sesame:{" "}
-                                {food.con_sesame === true ? (
+                                Is Vegan:{" "}
+                                {food.is_vegan === true ? (
+                                  <div>
+                                    <Segment color="red" inverted>
+                                      <Icon name="warning" />
+                                      True
+                                      <Icon name="warning" />
+                                    </Segment>
+                                  </div>
+                                ) : (
+                                  <div>
+                                    <Icon name="window close outline" />
+                                    False
+                                    <Icon name="window close outline" />
+                                  </div>
+                                )}
+                              </h3>
+                            </Grid.Row>
+                            <Grid.Row>
+                              <h3>
+                                Is Vegiterian:{" "}
+                                {food.is_vegetarian === true ? (
                                   <div>
                                     <Segment color="red" inverted>
                                       <Icon name="warning" />
