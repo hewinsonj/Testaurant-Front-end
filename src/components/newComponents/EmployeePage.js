@@ -3,11 +3,13 @@ import { Grid, Segment, Button } from "semantic-ui-react";
 import { getAllEmployees } from "../../api/user";
 import { getAllTests } from "../../api/test";
 import { getAllQuestions } from "../../api/question";
+import { getAllResults } from "../../api/result";
 import AssignTestModal from "./AssignTestModal";
 import UpdateEmployeeModal from "../auth/UpdateEmployeeModal";
 import DeleteEmployeeButton from "../auth/DeleteEmployeeButton";
 import SearchList from "./SearchList";
 import NewEmployeeModal from "./NewEmployeeModal";
+import ResultsSegment from "./ResultsSegment";
 
 const EmployeePage = ({ user, msgAlert }) => {
   const [allEmployees, setAllEmployees] = useState([]);
@@ -18,45 +20,41 @@ const EmployeePage = ({ user, msgAlert }) => {
   const [newEmpModalOpen, setNewEmpModalOpen] = useState(false);
 
   useEffect(() => {
-    getAllEmployees(user)
-      .then((res) => {
-        setAllEmployees(res.data.users);
-        setFilteredEmployees(res.data.users);
-      })
-      .catch((error) => {
-        msgAlert({
-          heading: "Failure",
-          message: "Could not fetch employees: " + error,
-          variant: "danger",
-        });
-      });
+    Promise.all([
+      getAllEmployees(user),
+      getAllResults(user),
+      getAllTests(user),
+      getAllQuestions(user)
+    ])
+      .then(([empRes, resultRes, testRes, questionRes]) => {
+        const employees = empRes.data.users;
+        const results = resultRes.data.results;
+        const tests = testRes.data.test_thiss;
+        const questions = questionRes.data.question_news;
 
-    getAllTests(user)
-      .then((res) => {
-        setAllTests(res.data.test_thiss);
+        const employeesWithResults = employees.map(emp => {
+          const empResults = results.filter(r => {
+            const ownerId = typeof r.owner === 'object' ? r.owner.id : r.owner;
+            return ownerId === emp.id;
+          });
+          return { ...emp, results: empResults };
+        });
+
+        console.log("✅ Final merged employees with results:", employeesWithResults);
+
+        setAllEmployees(employeesWithResults);
+        setFilteredEmployees(employeesWithResults);
+        setAllTests(tests);
+        setAllQuestions(questions);
       })
       .catch((error) => {
         msgAlert({
           heading: "Error",
-          message: "Could not get tests",
+          message: "Could not fetch data: " + error,
           variant: "danger",
         });
       });
-
-    // Fetch all questions here in the parent
-    getAllQuestions(user)
-      .then((res) => {
-        // Assuming the questions are returned in res.data.question_news
-        setAllQuestions(res.data.question_news);
-      })
-      .catch((error) => {
-        msgAlert({
-          heading: "Error",
-          message: "Could not get questions: " + error,
-          variant: "danger",
-        });
-      });
-  }, []);
+  }, [user]);
 
   const getAssignedTestNames = (testIds) => {
     if (!Array.isArray(testIds)) return [];
@@ -74,7 +72,7 @@ const EmployeePage = ({ user, msgAlert }) => {
           <Button
             primary
             fluid
-            style={{ marginBottom: '1em' }}
+            // style={{ marginBottom: '1em' }}
             onClick={() => setNewEmpModalOpen(true)}
           >
             + New Employee
@@ -89,7 +87,10 @@ const EmployeePage = ({ user, msgAlert }) => {
               });
               setFilteredEmployees(filtered);
             }}
-            onSelect={(emp) => setSelectedEmployee(emp)}
+            onSelect={(emp) => {
+              const enriched = filteredEmployees.find(e => e.id === emp.id);
+              setSelectedEmployee(enriched || emp);
+            }}
             searchPlaceholder="Search by employee name"
             extractLabel={(emp) =>
               emp.first_name || emp.last_name
@@ -103,7 +104,6 @@ const EmployeePage = ({ user, msgAlert }) => {
         <Grid.Column width={7}>
           {selectedEmployee ? (
             <Segment>
-              {/* <h2>Employee Info</h2> */}
               <p>
                 <strong>Email:</strong>{" "}
                 {selectedEmployee.email || <i>(none)</i>}
@@ -127,11 +127,29 @@ const EmployeePage = ({ user, msgAlert }) => {
                   <i>(none)</i>
                 )}
               </p>
+              <p>
+                <strong>Test Score Average:</strong>{" "}
+                {(() => {
+                  const results = selectedEmployee?.results || [];
+                  const percentages = results
+                    .map(res => {
+                      const match = (typeof res.score === 'string') ? res.score.match(/^(\d+)\s*out\s*of\s*(\d+)/i) : null;
+                      if (!match) return NaN;
+                      const correct = parseFloat(match[1]);
+                      const total = parseFloat(match[2]);
+                      return total > 0 ? (correct / total) * 100 : NaN;
+                    })
+                    .filter(pct => !isNaN(pct));
+
+                  if (!percentages.length) return <i>(no valid scores)</i>;
+
+                  const totalPct = percentages.reduce((sum, p) => sum + p, 0);
+                  return (totalPct / percentages.length).toFixed(0) + '%';
+                })()}
+              </p>
               <Segment inverted>
                 <Segment>
-                  <p>
-                    <strong>Assigned Tests:</strong>
-                  </p>
+                  <p><strong>Assigned Tests:</strong></p>
                   {Array.isArray(selectedEmployee.assigned_tests) &&
                   selectedEmployee.assigned_tests.length > 0 ? (
                     <ul
@@ -141,9 +159,7 @@ const EmployeePage = ({ user, msgAlert }) => {
                         paddingLeft: "1rem",
                       }}
                     >
-                      {getAssignedTestNames(
-                        selectedEmployee.assigned_tests
-                      ).map((name, idx) => (
+                      {getAssignedTestNames(selectedEmployee.assigned_tests).map((name, idx) => (
                         <li key={idx}>{name}</li>
                       ))}
                     </ul>
@@ -158,6 +174,26 @@ const EmployeePage = ({ user, msgAlert }) => {
           ) : (
             <p>Select an employee to view details</p>
           )}
+            <h4>Test Results</h4>
+
+          <Segment style={{ maxHeight: '300px', overflowY: 'auto' }}>
+            {selectedEmployee
+              ? (selectedEmployee.results || []).map((res, idx) => {
+                  const test = Array.isArray(allTests) ? allTests.find(t => t.id === res.the_test) : null;
+                  return (
+                    <div key={`${selectedEmployee.id}-${idx}`} style={{ marginBottom: '1em' }}>
+                      <ResultsSegment
+                        result={res}
+                        user={user}
+                        msgAlert={msgAlert}
+                        label={test ? test.name : 'Unknown Test'}
+                      />
+                    </div>
+                  );
+                })
+              : <p style={{ fontStyle: "italic" }}>Select an employee to view results.</p>
+            }
+          </Segment>
         </Grid.Column>
 
         {/* Column 3: Action buttons */}

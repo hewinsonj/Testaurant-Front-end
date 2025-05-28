@@ -16,10 +16,17 @@ const QuestionIndex = ({ user, msgAlert, newQuestion, setNewQuestion }) => {
   useEffect(() => {
     getAllQuestions(user)
       .then((res) => {
-        const enrichedQuestions = res.data.question_news.map((q) => ({
-          ...q,
-          employees: res.data.users || [],
-        }));
+        const enrichedQuestions = res.data.question_news.map((q) => {
+          const employees = res.data.users || [];
+          const owner = employees.find((emp) => emp.id === q.owner);
+          return {
+            ...q,
+            employees,
+            creator_name: owner
+              ? `${owner.first_name || ""} ${owner.last_name || ""}`
+              : "Unknown",
+          };
+        });
         setAllQuestions(enrichedQuestions);
         setOriginalQuestions(enrichedQuestions);
         setFilteredQuestions(enrichedQuestions);
@@ -70,15 +77,10 @@ const QuestionIndex = ({ user, msgAlert, newQuestion, setNewQuestion }) => {
               q.question_str ? `${q.question_str.slice(0, 60)}...` : "No text"
             }
             extractUpdatedAt={(q) => q.updated_at || null}
-            extractOwner={(q) => {
-              const owner = q.employees.find((emp) => emp.id === q.owner);
-              return owner
-                ? `${owner.first_name} ${owner.last_name}`
-                : "Unknown";
-            }}
+            extractOwner={(q) => q.creator_name || "Unknown"}
             sortOptions={[
               { key: "updated_at", label: "Last Updated", style: { display: "inline-block", marginRight: "0.5rem" } },
-              { key: "creator", label: "Creator", style: { display: "inline-block", marginRight: "0.5rem" } },
+              { key: "creator_name", label: "Creator", style: { display: "inline-block", marginRight: "0.5rem" } },
             ]}
             defaultSortKey="updated_at"
             buttonContainerStyle={{ height: "2.5rem", overflow: "hidden" }}

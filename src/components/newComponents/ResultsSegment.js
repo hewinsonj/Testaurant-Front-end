@@ -2,19 +2,21 @@ import React, { useState, useEffect } from "react";
 
 import { Segment, Header, Divider, Label } from "semantic-ui-react"
 
-const ResultsSegment = ({ result, allTests, employees, setOwnerName }) => {
+const ResultsSegment = ({ result, allTests, employees, setOwnerName, label }) => {
   const getTestName = (testId) => {
-    const match = allTests.find((test) => test.id === testId)
-    return match ? match.name : "Unknown Test"
+    const testArray = Array.isArray(allTests) ? allTests : [];
+    console.log("getTestName called with testId:", testId, "allTests:", allTests);
+    const match = testArray.find((test) => test.id === testId);
+    return match ? match.name : "Unknown Test";
   }
 
   const getOwnerEmail = (ownerId) => {
-    const match = employees.find((emp) => emp.id === ownerId)
+    const match = Array.isArray(employees) ? employees.find((emp) => emp.id === ownerId) : null;
     return match ? match.email : "Unknown User Email"
   }
 
   const getOwnerFullName = (ownerId) => {
-    const match = employees.find((emp) => emp.id === ownerId)
+    const match = Array.isArray(employees) ? employees.find((emp) => emp.id === ownerId) : null;
     if (!match) return "Unknown User"
     return `${match.first_name || ""} ${match.last_name || ""}`.trim()
   }
@@ -34,19 +36,19 @@ const ResultsSegment = ({ result, allTests, employees, setOwnerName }) => {
   return (
     <Segment raised>
       <Label ribbon color="black" size="huge">
-        Test: {getTestName(result.the_test)}
+        {label || `Test: ${getTestName(result.the_test)}`}
       </Label>
-      <Header as="h4" style={{ textAlign: "right" }} color="grey" size="small">
+      {/* <Header as="h4" style={{ textAlign: "right" }} color="grey" size="small">
         Taken by: {getOwnerFullName(result.owner)} 
         <Divider></Divider>
         Email: {getOwnerEmail(result.owner)}
-      </Header>
+      </Header> */}
 
       <Divider />
 
-      <Header as="h3" style={{ fontSize: "1.5rem", marginBottom: "0.5rem" }}>
+      {/* <Header as="h3" style={{ fontSize: "1.5rem", marginBottom: "0.5rem" }}>
         Test Stats
-      </Header>
+      </Header> */}
       <p style={{ fontSize: "1.25rem" }}><strong>Correct:</strong> {result.correct}</p>
       <p style={{ fontSize: "1.25rem" }}><strong>Wrong:</strong> {result.wrong}</p>
       <div

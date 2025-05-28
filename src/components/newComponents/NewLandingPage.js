@@ -114,7 +114,7 @@ const NewLandingPage = ({ user, setUser, msgAlert }) => {
               active={activeItem === "employees"}
               onClick={handleItemClick}
             >
-              Employees
+              Admin
             </Menu.Item>
             <Menu.Item
               name="results"

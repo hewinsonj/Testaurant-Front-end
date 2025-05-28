@@ -17,12 +17,12 @@ const SearchList = ({
   const [query, setQuery] = React.useState("");
 
   const [sortKey, setSortKey] = React.useState(defaultSortKey || (sortOptions[0]?.key || null));
-  const [sortAsc, setSortAsc] = React.useState(true);
+  const [sortAsc, setSortAsc] = React.useState(false);
 
   const handleChange = (e) => {
-    const value = e.target.value.toLowerCase();
+    const value = e.target.value;
     setQuery(value);
-    onSearch(value);
+    onSearch(value.toLowerCase());
   };
 
   const defaultExtractOwner = (item) => {
@@ -67,7 +67,7 @@ const SearchList = ({
     return sortAsc ? sorted : sorted.reverse();
   };
 
-  const displayData = sortData(reversed ? [...data].reverse() : [...data]);
+  const displayData = sortData([...data]);
 
   return (
     <>
@@ -105,7 +105,7 @@ const SearchList = ({
           value={query}
         />
       </Form>
-      <div style={{ maxHeight: "450px", overflowY: "auto" }}>
+      <div style={{ maxHeight: "600px", overflowY: "auto" }}>
         <List divided selection>
           {displayData.map((item) => (
             <List.Item key={item.id} onClick={() => onSelect(item)}>

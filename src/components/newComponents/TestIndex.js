@@ -31,8 +31,10 @@ const TestIndex = ({ user, msgAlert, newTest, setNewTest }) => {
                 ...test,
                 employees: res.data.users,
               }));
-              setAllTests(testsWithEmployees);
-              setFilteredTests(testsWithEmployees);
+              // Reverse/sort by newest updated_at first before setting state
+              const reversedTests = testsWithEmployees.slice().sort((a, b) => new Date(b.updated_at) - new Date(a.updated_at));
+              setAllTests(reversedTests);
+              setFilteredTests(reversedTests);
             })
             .catch((error) => {
               msgAlert({
@@ -131,9 +133,9 @@ const TestIndex = ({ user, msgAlert, newTest, setNewTest }) => {
       const bName = getOwnerName(b).toLowerCase();
       result = aName.localeCompare(bName);
     } else {
-      result = new Date(a.created_at) - new Date(b.created_at);
+      result = new Date(b.updated_at) - new Date(a.updated_at);
     }
-    return sortAsc ? result : -result;
+    return sortAsc ? -result : result;
   });
 
   return (

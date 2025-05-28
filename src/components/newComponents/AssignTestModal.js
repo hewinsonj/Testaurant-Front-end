@@ -121,7 +121,7 @@ const AssignTestModal = ({ user, employee, tests, msgAlert, allQuestions }) => {
             <Segment
               basic
               color="blue"
-              style={{ maxHeight: "250px", overflowY: "auto" }}
+              style={{ maxHeight: "440px", overflowY: "auto" }}
             >
               {" "}
               <Header as="h4">Preview Panel</Header>
