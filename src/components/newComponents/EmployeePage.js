@@ -40,7 +40,7 @@ const EmployeePage = ({ user, msgAlert }) => {
           return { ...emp, results: empResults };
         });
 
-        console.log("✅ Final merged employees with results:", employeesWithResults);
+        // console.log("✅ Final merged employees with results:", employeesWithResults);
 
         setAllEmployees(employeesWithResults);
         setFilteredEmployees(employeesWithResults);
@@ -178,7 +178,7 @@ const EmployeePage = ({ user, msgAlert }) => {
 
           <Segment style={{ maxHeight: '300px', overflowY: 'auto' }}>
             {selectedEmployee
-              ? (selectedEmployee.results || []).map((res, idx) => {
+              ? (selectedEmployee.results || []).slice().reverse().map((res, idx) => {
                   const test = Array.isArray(allTests) ? allTests.find(t => t.id === res.the_test) : null;
                   return (
                     <div key={`${selectedEmployee.id}-${idx}`} style={{ marginBottom: '1em' }}>
@@ -212,7 +212,14 @@ const EmployeePage = ({ user, msgAlert }) => {
                   employee={selectedEmployee}
                   tests={allTests}
                   msgAlert={msgAlert}
-                  allQuestions={allQuestions} // Passing down the fetched questions
+                  allQuestions={allQuestions}
+                  onAssigned={(newAssignedIds) => {
+                    // Update selected employee in place
+                    setSelectedEmployee(prev => prev ? { ...prev, assigned_tests: newAssignedIds } : prev);
+                    // Update employees arrays
+                    setAllEmployees(prev => prev.map(emp => emp.id === selectedEmployee.id ? { ...emp, assigned_tests: newAssignedIds } : emp));
+                    setFilteredEmployees(prev => prev.map(emp => emp.id === selectedEmployee.id ? { ...emp, assigned_tests: newAssignedIds } : emp));
+                  }}
                 />
                 <DeleteEmployeeButton
                   user={user}

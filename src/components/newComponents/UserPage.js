@@ -30,7 +30,7 @@ const UserPage = ({ user, msgAlert }) => {
         setAllTests(res.data.test_thiss);
       })
       .then(() => {
-        console.log(allTests, "ALL TESTS");
+        // console.log(allTests, "ALL TESTS");
       })
 
       

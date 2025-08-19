@@ -3,7 +3,7 @@ import { createDrink } from "../../api/drink";
 import AddDrinkForm from "./AddDrinkForm";
 
 const CreateDrink = (props) => {
-  const { user, msgAlert, setOpen } = props;
+  const { user, msgAlert, setOpen, onCreated } = props;
 
   const [errorMsg, setErrorMsg] = useState("");
 
@@ -54,20 +54,22 @@ const CreateDrink = (props) => {
     }
 
     createDrink(user, drink)
-      .then(() => {
+      .then((res) => {
+        const newDrink = (res && res.data && (res.data.drink || res.data)) || null;
         msgAlert({
           heading: "Success",
           message: "Created Drink Item",
           variant: "success",
         });
-      })
-      .then(() => {
+        if (typeof onCreated === 'function' && newDrink) {
+          onCreated(newDrink);
+        }
         setOpen(false);
       })
       .catch((error) => {
         msgAlert({
           heading: "Failure",
-          message: "Create Drink Item Failure" + error,
+          message: "Create Drink Item Failure: " + error,
           variant: "danger",
         });
       });

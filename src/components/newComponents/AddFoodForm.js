@@ -14,7 +14,6 @@ const AddFoodForm = (props) => {
             id="name"
             label="Name"
             placeholder="Name of Food Item"
-            defaultValue={food.name}
             value={food.name}
             onChange={handleChange}
           />
@@ -25,7 +24,6 @@ const AddFoodForm = (props) => {
           id="ingredients"
           label="Ingredients"
           placeholder="Ingredients"
-          defaultValue={food.ingredients}
           value={food.ingredients}
           onChange={handleChange}
         />

@@ -3,7 +3,7 @@ import { createQuestion } from "../../api/question";
 import AddItem from "./AddItem";
 
 const CreateQuestion = (props) => {
-  const { user, msgAlert, setOpen, setNewQuestion } = props;
+  const { user, msgAlert, setOpen, setNewQuestion, onCreated } = props;
 
   const defaultQuestion = {
     question_str: "",
@@ -42,29 +42,29 @@ const CreateQuestion = (props) => {
         e.preventDefault()
 
         createQuestion(user, question)
-            .then(() => {
-                msgAlert({
-                    heading: 'Success',
-                    message: 'Created Question',
-                    variant: 'success'
-                })
-            })
-            // 
-            .then(() => {
-                setOpen(false)
-            })
-            
-            .then(() => setNewQuestion(prev => !prev))
-            .catch((error) => {
-                msgAlert({
-                    heading: 'Failure',
-                    message: 'Create Question Failure' + error,
-                    variant: 'danger'
-                })
-            })
+          .then((res) => {
+            const newQuestionObj = (res && res.data && (res.data.question || res.data)) || null;
+            msgAlert({
+              heading: 'Success',
+              message: 'Created Question',
+              variant: 'success'
+            });
+            if (typeof onCreated === 'function' && newQuestionObj) {
+              onCreated(newQuestionObj);
+            }
+            setOpen(false);
+          })
+          .then(() => setNewQuestion(prev => !prev))
+          .catch((error) => {
+            msgAlert({
+              heading: 'Failure',
+              message: 'Create Question Failure' + error,
+              variant: 'danger'
+            });
+          });
     }
 
-    console.log(user, 'this be the user')
+    // console.log(user, 'this be the user')
     return (
         <AddItem
             question={ question }

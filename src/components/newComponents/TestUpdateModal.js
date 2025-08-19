@@ -218,7 +218,7 @@ const TestUpdateModal = (props) => {
       question_new: idStorage.question_ids, // Only pass the question IDs
     };
   
-    console.log("Updated Test Object to be Sent:", updatedTest);
+    // console.log("Updated Test Object to be Sent:", updatedTest);
   
     updateTest(user, updatedTest, initialTest.id)
       .then(() => {

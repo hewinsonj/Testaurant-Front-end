@@ -5,7 +5,7 @@ import { Segment, Header, Divider, Label } from "semantic-ui-react"
 const ResultsSegment = ({ result, allTests, employees, setOwnerName, label }) => {
   const getTestName = (testId) => {
     const testArray = Array.isArray(allTests) ? allTests : [];
-    console.log("getTestName called with testId:", testId, "allTests:", allTests);
+    // console.log("getTestName called with testId:", testId, "allTests:", allTests);
     const match = testArray.find((test) => test.id === testId);
     return match ? match.name : "Unknown Test";
   }

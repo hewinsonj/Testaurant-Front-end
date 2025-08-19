@@ -95,13 +95,15 @@ const NewLandingPage = ({ user, setUser, msgAlert }) => {
             >
               <h1>Testaurant</h1>
             </Menu.Item>
-            <Menu.Item
-              name="test-nav"
-              active={activeItem === "test-nav"}
-              onClick={handleItemClick}
-            >
-              Tests
-            </Menu.Item>
+            {/* {user?.role === "manager" && ( */}
+              <Menu.Item
+                name="test-nav"
+                active={activeItem === "test-nav"}
+                onClick={handleItemClick}
+              >
+                Tests
+              </Menu.Item>
+            {/* )} */}
             <Menu.Item
               name="menu-nav"
               active={activeItem === "menu-nav"}
@@ -109,13 +111,15 @@ const NewLandingPage = ({ user, setUser, msgAlert }) => {
             >
               Menu
             </Menu.Item>
-            <Menu.Item
-              name="employees"
-              active={activeItem === "employees"}
-              onClick={handleItemClick}
-            >
-              Admin
-            </Menu.Item>
+            {user?.role === "manager" && (
+              <Menu.Item
+                name="employees"
+                active={activeItem === "employees"}
+                onClick={handleItemClick}
+              >
+                Admin
+              </Menu.Item>
+            )}
             <Menu.Item
               name="results"
               active={activeItem === "results"}
@@ -130,13 +134,15 @@ const NewLandingPage = ({ user, setUser, msgAlert }) => {
             >
               Sign Out
             </Menu.Item>
-            <Menu.Item
-              name="change-password"
-              active={activeItem === "change-password"}
-              onClick={handleItemClick}
-            >
-              Change Password
-            </Menu.Item>
+            {user?.role === "manager" && (
+              <Menu.Item
+                name="change-password"
+                active={activeItem === "change-password"}
+                onClick={handleItemClick}
+              >
+                Change Password
+              </Menu.Item>
+            )}
           </Menu.Menu>
         )}{" "}
         {user?.first_name && (

@@ -26,7 +26,7 @@ const TestIndex = ({ user, msgAlert, newTest, setNewTest }) => {
           setEmployees(res.data.users);
           getAllTests(user)
             .then((res) => {
-              console.log("✅ Fetched Tests:", res.data.test_thiss);
+              // console.log("✅ Fetched Tests:", res.data.test_thiss);
               const testsWithEmployees = res.data.test_thiss.map(test => ({
                 ...test,
                 employees: res.data.users,
@@ -57,7 +57,7 @@ const TestIndex = ({ user, msgAlert, newTest, setNewTest }) => {
   useEffect(() => {
     getAllQuestions(user)
       .then((res) => {
-        console.log("✅ Fetched Questions:", res.data.question_news);
+        // console.log("✅ Fetched Questions:", res.data.question_news);
         setAllQuestions(res.data.question_news);
       })
       .catch((error) => {
@@ -69,8 +69,39 @@ const TestIndex = ({ user, msgAlert, newTest, setNewTest }) => {
       });
   }, []);
 
-  const handleDeleteTest = () => {
-    deleteTest(user, selectedTest.id)
+  const reloadTests = () => {
+    return getAllTests(user)
+      .then((res) => {
+        const testsWithEmployees = res.data.test_thiss.map((test) => ({
+          ...test,
+          employees: employees,
+        }));
+        const reversedTests = testsWithEmployees
+          .slice()
+          .sort((a, b) => new Date(b.updated_at) - new Date(a.updated_at));
+        setAllTests(reversedTests);
+        setFilteredTests(reversedTests);
+      })
+      .catch(() => {
+        msgAlert({
+          heading: "Error",
+          message: "Could not refresh tests",
+          variant: "danger",
+        });
+      });
+  };
+
+  const handleDeleteTest = (testId) => {
+    if (!testId) return;
+
+    // Optimistically remove from list
+    setAllTests((prev) => prev.filter((t) => t.id !== testId));
+    setFilteredTests((prev) => prev.filter((t) => t.id !== testId));
+    if (selectedTest && selectedTest.id === testId) {
+      setSelectedTest(null);
+    }
+
+    deleteTest(user, testId)
       .then(() => {
         msgAlert({
           heading: "Success",
@@ -78,13 +109,16 @@ const TestIndex = ({ user, msgAlert, newTest, setNewTest }) => {
           variant: "success",
         });
       })
-      // .then(() => setOpen(false))
       .catch((error) => {
         msgAlert({
           heading: "Failure",
           message: `Failed to delete test: ${error.message}`,
           variant: "danger",
         });
+      })
+      .finally(() => {
+        // Authoritative refresh
+        reloadTests();
       });
   };
 
@@ -140,7 +174,17 @@ const TestIndex = ({ user, msgAlert, newTest, setNewTest }) => {
 
   return (
     <Segment raised>
-      <AddTestModal user={user} msgAlert={msgAlert} setNewTest={setNewTest} />
+      <AddTestModal
+  user={user}
+  msgAlert={msgAlert}
+  setNewTest={setNewTest}
+  onCreated={(newTestObj) => {
+    // Prepend so it shows up first (matches newest-first)
+    setAllTests((prev) => Array.isArray(prev) ? [newTestObj, ...prev] : [newTestObj]);
+    setFilteredTests((prev) => Array.isArray(prev) ? [newTestObj, ...prev] : [newTestObj]);
+    setSelectedTest(newTestObj);
+  }}
+/>
       <Grid columns={3} divided padded>
         {/* Column 1: Test list and create button */}
         <Grid.Column width={5}>
@@ -238,7 +282,7 @@ const TestIndex = ({ user, msgAlert, newTest, setNewTest }) => {
                   color="red"
                   fluid
                   style={{ marginTop: "0.5rem" }}
-                  onClick={() => handleDeleteTest(selectedTest)}
+                  onClick={() => handleDeleteTest(selectedTest.id)}
                 >
                   Delete
                 </Button>

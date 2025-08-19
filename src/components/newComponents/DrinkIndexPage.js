@@ -81,7 +81,17 @@ const DrinkIndexPage = ({ user, msgAlert, setNewDrink }) => {
 
   return (
     <Segment raised>
-      <AddDrinkModal user={user} msgAlert={msgAlert} setNewDrink={setNewDrink} />
+      {user?.role === "manager" && (
+        <AddDrinkModal
+          user={user}
+          msgAlert={msgAlert}
+          setNewDrink={setNewDrink}
+          onCreated={(newDrink) => {
+            setAllDrinks((prev) => Array.isArray(prev) ? [...prev, newDrink] : [newDrink]);
+            setSelectedDrink(newDrink);
+          }}
+        />
+      )}
       <Button icon="filter" content="Filters" onClick={() => setFilterOpen(true)} />
       <Input
         icon="search"
@@ -175,24 +185,26 @@ const DrinkIndexPage = ({ user, msgAlert, setNewDrink }) => {
         </Grid.Column>
 
         {/* Column 3: Actions */}
-        <Grid.Column width={4}>
-          <Segment>
-            {selectedDrink && (
-              <>
-                <DrinkUpdateModal drink={selectedDrink} user={user} msgAlert={msgAlert} />
+        {user?.role === "manager" && (
+          <Grid.Column width={4}>
+            <Segment>
+              {selectedDrink && user?.role === "manager" && (
+                <>
+                  <DrinkUpdateModal drink={selectedDrink} user={user} msgAlert={msgAlert} />
 
-                <Button
-                  color="red"
-                  fluid
-                  style={{ marginTop: "0.5rem" }}
-                  onClick={() => handleDelete(selectedDrink.id)}
-                >
-                  Delete
-                </Button>
-              </>
-            )}
-          </Segment>
-        </Grid.Column>
+                  <Button
+                    color="red"
+                    fluid
+                    style={{ marginTop: "0.5rem" }}
+                    onClick={() => handleDelete(selectedDrink.id)}
+                  >
+                    Delete
+                  </Button>
+                </>
+              )}
+            </Segment>
+          </Grid.Column>
+        )}
       </Grid>
     </Segment>
   );

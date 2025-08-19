@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Button, Grid, Modal } from "semantic-ui-react";
 import CreateDrink from "./CreateDrink";
 
-const AddDrinkModal = ({ user, msgAlert, setNewDrink, activeItem }) => {
+const AddDrinkModal = ({ user, msgAlert, setNewDrink, activeItem, onCreated }) => {
   const [open, setOpen] = useState(false);
 
   return (
@@ -31,6 +31,7 @@ const AddDrinkModal = ({ user, msgAlert, setNewDrink, activeItem }) => {
             msgAlert={msgAlert}
             activeItem={activeItem}
             setOpen={setOpen}
+            onCreated={onCreated}
           />
         </Modal.Content>
         <Modal.Actions>

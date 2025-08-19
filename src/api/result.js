@@ -82,7 +82,7 @@ export const getResult = (user, resultId) => {
 //create a result 
 //data returned: res.data.result will be the new result 
 export const createResult = (user, result) => {
-    console.log(result, 'this is result right before my api request')
+    // console.log(result, 'this is result right before my api request')
     return axios({
         method: 'POST',
         headers: {

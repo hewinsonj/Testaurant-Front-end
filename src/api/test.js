@@ -37,7 +37,7 @@ export const getTest = (user, testId) => {
 //create a test
 //data returned: res.data.test will be the new test 
 export const createTest = (user, test) => {
-    console.log(test, 'this be the test right before my api request')
+    // console.log(test, 'this be the test right before my api request')
     return axios({
         method: 'POST',
         headers: {

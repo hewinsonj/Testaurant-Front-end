@@ -59,7 +59,7 @@ const QuestionUpdateModal = (props) => {
     }
   };
 
-  console.log(user, "this be the user");
+  // console.log(user, "this be the user");
   return (
     <Modal
       onClose={() => {

@@ -16,7 +16,7 @@ const ResultsPage = ({ user, msgAlert, setUser }) => {
   useEffect(() => {
     const fetchResults =
       user?.role === "manager" ? getAllResults : getMyResults;
-    console.log(user, "userRole----------");
+    // console.log(user, "userRole----------");
 
     fetchResults(user)
       .then((res) => {
@@ -77,7 +77,7 @@ const ResultsPage = ({ user, msgAlert, setUser }) => {
       <Grid columns={3} divided padded>
         <Grid.Column width={5}>
           <h3>
-            {user?.role === "manager" ? "Test Results" : "Your Test Results"}
+            {user?.role === "manager" ? "All Test Results" : "Your Test Results"}
           </h3>{" "}
           {allResults.length > 0 ? (
             <List divided selection>

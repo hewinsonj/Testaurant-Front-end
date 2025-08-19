@@ -2,26 +2,22 @@ import React, { Component } from 'react'
 import { Menu } from 'semantic-ui-react'
 import QuestionIndex from './QuestionIndex'
 import TestIndex from './TestIndex'
+import TestAssignIndex from './TestAssignIndex'
 import { getAllTests } from '../../api/test'
 import { getAllQuestions } from '../../api/question'
 import { Link } from 'react-router-dom'
 
 export default class TestNav extends Component {
-  state = { activeItem: 'Tests', setNewQuestion: false, setNewTest: false }
-  
-  handleItemClick = (e, { name }) => this.setState({ activeItem: name })
-  
-
-
-
   constructor(props) {
     super(props);
-    // Initialize state
-    // this.state = {
-    //     allTests: [], // Initialize as an empty array
-    //     allQuestions: [],
-    // };
-}
+    this.state = {
+      activeItem: props.user?.role === "manager" ? "Tests" : "Assigned Tests",
+      setNewQuestion: false,
+      setNewTest: false
+    };
+  }
+
+  handleItemClick = (e, { name }) => this.setState({ activeItem: name })
 
 // Component lifecycle method
 componentDidMount() {
@@ -62,11 +58,17 @@ componentDidMount() {
  
   render() {
     const { activeItem } = this.state;
+    const { user } = this.props;
     const contentJSX =
       activeItem === "Questions" ? (
         <QuestionIndex
           user={this.props.user}
           setNewQuestion={this.props.setNewQuestion}
+          msgAlert={this.props.msgAlert}
+        />
+      ) : activeItem === "Assigned Tests" ? (
+        <TestAssignIndex
+          user={this.props.user}
           msgAlert={this.props.msgAlert}
         />
       ) : (
@@ -81,16 +83,26 @@ componentDidMount() {
     return (
       <>
         <Menu tabular>
-          <Menu.Item
-            name="Tests"
-            active={activeItem === "Tests"}
-            onClick={this.handleItemClick}
-          ></Menu.Item>
-          <Menu.Item
-            name="Questions"
-            active={activeItem === "Questions"}
-            onClick={this.handleItemClick}
-          ></Menu.Item>
+          {user?.role === "manager" ? (
+            <>
+              <Menu.Item
+                name="Tests"
+                active={activeItem === "Tests"}
+                onClick={this.handleItemClick}
+              />
+              <Menu.Item
+                name="Questions"
+                active={activeItem === "Questions"}
+                onClick={this.handleItemClick}
+              />
+            </>
+          ) : (
+            <Menu.Item
+              name="Assigned Tests"
+              active={activeItem === "Assigned Tests"}
+              onClick={this.handleItemClick}
+            />
+          )}
         </Menu>
         {contentJSX}
       </>

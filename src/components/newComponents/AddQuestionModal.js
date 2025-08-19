@@ -3,7 +3,7 @@ import { Button, Grid, Modal } from "semantic-ui-react";
 
 import CreateQuestion from "./CreateQuestion";
 
-const AddQuestionModal = ({ user, msgAlert, setNewQuestion, activeItem }) => {
+const AddQuestionModal = ({ user, msgAlert, setNewQuestion, activeItem, onCreated }) => {
   const [open, setOpen] = useState(false);
 
   return (
@@ -32,6 +32,7 @@ const AddQuestionModal = ({ user, msgAlert, setNewQuestion, activeItem }) => {
             msgAlert={msgAlert}
             activeItem={activeItem}
             setOpen={setOpen}
+            onCreated={onCreated}
           />
         </Modal.Content>
         <Modal.Actions>

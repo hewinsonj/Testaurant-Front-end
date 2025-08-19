@@ -25,7 +25,7 @@ const SignOut = (props) => {
     navigate("/");
   };
 
-  console.log(user);
+  // console.log(user);
   return (
     <>
       <div>
@@ -34,7 +34,7 @@ const SignOut = (props) => {
             padded="very"
             inverted
             color="grey"
-            verticalAlign="middle"
+            // verticalAlign="middle"
             id="segment"
           >
             <h3 id="signOutText">Are you sure you want to sign out?</h3>

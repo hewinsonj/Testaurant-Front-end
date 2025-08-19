@@ -3,7 +3,7 @@ import { createFood } from "../../api/food";
 import AddFoodForm from "./AddFoodForm";
 
 const CreateFood = (props) => {
-  const { user, msgAlert, setOpen } = props;
+  const { user, msgAlert, setOpen, onCreated } = props;
 
   const defaultFood = {
     name: "",
@@ -37,7 +37,7 @@ const CreateFood = (props) => {
     });
   };
 
-  console.log("Food object being submitted:", food);
+  // console.log("Food object being submitted:", food);
   const handleCreateFood = (e) => {
     e.preventDefault();
 
@@ -52,20 +52,22 @@ const CreateFood = (props) => {
     }
 
     createFood(user, food)
-      .then(() => {
+      .then((res) => {
+        const newFood = (res && res.data && (res.data.food || res.data)) || null;
         msgAlert({
           heading: "Success",
           message: "Created Food Item",
           variant: "success",
         });
-      })
-      .then(() => {
+        if (typeof onCreated === 'function' && newFood) {
+          onCreated(newFood);
+        }
         setOpen(false);
       })
       .catch((error) => {
         msgAlert({
           heading: "Failure",
-          message: "Create Food Item Failure" + error,
+          message: "Create Food Item Failure: " + error,
           variant: "danger",
         });
       });

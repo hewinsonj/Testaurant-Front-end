@@ -11,13 +11,13 @@ import {
 } from "semantic-ui-react";
 import { updateEmployee } from "../../api/user";
 
-const AssignTestModal = ({ user, employee, tests, msgAlert, allQuestions }) => {
+const AssignTestModal = ({ user, employee, tests, msgAlert, allQuestions, onAssigned }) => {
   const [open, setOpen] = useState(false);
   const [selectedTests, setSelectedTests] = useState([]);
   const [hoveredTestId, setHoveredTestId] = useState(null);
 
   const toggleTestSelection = (testId) => {
-    console.log("Toggling test selection for:", testId);
+    // console.log("Toggling test selection for:", testId);
     setSelectedTests((prevSelected) =>
       prevSelected.includes(testId)
         ? prevSelected.filter((id) => id !== testId)
@@ -26,7 +26,7 @@ const AssignTestModal = ({ user, employee, tests, msgAlert, allQuestions }) => {
   };
 
   const handleSubmit = () => {
-    console.log("Submitting selected tests:", selectedTests);
+    // console.log("Submitting selected tests:", selectedTests);
     const updatedFields = { assigned_tests: selectedTests };
     updateEmployee(user, employee.id, updatedFields)
       .then(() => {
@@ -35,6 +35,9 @@ const AssignTestModal = ({ user, employee, tests, msgAlert, allQuestions }) => {
           message: "Test(s) assigned to employee.",
           variant: "success",
         });
+        if (typeof onAssigned === "function") {
+          onAssigned(selectedTests);
+        }
         setOpen(false);
       })
       .catch((error) => {
@@ -48,14 +51,14 @@ const AssignTestModal = ({ user, employee, tests, msgAlert, allQuestions }) => {
 
   // When the modal opens, preselect tests already assigned to the employee.
   const handleOpen = () => {
-    console.log("Modal opened");
+    // console.log("Modal opened");
     const preselected = employee.assigned_tests.map((test) =>
       typeof test === "object" && test.id ? test.id : test
     );
-    console.log("Preselected tests:", preselected);
+    // console.log("Preselected tests:", preselected);
     setSelectedTests(preselected);
     setOpen(true);
-    console.log("All questions from parent:", allQuestions);
+    // console.log("All questions from parent:", allQuestions);
   };
 
   const selectedTestDetails = selectedTests.map((id) =>
@@ -64,7 +67,7 @@ const AssignTestModal = ({ user, employee, tests, msgAlert, allQuestions }) => {
 
   const hoveredTest = tests.find((t) => t.id === hoveredTestId);
   if (hoveredTest) {
-    console.log("Hovered test:", hoveredTest);
+    // console.log("Hovered test:", hoveredTest);
   }
 
   return (
@@ -103,7 +106,7 @@ const AssignTestModal = ({ user, employee, tests, msgAlert, allQuestions }) => {
                     checked={selectedTests.includes(test.id)}
                     onChange={() => toggleTestSelection(test.id)}
                     onMouseEnter={() => {
-                      console.log("Hovering over test:", test.id);
+                      // console.log("Hovering over test:", test.id);
                       setHoveredTestId(test.id);
                     }}
                     // onMouseLeave={() => {
@@ -134,18 +137,18 @@ const AssignTestModal = ({ user, employee, tests, msgAlert, allQuestions }) => {
                   </p>
                   <List bulleted>
                     {hoveredTest.question_new?.map((qId, idx) => {
-                      console.log("qId is:", qId, "| type:", typeof qId);
+                      // console.log("qId is:", qId, "| type:", typeof qId);
                       let question = allQuestions.find((q) => q.id == qId);
-                      console.log(
-                        "Matching by direct ID => question found:",
-                        question
-                      );
+                      // console.log(
+                      //   "Matching by direct ID => question found:",
+                      //   question
+                      // );
                       if (!question && qId?.id) {
                         question = allQuestions.find((q) => q.id == qId.id);
-                        console.log(
-                          "Trying qId.id => question found:",
-                          question
-                        );
+                        // console.log(
+                        //   "Trying qId.id => question found:",
+                        //   question
+                        // );
                       }
                       return (
                         <List.Item key={idx}>

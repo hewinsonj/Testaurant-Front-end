@@ -107,8 +107,11 @@ const SearchList = ({
       </Form>
       <div style={{ maxHeight: "600px", overflowY: "auto" }}>
         <List divided selection>
-          {displayData.map((item) => (
-            <List.Item key={item.id} onClick={() => onSelect(item)}>
+          {displayData.map((item, index) => (
+            <List.Item
+              key={item.id ?? item._id ?? item.uuid ?? `${extractLabel ? extractLabel(item) : 'item'}-${index}`}
+              onClick={() => onSelect(item)}
+            >
               <List.Content>
                 <List.Header>{extractLabel(item)}</List.Header>
                 {item.email ? (

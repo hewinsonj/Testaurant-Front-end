@@ -42,12 +42,12 @@ const SignUp = (props) => {
       hire_date: hireDate || null,
     };
 
-    console.log("Attempting to sign up with credentials:", credentials);
+    // console.log("Attempting to sign up with credentials:", credentials);
 
     signUp(credentials)
       .then(() => signIn(credentials))
       .then((res) => {
-        console.log("Sign in response:", res.data);
+        // console.log("Sign in response:", res.data);
         setUser(res.data.user);
       })
       .then(() =>

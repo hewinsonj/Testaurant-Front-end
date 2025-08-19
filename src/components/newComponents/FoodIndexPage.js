@@ -82,7 +82,17 @@ const FoodIndexPage = ({ user, msgAlert, setNewFood }) => {
 
   return (
     <Segment raised>
-      <AddFoodModal user={user} msgAlert={msgAlert} setNewFood={setNewFood} />
+      {user?.role === "manager" && (
+        <AddFoodModal
+          user={user}
+          msgAlert={msgAlert}
+          setNewFood={setNewFood}
+          onCreated={(newFood) => {
+            setAllFoods((prev) => (Array.isArray(prev) ? [...prev, newFood] : [newFood]));
+            setSelectedFood(newFood);
+          }}
+        />
+      )}
       <Button icon="filter" content="Filters" onClick={() => setFilterOpen(true)} />
       <Input
         icon="search"
@@ -167,23 +177,25 @@ const FoodIndexPage = ({ user, msgAlert, setNewFood }) => {
         </Grid.Column>
 
         {/* Column 3: Actions */}
-        <Grid.Column width={4}>
-          <Segment>
-            {selectedFood && (
-              <>
-                <FoodUpdateModal food={selectedFood} user={user} msgAlert={msgAlert} />
-                <Button
-                  color="red"
-                  fluid
-                  style={{ marginTop: "0.5rem" }}
-                  onClick={() => handleDelete(selectedFood.id)}
-                >
-                  Delete
-                </Button>
-              </>
-            )}
-          </Segment>
-        </Grid.Column>
+        {user?.role === "manager" && (
+          <Grid.Column width={4}>
+            <Segment>
+              {selectedFood && (
+                <>
+                  <FoodUpdateModal food={selectedFood} user={user} msgAlert={msgAlert} />
+                  <Button
+                    color="red"
+                    fluid
+                    style={{ marginTop: "0.5rem" }}
+                    onClick={() => handleDelete(selectedFood.id)}
+                  >
+                    Delete
+                  </Button>
+                </>
+              )}
+            </Segment>
+          </Grid.Column>
+        )}
       </Grid>
     </Segment>
   );

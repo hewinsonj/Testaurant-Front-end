@@ -20,6 +20,7 @@ const AddTestModal = ({
   msgAlert,
   setNewQuestion,
   activeItem,
+  onCreated,            // ← NEW
 }) => {
   const [open, setOpen] = useState(false);
 
@@ -49,6 +50,7 @@ const AddTestModal = ({
             msgAlert={msgAlert}
             activeItem={activeItem}
             setOpen={setOpen}
+            onCreated={onCreated}
           />
         </Modal.Content>
         <Modal.Actions>
