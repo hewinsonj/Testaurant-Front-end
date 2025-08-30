@@ -8,7 +8,9 @@ const SearchList = ({
   searchPlaceholder = "Search...",
   extractLabel,
   extractOwner,
+  getOwnerName, // optional: parent-provided resolver
   extractUpdatedAt,
+  employeesList = [],
   reversed = true,
   sortOptions = [],
   defaultSortKey = null,
@@ -26,18 +28,38 @@ const SearchList = ({
   };
 
   const defaultExtractOwner = (item) => {
-    if (!item.owner || !Array.isArray(item.employees)) return "";
-    const owner = item.employees.find((emp) =>
-      emp.id === item.owner ||
-      emp.id === Number(item.owner) ||
-      emp.id === item.owner?.id
-    );
-    return owner ? `${owner.first_name} ${owner.last_name}` : "Unknown";
+    if (!item) return "";
+
+    // normalize owner id
+    const ownerId = typeof item.owner === 'object' ? (item.owner?.id ?? item.owner?.pk) : item.owner;
+    if (ownerId == null) return "";
+
+    // choose a candidate employees array: explicit prop, embedded employees, or embedded users
+    const candidates = Array.isArray(employeesList) && employeesList.length > 0
+      ? employeesList
+      : (Array.isArray(item.employees) ? item.employees : (Array.isArray(item.users) ? item.users : []));
+
+    if (!Array.isArray(candidates) || candidates.length === 0) return "";
+
+    // find by several common id shapes
+    const match = candidates.find((emp) => {
+      const eid = emp?.id ?? emp?.pk ?? emp?.user?.id;
+      return String(eid) === String(ownerId);
+    });
+
+    if (!match) return "Unknown";
+
+    const first = match.first_name ?? match.firstName ?? match?.user?.first_name ?? match?.user?.firstName ?? '';
+    const last  = match.last_name  ?? match.lastName  ?? match?.user?.last_name  ?? match?.user?.lastName  ?? '';
+    const full = `${first} ${last}`.trim();
+    if (full) return full;
+
+    return match?.email || match?.user?.email || `User #${ownerId}`;
   };
 
   const defaultExtractUpdatedAt = (item) => item.updated_at || null;
 
-  const ownerExtractor = extractOwner || defaultExtractOwner;
+  const ownerExtractor = getOwnerName || extractOwner || defaultExtractOwner;
   const updatedAtExtractor = extractUpdatedAt || defaultExtractUpdatedAt;
 
   const sortData = (items) => {

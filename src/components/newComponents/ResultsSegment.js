@@ -3,10 +3,13 @@ import React, { useState, useEffect } from "react";
 import { Segment, Header, Divider, Label } from "semantic-ui-react"
 
 const ResultsSegment = ({ result, allTests, employees, setOwnerName, label }) => {
+  if (process.env.NODE_ENV !== 'production') {
+    try { console.log('[ResultsSegment] result payload', result); } catch {}
+  }
   const getTestName = (testId) => {
     const testArray = Array.isArray(allTests) ? allTests : [];
-    // console.log("getTestName called with testId:", testId, "allTests:", allTests);
-    const match = testArray.find((test) => test.id === testId);
+    const idStr = String(typeof testId === 'object' ? testId?.id : testId);
+    const match = testArray.find((test) => String(test.id) === idStr);
     return match ? match.name : "Unknown Test";
   }
 
@@ -21,6 +24,41 @@ const ResultsSegment = ({ result, allTests, employees, setOwnerName, label }) =>
     return `${match.first_name || ""} ${match.last_name || ""}`.trim()
   }
 
+  const toArray = (val) => {
+    if (Array.isArray(val)) return val;
+    if (val == null) return [];
+    if (typeof val === 'string') {
+      // Try JSON first
+      try {
+        const parsed = JSON.parse(val);
+        if (Array.isArray(parsed)) return parsed;
+      } catch {}
+      // Fallback: comma/space separated list "1,2,3"
+      const parts = val.split(/[\s,]+/).filter(Boolean);
+      return parts.map((p) => (isNaN(Number(p)) ? p : Number(p)));
+    }
+    // Unknown shape -> nothing
+    return [];
+  };
+
+  // Pull questions for this result's test from the allTests prop
+  const getQuestionsForTest = () => {
+    const testId = typeof result?.the_test === 'object' ? result?.the_test?.id : result?.the_test;
+    const tests = Array.isArray(allTests) ? allTests : [];
+    const testObj = tests.find((t) => String(t.id) === String(testId));
+    if (!testObj) return [];
+    // Some shapes are already an array of question objects; others may nest under question_new
+    const qs = Array.isArray(testObj.question_new) ? testObj.question_new : [];
+    return qs;
+  };
+
+  const getQuestionText = (qid) => {
+    const qs = getQuestionsForTest();
+    // support shapes: { id, question_str } or { question_new: { id, question_str } }
+    const match = qs.find((q) => String(q.id) === String(qid) || String(q?.question_new?.id) === String(qid));
+    if (!match) return String(qid);
+    return match.question_str || match?.question_new?.question_str || String(qid);
+  };
 
   useEffect(() => {
     if (result && employees && employees.length > 0) {
@@ -32,6 +70,7 @@ const ResultsSegment = ({ result, allTests, employees, setOwnerName, label }) =>
     }
   }, [result, employees, setOwnerName]);
 
+  const wrongIds = toArray(result?.wrong_question_ids);
 
   return (
     <Segment raised>
@@ -72,11 +111,30 @@ const ResultsSegment = ({ result, allTests, employees, setOwnerName, label }) =>
       </div>
       <p style={{ fontSize: "1.25rem" }}><strong>Score:</strong> {result.score}</p>
       <p style={{ fontSize: "1.25rem" }}><strong>Total Questions:</strong> {result.total}</p>
+      <p style={{ fontSize: "1.25rem" }}><strong>Elapsed:</strong> {result.time || '—'}</p>
+      <p style={{ fontSize: "1.25rem" }}><strong>Time Completed:</strong> {result.time_completed || '—'}</p>
+
+      {Array.isArray(result?.wrong_question_ids) || typeof result?.wrong_question_ids === 'string' ? (
+        wrongIds.length > 0 ? (
+          <div style={{ marginTop: '0.75rem' }}>
+            <strong>Wrong Questions:</strong>
+            <ul style={{ marginTop: '0.25rem' }}>
+              {wrongIds.map((qid) => (
+                <li key={String(qid)}>{getQuestionText(qid)}</li>
+              ))}
+            </ul>
+          </div>
+        ) : (
+          <div style={{ marginTop: '0.75rem' }}>
+            <strong>Wrong Questions:</strong> none
+          </div>
+        )
+      ) : null}
 
       <Divider />
 
       <p style={{ fontSize: "1.1rem", color: "#888", marginTop: "1rem" }}>
-        <strong>Taken On:</strong> {new Date(result.created_at).toLocaleString()}
+        <strong>Taken On:</strong> {result?.created_at ? new Date(result.created_at).toLocaleString() : '—'}
       </p>
     </Segment>
   )

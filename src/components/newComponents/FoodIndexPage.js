@@ -4,6 +4,7 @@ import { getAllFoods, deleteFood } from "../../api/food";
 import AddFoodModal from "./AddFoodModal";
 import LoadingScreen from "../shared/LoadingPage";
 import FoodUpdateModal from "./FoodUpdateModal";
+import EditLogModal from "./EditLogModal";
 import FilterModal from "./FilterModal";
 
 const allergenFilters = [
@@ -21,13 +22,51 @@ const allergenFilters = [
   { key: "is_vegetarian", label: "Vegetarian" },
 ];
 
-const FoodIndexPage = ({ user, msgAlert, setNewFood }) => {
+const FoodIndexPage = ({ user, msgAlert, setNewFood,  employees: incomingEmployees = []  }) => {
   const [allFoods, setAllFoods] = useState([]);
   const [selectedFood, setSelectedFood] = useState(null);
   const [filterOpen, setFilterOpen] = useState(false);
   // Use an object for activeFilters with excludeKeys and includeKeys
   const [activeFilters, setActiveFilters] = useState({ excludeKeys: [], includeKeys: [] });
   const [searchTerm, setSearchTerm] = useState("");
+  const [logOpen, setLogOpen] = useState(false);
+
+  const getOwnerName = (food) => {
+    // Only show for elevated roles; employees don't need owner info
+    if (!(user && ["Manager", "Admin", "GeneralManager"].includes(user.role))) {
+      return "";
+    }
+    if (!food) return "Unknown";
+
+    // Normalize owner id (can be id or object)
+    const ownerId = typeof food.owner === 'object' ? (food.owner?.id ?? food.owner?.pk) : food.owner;
+    if (ownerId == null) {
+      // Fall back to embedded owner object (if present)
+      const first = food.owner?.first_name ?? food.owner?.firstName ?? '';
+      const last  = food.owner?.last_name  ?? food.owner?.lastName  ?? '';
+      const full = `${first} ${last}`.trim();
+      return full || food.owner?.email || 'Unknown';
+    }
+
+    // Choose candidates from the provided employees prop; support { users: [...] } as well
+    const candidates = Array.isArray(incomingEmployees)
+      ? incomingEmployees
+      : (Array.isArray(incomingEmployees?.users) ? incomingEmployees.users : []);
+
+    const match = candidates.find((emp) => {
+      const eid = emp?.id ?? emp?.pk ?? emp?.user?.id;
+      return String(eid) === String(ownerId);
+    });
+
+    if (!match) {
+      return `User #${ownerId}`;
+    }
+
+    const first = match.first_name ?? match.firstName ?? match?.user?.first_name ?? match?.user?.firstName ?? '';
+    const last  = match.last_name  ?? match.lastName  ?? match?.user?.last_name  ?? match?.user?.lastName  ?? '';
+    const full = `${first} ${last}`.trim();
+    return full || match?.email || match?.user?.email || `User #${ownerId}`;
+  };
 
   useEffect(() => {
     getAllFoods(user)
@@ -82,7 +121,7 @@ const FoodIndexPage = ({ user, msgAlert, setNewFood }) => {
 
   return (
     <Segment raised>
-      {user?.role === "manager" && (
+      {user && ["Manager", "Admin", "GeneralManager"].includes(user.role) && (
         <AddFoodModal
           user={user}
           msgAlert={msgAlert}
@@ -156,6 +195,7 @@ const FoodIndexPage = ({ user, msgAlert, setNewFood }) => {
               <h2>{selectedFood.name}</h2>
               <p><strong>Ingredients:</strong> {selectedFood.ingredients}</p>
               <p><strong>Contains Allergens:</strong></p>
+              
               <ul>
                 {selectedFood.con_egg && <li>Egg</li>}
                 {selectedFood.con_tree_nut && <li>Tree Nuts</li>}
@@ -170,6 +210,9 @@ const FoodIndexPage = ({ user, msgAlert, setNewFood }) => {
                 {selectedFood.is_vegan && <li>Vegan</li>}
                 {selectedFood.is_vegetarian && <li>Vegetarian</li>}
               </ul>
+              <p>
+                <strong>Created By:</strong> {getOwnerName(selectedFood) || 'Unknown'}
+              </p>
             </Segment>
           ) : (
             <p>Select a food to view details</p>
@@ -177,12 +220,28 @@ const FoodIndexPage = ({ user, msgAlert, setNewFood }) => {
         </Grid.Column>
 
         {/* Column 3: Actions */}
-        {user?.role === "manager" && (
+        {user && ["Manager", "Admin", "GeneralManager"].includes(user.role) && (
           <Grid.Column width={4}>
             <Segment>
               {selectedFood && (
                 <>
                   <FoodUpdateModal food={selectedFood} user={user} msgAlert={msgAlert} />
+
+                <Button
+                  color="blue"
+                  fluid
+                  style={{ marginTop: "0.5rem" }}
+                  onClick={() => setLogOpen(true)}
+                >
+                  Show Edit Log
+                </Button>
+                <EditLogModal
+                  open={logOpen}
+                  onClose={() => setLogOpen(false)}
+                  user={user}
+                  itemType="Food"
+                  itemId={selectedFood?.id}
+                />
                   <Button
                     color="red"
                     fluid

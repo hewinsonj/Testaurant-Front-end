@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Button, Modal, Form, Header, Segment, Icon } from "semantic-ui-react";
 import { updateEmployee } from "../../api/user";
 
-const UpdateEmployeeModal = ({ user, employee, msgAlert }) => {
+const UpdateEmployeeModal = ({ user, employee, msgAlert, allRestaurants }) => {
   const [open, setOpen] = useState(false);
   const [formData, setFormData] = useState({
     email: "",
@@ -10,7 +10,10 @@ const UpdateEmployeeModal = ({ user, employee, msgAlert }) => {
     last_name: "",
     role: "",
     hire_date: "",
+    restaurant: "",
   });
+
+  
 
   // Auto-fill the form when modal opens or employee changes
   useEffect(() => {
@@ -21,7 +24,7 @@ const UpdateEmployeeModal = ({ user, employee, msgAlert }) => {
         last_name: employee.last_name || "",
         role: employee.role || "",
         hire_date: employee.hire_date || "",
-      });
+        restaurant: (employee.restaurant && employee.restaurant.id) ? employee.restaurant.id : (employee.restaurant || ""),      });
     }
   }, [employee, open]);
 
@@ -88,18 +91,34 @@ const UpdateEmployeeModal = ({ user, employee, msgAlert }) => {
             <Form.Field>
               <label>Role</label>
               <Form.Group inline>
+                
+                
+                <Form.Radio
+                  label="Admin"
+                  name="role"
+                  value="Admin"
+                  checked={formData.role === "Admin"}
+                  onChange={handleChange}
+                />
+                <Form.Radio
+                  label="General Manager"
+                  name="role"
+                  value="GeneralManager"
+                  checked={formData.role === "GeneralManager"}
+                  onChange={handleChange}
+                />
                 <Form.Radio
                   label="Manager"
                   name="role"
-                  value="manager"
-                  checked={formData.role === "manager"}
+                  value="Manager"
+                  checked={formData.role === "Manager"}
                   onChange={handleChange}
                 />
                 <Form.Radio
                   label="Employee"
                   name="role"
-                  value="employee"
-                  checked={formData.role === "employee"}
+                  value="Employee"
+                  checked={formData.role === "Employee"}
                   onChange={handleChange}
                 />
               </Form.Group>
@@ -110,6 +129,22 @@ const UpdateEmployeeModal = ({ user, employee, msgAlert }) => {
               type="date"
               value={formData.hire_date}
               onChange={handleChange}
+            />
+            <Form.Select
+              clearable
+              label="Restaurant"
+              name="restaurant"
+              value={formData.restaurant}
+              onChange={handleChange}
+              options={[
+                { key: 'none', text: 'None', value: '' },
+                ...(allRestaurants || []).map(r => ({
+                  key: r.id,
+                  text: r.name,
+                  value: r.id,
+                }))
+              ]}
+              placeholder="Select a restaurant"
             />
           </Form>
         </Segment>

@@ -3,13 +3,13 @@ import { Grid, Segment, List } from "semantic-ui-react";
 import LoadingScreen from "../shared/LoadingPage";
 import { getAllTests } from "../../api/test";
 import { getAllQuestions } from "../../api/question";
-import { getAllEmployees } from "../../api/user";
+// import { getAllEmployees } from "../../api/user";
 import TestTake from "./TestTake";
 
 const TestAssignIndex = ({ user, msgAlert }) => {
   const [allTests, setAllTests] = useState([]);
   const [allQuestions, setAllQuestions] = useState([]);
-  const [employees, setEmployees] = useState([]);
+  // const [employees, setEmployees] = useState([]);
   const [selectedTest, setSelectedTest] = useState(null);
 
   const initialAssigned = Array.isArray(user?.assigned_tests)
@@ -20,10 +20,8 @@ const TestAssignIndex = ({ user, msgAlert }) => {
   const [assignedIds, setAssignedIds] = useState(initialAssigned);
 
   const loadAssignedTests = () => {
-    return Promise.all([getAllEmployees(user), getAllTests(user)])
-      .then(([empRes, testRes]) => {
-        const emps = empRes?.data?.users || [];
-        setEmployees(emps);
+    return getAllTests(user)
+      .then((testRes) => {
         const tests = (testRes?.data?.test_thiss || [])
           .filter((t) => assignedIds.includes(t.id))
           .map((t) => ({ ...t }));
@@ -56,12 +54,12 @@ const TestAssignIndex = ({ user, msgAlert }) => {
 
   const relevantQuestions = selectedTest ? findRelevantQuestions(selectedTest, allQuestions) : [];
 
-  const getOwnerName = (test) => {
-    if (!Array.isArray(employees)) return "Unknown";
-    const owner = employees.find((emp) => emp.id === test.owner);
-    const full = owner ? `${owner.first_name || ""} ${owner.last_name || ""}`.trim() : "Unknown";
-    return full || "Unknown";
-  };
+  // const getOwnerName = (test) => {
+  //   if (!Array.isArray(employees)) return "Unknown";
+  //   const owner = employees.find((emp) => emp.id === test.owner);
+  //   const full = owner ? `${owner.first_name || ""} ${owner.last_name || ""}`.trim() : "Unknown";
+  //   return full || "Unknown";
+  // };
 
   return (
     <Segment raised>

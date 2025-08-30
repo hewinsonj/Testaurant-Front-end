@@ -6,8 +6,9 @@ import AddDrinkModal from "./AddDrinkModal";
 import LoadingScreen from "../shared/LoadingPage";
 import DrinkUpdateModal from "./DrinkUpdateModal";
 import FilterModal from "./FilterModal";
+import EditLogModal from "./EditLogModal";
 
-const DrinkIndexPage = ({ user, msgAlert, setNewDrink }) => {
+const DrinkIndexPage = ({ user, msgAlert, setNewDrink, employees = [] }) => {
   const [allDrinks, setAllDrinks] = useState([]);
   const [selectedDrink, setSelectedDrink] = useState(null);
 
@@ -27,8 +28,45 @@ const DrinkIndexPage = ({ user, msgAlert, setNewDrink }) => {
   ];
 
   const [filterOpen, setFilterOpen] = useState(false);
-  const [activeFilters, setActiveFilters] = useState({ excludeKeys: [], includeKeys: [] });
+  const [activeFilters, setActiveFilters] = useState({
+    excludeKeys: [],
+    includeKeys: [],
+  });
   const [searchTerm, setSearchTerm] = useState("");
+  const [logOpen, setLogOpen] = useState(false);
+
+  const getOwnerName = (drink) => {
+    // Only show for elevated roles
+    if (!(user && ["Manager", "Admin", "GeneralManager"].includes(user.role))) {
+      return "";
+    }
+    if (!drink) return "Unknown";
+
+    // Normalize owner id (can be id or object)
+    const ownerId = typeof drink.owner === 'object' ? (drink.owner?.id ?? drink.owner?.pk) : drink.owner;
+    if (ownerId == null) {
+      const first = drink.owner?.first_name ?? drink.owner?.firstName ?? '';
+      const last  = drink.owner?.last_name  ?? drink.owner?.lastName  ?? '';
+      const full = `${first} ${last}`.trim();
+      return full || drink.owner?.email || 'Unknown';
+    }
+
+    const candidates = Array.isArray(employees)
+      ? employees
+      : (Array.isArray(employees?.users) ? employees.users : []);
+
+    const match = candidates.find((emp) => {
+      const eid = emp?.id ?? emp?.pk ?? emp?.user?.id;
+      return String(eid) === String(ownerId);
+    });
+
+    if (!match) return `User #${ownerId}`;
+
+    const first = match.first_name ?? match.firstName ?? match?.user?.first_name ?? match?.user?.firstName ?? '';
+    const last  = match.last_name  ?? match.lastName  ?? match?.user?.last_name  ?? match?.user?.lastName  ?? '';
+    const full = `${first} ${last}`.trim();
+    return full || match?.email || match?.user?.email || `User #${ownerId}`;
+  };
 
   useEffect(() => {
     getAllDrinks(user)
@@ -47,7 +85,9 @@ const DrinkIndexPage = ({ user, msgAlert, setNewDrink }) => {
   const handleDelete = (id) => {
     deleteDrink(user, id)
       .then(() => {
-        setAllDrinks((prevDrinks) => prevDrinks.filter((drink) => drink.id !== id));
+        setAllDrinks((prevDrinks) =>
+          prevDrinks.filter((drink) => drink.id !== id)
+        );
         setSelectedDrink(null);
         msgAlert({
           heading: "Deleted",
@@ -73,26 +113,36 @@ const DrinkIndexPage = ({ user, msgAlert, setNewDrink }) => {
       drink.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       drink.ingredients.toLowerCase().includes(searchTerm.toLowerCase());
 
-    const matchesExclusions = activeFilters.excludeKeys.every((key) => !drink[key]);
-    const matchesInclusions = activeFilters.includeKeys.every((key) => drink[key]);
+    const matchesExclusions = activeFilters.excludeKeys.every(
+      (key) => !drink[key]
+    );
+    const matchesInclusions = activeFilters.includeKeys.every(
+      (key) => drink[key]
+    );
 
     return matchesSearch && matchesExclusions && matchesInclusions;
   });
 
   return (
     <Segment raised>
-      {user?.role === "manager" && (
+      {user && ["Manager", "Admin", "GeneralManager"].includes(user.role) && (
         <AddDrinkModal
           user={user}
           msgAlert={msgAlert}
           setNewDrink={setNewDrink}
           onCreated={(newDrink) => {
-            setAllDrinks((prev) => Array.isArray(prev) ? [...prev, newDrink] : [newDrink]);
+            setAllDrinks((prev) =>
+              Array.isArray(prev) ? [...prev, newDrink] : [newDrink]
+            );
             setSelectedDrink(newDrink);
           }}
         />
       )}
-      <Button icon="filter" content="Filters" onClick={() => setFilterOpen(true)} />
+      <Button
+        icon="filter"
+        content="Filters"
+        onClick={() => setFilterOpen(true)}
+      />
       <Input
         icon="search"
         placeholder="Search by name or ingredients..."
@@ -106,7 +156,8 @@ const DrinkIndexPage = ({ user, msgAlert, setNewDrink }) => {
         filters={allergenFilters}
         onApply={applyFilters}
       />
-      {(activeFilters.excludeKeys.length > 0 || activeFilters.includeKeys.length > 0) && (
+      {(activeFilters.excludeKeys.length > 0 ||
+        activeFilters.includeKeys.length > 0) && (
         <Segment secondary>
           {activeFilters.excludeKeys.length > 0 && (
             <p>
@@ -137,13 +188,16 @@ const DrinkIndexPage = ({ user, msgAlert, setNewDrink }) => {
         {/* Column 1: Drink List */}
         <Grid.Column width={5}>
           <h3>All Drinks</h3>
-          <div style={{ maxHeight: '650px', overflowY: 'auto' }}>
+          <div style={{ maxHeight: "650px", overflowY: "auto" }}>
             <List divided selection>
               {filteredDrinks
                 .slice()
                 .reverse()
                 .map((drink) => (
-                  <List.Item key={drink.id} onClick={() => setSelectedDrink(drink)}>
+                  <List.Item
+                    key={drink.id}
+                    onClick={() => setSelectedDrink(drink)}
+                  >
                     <List.Content>
                       <List.Header>{drink.name.slice(0, 100)}</List.Header>
                     </List.Content>
@@ -158,11 +212,22 @@ const DrinkIndexPage = ({ user, msgAlert, setNewDrink }) => {
           {selectedDrink ? (
             <Segment>
               <h2>{selectedDrink.name}</h2>
-              <p><strong>Ingredients:</strong> {selectedDrink.ingredients}</p>
-              <p><strong>Garnish:</strong> {selectedDrink.garnishes}</p>
-              <p><strong>Glassware:</strong> {selectedDrink.glassware}</p>
-              <p><strong>Prep Instructions:</strong> {selectedDrink.prep_instructs}</p>
-              <p><strong>Contains Allergens:</strong></p>
+              <p>
+                <strong>Ingredients:</strong> {selectedDrink.ingredients}
+              </p>
+              <p>
+                <strong>Garnish:</strong> {selectedDrink.garnishes}
+              </p>
+              <p>
+                <strong>Glassware:</strong> {selectedDrink.glassware}
+              </p>
+              <p>
+                <strong>Prep Instructions:</strong>{" "}
+                {selectedDrink.prep_instructs}
+              </p>
+              <p>
+                <strong>Contains Allergens:</strong>
+              </p>
               <ul>
                 {selectedDrink.con_egg && <li>Egg</li>}
                 {selectedDrink.con_tree_nut && <li>Tree Nuts</li>}
@@ -176,8 +241,10 @@ const DrinkIndexPage = ({ user, msgAlert, setNewDrink }) => {
                 {selectedDrink.con_dairy && <li>Dairy</li>}
                 {selectedDrink.is_vegan && <li>Vegan</li>}
                 {selectedDrink.is_vegetarian && <li>Vegetarian</li>}
-
               </ul>
+              <p>
+                <strong>Created By:</strong> {getOwnerName(selectedDrink) || 'Unknown'}
+              </p>
             </Segment>
           ) : (
             <p>Select a drink to view details</p>
@@ -185,13 +252,31 @@ const DrinkIndexPage = ({ user, msgAlert, setNewDrink }) => {
         </Grid.Column>
 
         {/* Column 3: Actions */}
-        {user?.role === "manager" && (
+        {user && ["Manager", "Admin", "GeneralManager"].includes(user.role) && (
           <Grid.Column width={4}>
             <Segment>
-              {selectedDrink && user?.role === "manager" && (
+              {selectedDrink && user && ["Manager", "Admin", "GeneralManager"].includes(user.role) && (
                 <>
-                  <DrinkUpdateModal drink={selectedDrink} user={user} msgAlert={msgAlert} />
-
+                  <DrinkUpdateModal
+                    drink={selectedDrink}
+                    user={user}
+                    msgAlert={msgAlert}
+                  />
+                  <Button
+                    color="blue"
+                    fluid
+                    style={{ marginTop: "0.5rem" }}
+                    onClick={() => setLogOpen(true)}
+                  >
+                    Show Edit Log
+                  </Button>
+                  <EditLogModal
+                    open={logOpen}
+                    onClose={() => setLogOpen(false)}
+                    user={user}
+                    itemType="Drink"
+                    itemId={selectedDrink?.id}
+                  />
                   <Button
                     color="red"
                     fluid

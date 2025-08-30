@@ -13,6 +13,14 @@ const AddTest = (props) => {
     handleChangeOther,
   } = props;
 
+  const handleAllottedTimeChange = (e, data) => {
+    const raw = data?.value;
+    const num = Number(raw);
+    const safe = Number.isFinite(num) && num > 0 ? Math.floor(num) : 0;
+    // Call the parent handler in Semantic-UI style with a normalized payload
+    return handleChangeOther(e, { ...data, name: 'allotted_time', value: String(safe) });
+  };
+
   return (
     <Container className="justify-content-center">
       <h3>{heading}</h3>
@@ -26,8 +34,19 @@ const AddTest = (props) => {
                 id="name"
                 label="Test Name"
                 placeholder="Test Name"
-                value={test.name}
+                value={test?.name ?? ''}
                 onChange={handleChangeOther}
+              />
+              <Form.Input
+                required
+                type="number"
+                name="allotted_time"
+                id="allotted_time"
+                label="Allotted Time (minutes)"
+                placeholder="Enter minutes"
+                value={test?.allotted_time ?? ''}
+                onChange={handleAllottedTimeChange}
+                min="0"
               />
             </Segment>
           </Grid.Row>
@@ -43,7 +62,7 @@ const AddTest = (props) => {
                       id={String(question.id)}
                       label={question.question_str}
                       value={question.id}
-                      defaultChecked={test.question_new.some((q) => q.id === question.id)} // Preselect relevant questions
+                      defaultChecked={Array.isArray(test?.question_new) && test.question_new.some((q) => q.id === question.id)} // Preselect relevant questions
                       
                       onChange={handleChange}
                     />

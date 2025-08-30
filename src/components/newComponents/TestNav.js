@@ -6,55 +6,54 @@ import TestAssignIndex from './TestAssignIndex'
 import { getAllTests } from '../../api/test'
 import { getAllQuestions } from '../../api/question'
 import { Link } from 'react-router-dom'
+import { getAllEmployees } from '../../api/user'
 
 export default class TestNav extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      activeItem: props.user?.role === "manager" ? "Tests" : "Assigned Tests",
+      activeItem: (props.user && ["Manager", "GeneralManager", "Admin"].includes(props.user.role)) ? "Tests" : "Assigned Tests",
       setNewQuestion: false,
-      setNewTest: false
+      setNewTest: false,
+      employees: []
     };
   }
 
   handleItemClick = (e, { name }) => this.setState({ activeItem: name })
 
-// Component lifecycle method
-componentDidMount() {
-    const { user, msgAlert} = this.props;
-    
-    // getAllQuestions(user)
-    //     .then(res => {
-    //         // console.log(res.data); // Log to inspect the structure
-    //         this.setState({ allQuestions: res.data.question_news}); // Ensure correct key
-    //     })
-    //     .catch(error => {
-    //         msgAlert({
-    //             heading: 'Error',
-    //             message: 'Could not get questions',
-    //             variant: 'danger'
-    //         });
-    //     }); 
+  // Component lifecycle method
+  componentDidMount() {
+    this.loadEmployees();
+  }
 
-    // getAllTests(user)
-    //     .then(res => {
-    //         // console.log(res.data); // Log to inspect the structure
-    //         this.setState({ allTests: res.data.test_thiss }); // Ensure correct key
-    //     })
-    //     .catch(error => {
-    //         msgAlert({
-    //             heading: 'Error',
-    //             message: 'Could not get tests',
-    //             variant: 'danger'
-    //         });
-    //     });
+  componentDidUpdate(prevProps) {
+    const prevRole = prevProps.user?.role;
+    const currRole = this.props.user?.role;
+    if (prevRole !== currRole) {
+      this.loadEmployees();
+    }
+  }
 
-    
-}
-
-
-
-
+  loadEmployees = () => {
+    const { user } = this.props;
+    if (user && ["Manager", "GeneralManager", "Admin"].includes(user.role)) {
+      getAllEmployees(user)
+        .then((res) => {
+          const list =
+            res?.data?.employees ??
+            res?.data?.users ??
+            (Array.isArray(res?.data) ? res.data : []) ??
+            [];
+          this.setState({ employees: Array.isArray(list) ? list : [] });
+        })
+        .catch((err) => {
+          console.warn('[TestNav] getAllEmployees failed', err?.response?.status, err?.response?.data);
+          this.setState({ employees: [] });
+        });
+    } else {
+      this.setState({ employees: [] });
+    }
+  }
  
   render() {
     const { activeItem } = this.state;
@@ -65,6 +64,7 @@ componentDidMount() {
           user={this.props.user}
           setNewQuestion={this.props.setNewQuestion}
           msgAlert={this.props.msgAlert}
+          employees={this.state.employees}
         />
       ) : activeItem === "Assigned Tests" ? (
         <TestAssignIndex
@@ -77,13 +77,14 @@ componentDidMount() {
           setNewQuestion={this.props.setNewQuestion}
           msgAlert={this.props.msgAlert}
           setNewTest={this.props.setNewTest}
+          employees={this.state.employees}
         />
       );
 
     return (
       <>
         <Menu tabular>
-          {user?.role === "manager" ? (
+          {user && ["Manager", "GeneralManager", "Admin"].includes(user.role) ? (
             <>
               <Menu.Item
                 name="Tests"

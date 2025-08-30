@@ -1,8 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { signUp, signIn } from "../../api/auth";
 import messages from "../shared/AutoDismissAlert/messages";
 import { Grid, Segment, Form, Container } from "semantic-ui-react";
+import { getAllRestaurants } from "../../api/restaurant";
+
 
 const SignUp = (props) => {
   const [email, setEmail] = useState("");
@@ -12,13 +14,27 @@ const SignUp = (props) => {
   const [lastName, setLastName] = useState("");
   const [role, setRole] = useState("");
   const [hireDate, setHireDate] = useState("");
+  const [restaurantId, setRestaurantId] = useState("");
+  const [restaurants, setRestaurants] = useState([]);
 
   const navigate = useNavigate();
 
+  const { msgAlert, setUser = [], user } = props;
+
+  useEffect(() => {
+  getAllRestaurants(user)
+    .then((res) => {
+      const list = res?.data?.restaurants ?? res?.data?.results ?? res?.data ?? [];
+      setRestaurants(Array.isArray(list) ? list : []);
+    })
+    .catch((err) => {
+      console.warn('[SignUp] failed to load restaurants', err);
+      setRestaurants([]);
+    });
+}, [user]);
+
   const onSignUp = (event) => {
     event.preventDefault();
-
-    const { msgAlert, setUser } = props;
 
     // Client-side check: ensure the password fields match
     if (password !== password_confirmation) {
@@ -38,8 +54,9 @@ const SignUp = (props) => {
       password_confirmation,
       first_name: firstName,
       last_name: lastName,
-      role,
+      role, // should be one of: 'Admin','GeneralManager','Manager','Employee'
       hire_date: hireDate || null,
+      restaurant: restaurantId || null,
     };
 
     // console.log("Attempting to sign up with credentials:", credentials);
@@ -68,6 +85,7 @@ const SignUp = (props) => {
         setLastName("");
         setRole("");
         setHireDate("");
+        setRestaurantId("");
         msgAlert({
           heading: "Sign Up Failed with error: " + error.message,
           message: messages.signUpFailure,
@@ -79,7 +97,7 @@ const SignUp = (props) => {
   return (
     <div>
       <Container id="container">
-        <Segment inverted color="grey" verticalAlign="middle" id="segment">
+        <Segment inverted color="grey" id="segment">
           <h3>Sign Up</h3>
           <Form onSubmit={onSignUp}>
             <Grid columns={2}>
@@ -134,21 +152,48 @@ const SignUp = (props) => {
                   <label>Role</label>
                   <Form.Group inline>
                     <Form.Radio
+                      label="Admin"
+                      name="role"
+                      value="Admin"
+                      checked={role === "Admin"}
+                      onChange={(e, { value }) => setRole(value)}
+                    />
+                    <Form.Radio
+                      label="General Manager"
+                      name="role"
+                      value="GeneralManager"
+                      checked={role === "GeneralManager"}
+                      onChange={(e, { value }) => setRole(value)}
+                    />
+                    <Form.Radio
                       label="Manager"
                       name="role"
-                      value="manager"
-                      checked={role === "manager"}
+                      value="Manager"
+                      checked={role === "Manager"}
                       onChange={(e, { value }) => setRole(value)}
                     />
                     <Form.Radio
                       label="Employee"
                       name="role"
-                      value="employee"
-                      checked={role === "employee"}
+                      value="Employee"
+                      checked={role === "Employee"}
                       onChange={(e, { value }) => setRole(value)}
                     />
                   </Form.Group>
                 </Form.Field>
+                <Form.Select
+                  fluid
+                  clearable
+                  label="Restaurant"
+                  placeholder="Select a restaurant (optional)"
+                  name="restaurant"
+                  value={restaurantId}
+                  onChange={(e, { value }) => setRestaurantId(value)}
+                  options={[
+                    { key: 'none', text: 'None', value: '' },
+                    ...(restaurants || []).map((r) => ({ key: r.id, text: r.name, value: r.id })),
+                  ]}
+                />
                 <Form.Input
                   fluid
                   label="Hire Date"

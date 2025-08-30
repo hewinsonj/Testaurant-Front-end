@@ -1,43 +1,47 @@
 import React, { useState, useEffect } from "react";
 import { Grid, Segment, List, Button } from "semantic-ui-react";
 import { getAllQuestions, deleteQuestion } from "../../api/question";
-import { getAllEmployees } from "../../api/user";
+// import { getAllEmployees } from "../../api/user";
 import LoadingScreen from "../shared/LoadingPage";
 import AddQuestionModal from "./AddQuestionModal";
+import EditLogModal from "./EditLogModal";
 import QuestionUpdateModal from "./QuestionUpdateModal";
 import SearchList from "./SearchList";
 
-const QuestionIndex = ({ user, msgAlert, newQuestion, setNewQuestion }) => {
-  const [employees, setEmployees] = useState([]);
+const QuestionIndex = ({ user, msgAlert, newQuestion, setNewQuestion, employees = [] }) => {
   const [allQuestions, setAllQuestions] = useState([]);
   const [originalQuestions, setOriginalQuestions] = useState([]);
   const [filteredQuestions, setFilteredQuestions] = useState([]);
   const [selectedQuestion, setSelectedQuestion] = useState(null);
+  const [logOpen, setLogOpen] = useState(false);
 
   const reloadQuestions = () => {
-    return Promise.all([getAllEmployees(user), getAllQuestions(user)])
-      .then(([empRes, qRes]) => {
-        const emps = empRes?.data?.users || [];
-        setEmployees(emps);
+    return getAllQuestions(user)
+      .then((qRes) => {
+        // const emps = empRes?.data?.users || [];
+        // setEmployees(emps);
 
-        const enrichedQuestions = (qRes?.data?.question_news || []).map((q) => {
-          const owner = emps.find((emp) => emp.id === q.owner);
-          return {
-            ...q,
-            creator_name: owner
-              ? `${owner.first_name || ""} ${owner.last_name || ""}`.trim()
-              : "Unknown",
-          };
-        });
+        // const enrichedQuestions = (qRes?.data?.question_news || []).map((q) => {
+        //   const owner = emps.find((emp) => emp.id === q.owner);
+        //   return {
+        //     ...q,
+        //     creator_name: owner
+        //       ? `${owner.first_name || ""} ${owner.last_name || ""}`.trim()
+        //       : "Unknown",
+        //   };
+        // });
 
-        setAllQuestions(enrichedQuestions);
-        setOriginalQuestions(enrichedQuestions);
-        setFilteredQuestions(enrichedQuestions);
+        // setAllQuestions(enrichedQuestions);
+        // setOriginalQuestions(enrichedQuestions);
+        // setFilteredQuestions(enrichedQuestions);
+        setAllQuestions(qRes?.data?.question_news || []);
+        setOriginalQuestions(qRes?.data?.question_news || []);
+        setFilteredQuestions(qRes?.data?.question_news || []);
       })
       .catch(() => {
         msgAlert({
           heading: "Error",
-          message: "Could not get questions or employees",
+          message: "Could not get questions",
           variant: "danger",
         });
       });
@@ -49,10 +53,33 @@ const QuestionIndex = ({ user, msgAlert, newQuestion, setNewQuestion }) => {
 
   const getOwnerName = (q) => {
     if (!q) return "Unknown";
-    const owner = employees.find((e) => e.id === q.owner);
-    return owner
-      ? `${owner.first_name || ""} ${owner.last_name || ""}`.trim()
-      : q.creator_name || "Unknown";
+    // Questions typically store owner as an id; normalize to id if object
+    const ownerId = typeof q.owner === 'object' ? (q.owner?.id ?? q.owner?.pk) : q.owner;
+    if (ownerId == null) return "Unknown";
+
+    // Look up the employee in the provided list
+    const match = Array.isArray(employees)
+      ? employees.find((emp) => String(emp?.id ?? emp?.pk ?? emp?.user?.id) === String(ownerId))
+      : null;
+
+    if (match) {
+      const first = match.first_name ?? match.firstName ?? match?.user?.first_name ?? match?.user?.firstName ?? '';
+      const last  = match.last_name  ?? match.lastName  ?? match?.user?.last_name  ?? match?.user?.lastName  ?? '';
+      const full = `${first} ${last}`.trim();
+      if (full) return full;
+      return match?.email || match?.user?.email || `User #${ownerId}`;
+    }
+
+    // Fallbacks if list not available or no match
+    if (typeof q.owner === 'object') {
+      const first = q.owner?.first_name ?? q.owner?.firstName ?? '';
+      const last  = q.owner?.last_name  ?? q.owner?.lastName  ?? '';
+      const full = `${first} ${last}`.trim();
+      if (full) return full;
+      return q.owner?.email || `User #${ownerId}`;
+    }
+
+    return `User #${ownerId}`;
   };
 
   const handleDelete = (questionId) => {
@@ -92,17 +119,21 @@ const QuestionIndex = ({ user, msgAlert, newQuestion, setNewQuestion }) => {
         msgAlert={msgAlert}
         setNewQuestion={setNewQuestion}
         onCreated={(newQ) => {
-          const owner = employees.find((e) => e.id === newQ.owner);
-          const enriched = {
-            ...newQ,
-            creator_name: owner ? `${owner.first_name || ''} ${owner.last_name || ''}`.trim() : 'Unknown',
-          };
+          // const owner = employees.find((e) => e.id === newQ.owner);
+          // const enriched = {
+          //   ...newQ,
+          //   creator_name: owner ? `${owner.first_name || ''} ${owner.last_name || ''}`.trim() : 'Unknown',
+          // };
 
           // Optimistic: prepend locally so the UI updates instantly
-          setAllQuestions((prev) => Array.isArray(prev) ? [enriched, ...prev] : [enriched]);
-          setOriginalQuestions((prev) => Array.isArray(prev) ? [enriched, ...prev] : [enriched]);
-          setFilteredQuestions((prev) => Array.isArray(prev) ? [enriched, ...prev] : [enriched]);
-          setSelectedQuestion(enriched);
+          // setAllQuestions((prev) => Array.isArray(prev) ? [enriched, ...prev] : [enriched]);
+          // setOriginalQuestions((prev) => Array.isArray(prev) ? [enriched, ...prev] : [enriched]);
+          // setFilteredQuestions((prev) => Array.isArray(prev) ? [enriched, ...prev] : [enriched]);
+          // setSelectedQuestion(enriched);
+          setAllQuestions((prev) => Array.isArray(prev) ? [newQ, ...prev] : [newQ]);
+          setOriginalQuestions((prev) => Array.isArray(prev) ? [newQ, ...prev] : [newQ]);
+          setFilteredQuestions((prev) => Array.isArray(prev) ? [newQ, ...prev] : [newQ]);
+          setSelectedQuestion(newQ);
 
           // Authoritative refresh from server to sync any computed fields
           reloadQuestions();
@@ -113,27 +144,31 @@ const QuestionIndex = ({ user, msgAlert, newQuestion, setNewQuestion }) => {
         <Grid.Column width={5}>
           <h3>All Questions</h3>
           <SearchList
+            getOwnerName={getOwnerName}   
+            employeesList={employees}
             data={filteredQuestions}
             onSearch={(val) => {
               const lowerVal = val.toLowerCase();
               const filtered = originalQuestions.filter((q) => {
                 const textMatch = q.question_str?.toLowerCase().includes(lowerVal);
-                const ownerName = getOwnerName(q).toLowerCase();
-                const ownerMatch = ownerName.includes(lowerVal);
-                return textMatch || ownerMatch;
+                // const ownerName = getOwnerName(q).toLowerCase();
+                // const ownerMatch = ownerName.includes(lowerVal);
+                // return textMatch || ownerMatch;
+                return textMatch;
               });
               setFilteredQuestions(filtered);
             }}
             onSelect={(question) => setSelectedQuestion(question)}
-            searchPlaceholder="Search questions or creator"
-            extractLabel={(q) =>
-              q.question_str ? `${q.question_str.slice(0, 60)}...` : "No text"
-            }
+            searchPlaceholder="Search questions"
+            extractLabel={(q) => {
+              const s = q.question_str || '';
+              return s.length > 60 ? `${s.slice(0, 60)}…` : (s || 'No text');
+            }}
             extractUpdatedAt={(q) => q.updated_at || null}
-            extractOwner={(q) => getOwnerName(q)}
+            // extractOwner={(q) => getOwnerName(q)}
             sortOptions={[
               { key: "updated_at", label: "Last Updated", style: { display: "inline-block", marginRight: "0.5rem" } },
-              { key: "creator", label: "Creator", style: { display: "inline-block", marginRight: "0.5rem" } },
+              // { key: "creator", label: "Creator", style: { display: "inline-block", marginRight: "0.5rem" } },
             ]}
             defaultSortKey="updated_at"
             buttonContainerStyle={{ height: "2.5rem", overflow: "hidden" }}
@@ -177,6 +212,21 @@ const QuestionIndex = ({ user, msgAlert, newQuestion, setNewQuestion }) => {
                   question={selectedQuestion}
                   user={user}
                   msgAlert={msgAlert}
+                />
+                <Button
+                  color="blue"
+                  fluid
+                  style={{ marginTop: "0.5rem" }}
+                  onClick={() => setLogOpen(true)}
+                >
+                  Show Edit Log
+                </Button>
+                <EditLogModal
+                  open={logOpen}
+                  onClose={() => setLogOpen(false)}
+                  user={user}
+                  itemType="Question"
+                  itemId={selectedQuestion?.id}
                 />
                 <Button
                   color="red"

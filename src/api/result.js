@@ -90,15 +90,19 @@ export const createResult = (user, result) => {
         },
         url: apiUrl + '/results/',
         data: {
-            "result": {
-                "score": result.score,
-                "correct": result.correct,
-                "wrong": result.wrong,
-                "total": result.total,
-                "percent": result.percent,
-                "time": result.time,
-                "the_test": result.the_test
-              }
+          result: {
+            score: result.score,
+            correct: result.correct,
+            wrong: result.wrong,
+            wrong_question_ids: Array.isArray(result.wrong_question_ids) ? result.wrong_question_ids : [],
+            total: result.total,
+            percent: result.percent,
+            time: result.time,
+            time_completed: result.time_completed,
+            the_test: Number(result.the_test),
+            owner: result.owner,
+            restaurant: result.restaurant ?? null,
+          }
         }
     })
 }

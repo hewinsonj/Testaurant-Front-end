@@ -4,7 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { signIn, changePassword } from "../../api/auth";
 
 const NewLandingPage = ({ user, setUser, msgAlert }) => {
-  const [activeItem, setActiveItem] = useState("home");
+  const [activeItem, setActiveItem] = useState("results");
   const navigate = useNavigate();
 
   const handleItemClick = (e, { name }) => {
@@ -46,7 +46,6 @@ const NewLandingPage = ({ user, setUser, msgAlert }) => {
         });
       });
   };
-
   return (
     <Sticky floated="right">
       <Menu tabular inverted id="header" size="massive">
@@ -111,7 +110,7 @@ const NewLandingPage = ({ user, setUser, msgAlert }) => {
             >
               Menu
             </Menu.Item>
-            {user?.role === "manager" && (
+            {user && ["Manager", "GeneralManager", "Admin"].includes(user.role) && (
               <Menu.Item
                 name="employees"
                 active={activeItem === "employees"}
@@ -134,7 +133,7 @@ const NewLandingPage = ({ user, setUser, msgAlert }) => {
             >
               Sign Out
             </Menu.Item>
-            {user?.role === "manager" && (
+            {user && ["Manager", "GeneralManager", "Admin"].includes(user.role) && (
               <Menu.Item
                 name="change-password"
                 active={activeItem === "change-password"}

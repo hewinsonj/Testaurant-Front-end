@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Grid, Segment, List } from "semantic-ui-react";
+import { Grid, Segment, List, Input } from "semantic-ui-react";
 import LoadingScreen from "../shared/LoadingPage";
 import { getAllResults, getMyResults } from "../../api/result";
 import { getAllTests } from "../../api/test";
@@ -12,10 +12,13 @@ const ResultsPage = ({ user, msgAlert, setUser }) => {
   const [employees, setEmployees] = useState([]);
   const [selectedResult, setSelectedResult] = useState(null);
   const [ownerName, setOwnerName] = useState("");
+  const [empSearch, setEmpSearch] = useState("");
+
+  const roleLC = (user?.role || '').toLowerCase();
+  const isMgrish = ['manager', 'generalmanager', 'admin'].includes(roleLC);
 
   useEffect(() => {
-    const fetchResults =
-      user?.role === "manager" ? getAllResults : getMyResults;
+    const fetchResults = isMgrish ? getAllResults : getMyResults;
     // console.log(user, "userRole----------");
 
     fetchResults(user)
@@ -48,19 +51,24 @@ const ResultsPage = ({ user, msgAlert, setUser }) => {
         });
       });
 
-    getAllEmployees(user)
-      .then((res) => {
-        if (res.data?.users) {
-          setEmployees(res.data.users);
-        }
-      })
-      .catch(() => {
-        msgAlert({
-          heading: "Error",
-          message: "Could not get Employees",
-          variant: "danger",
+    if (isMgrish) {
+      getAllEmployees(user)
+        .then((res) => {
+          if (res.data?.users) {
+            setEmployees(res.data.users);
+          } else {
+            setEmployees([]);
+          }
+        })
+        .catch((err) => {
+          // Non-fatal for managers; do not show a toast. Just log.
+          console.warn('[ResultsPage] getAllEmployees failed:', err?.response?.status || err);
+          setEmployees([]);
         });
-      });
+    } else {
+      // Not a manager: never fetch employees to avoid 403s
+      setEmployees([]);
+    }
   }, [user]);
 
   const getTestNameById = (testRef) => {
@@ -72,53 +80,87 @@ const ResultsPage = ({ user, msgAlert, setUser }) => {
     return test ? test.name : "Unknown Test";
   };
 
+  const employeesById = React.useMemo(() => {
+    const map = new Map();
+    if (Array.isArray(employees)) {
+      employees.forEach((e) => {
+        const id = e?.id ?? e?.pk ?? e?.user?.id;
+        if (id != null) map.set(Number(id), e);
+      });
+    }
+    return map;
+  }, [employees]);
+
+  const resultsForList = React.useMemo(() => {
+    let list = Array.isArray(allResults) ? allResults.slice().reverse() : [];
+    if (isMgrish && empSearch.trim()) {
+      const term = empSearch.trim().toLowerCase();
+      list = list.filter((r) => {
+        const emp = employeesById.get(Number(r.owner));
+        const first = (emp?.first_name || emp?.user?.first_name || "").toLowerCase();
+        const last  = (emp?.last_name  || emp?.user?.last_name  || "").toLowerCase();
+        return first.includes(term) || last.includes(term);
+      });
+    }
+    return list;
+  }, [allResults, isMgrish, empSearch, employeesById]);
+
   return (
     <Segment raised>
       <Grid columns={3} divided padded>
         <Grid.Column width={5}>
           <h3>
-            {user?.role === "manager" ? "All Test Results" : "Your Test Results"}
-          </h3>{" "}
-          {allResults.length > 0 ? (
+            {isMgrish ? 'All Test Results' : 'Your Test Results'}
+          </h3>
+          {isMgrish && (
+            <div style={{ margin: '0.5rem 0 0.75rem' }}>
+              <Input
+                fluid
+                icon="search"
+                placeholder="Filter by employee name..."
+                value={empSearch}
+                onChange={(e, { value }) => setEmpSearch(value)}
+              />
+            </div>
+          )}
+          {resultsForList.length > 0 ? (
             <List divided selection>
-              {allResults
-                .slice()
-                .reverse()
-                .map((result) => (
-                  <List.Item
-                    key={result.id}
-                    onClick={() => setSelectedResult(result)}
-                  >
-                    <List.Content>
-                      <List.Header as="h4" style={{ lineHeight: "1.4em" }}>
-                        {" "}
-                        <strong>Test: {getTestNameById(result.the_test)}</strong>{" "}
-                        <br />
-                        {user?.role === "manager" &&
-                          employees &&
-                          (() => {
-                            const owner = employees.find(
-                              (emp) => emp.id === result.owner
-                            );
-                            return owner ? (
-                              <span
-                              >
-                                Taken by: {owner.first_name} {owner.last_name}
-                              </span>
-                            ) : null;
-                          })()}{" "}
-                        <br />
+              {resultsForList.map((result) => (
+                <List.Item
+                  key={result.id}
+                  onClick={() => setSelectedResult(result)}
+                >
+                  <List.Content>
+                    <List.Header as="h4" style={{ lineHeight: "1.4em" }}>
+                      {" "}
+                      <strong>Test: {getTestNameById(result.the_test)}</strong>{" "}
+                      <br />
+                      {isMgrish &&
+                        Array.isArray(employees) && employees.length > 0 &&
+                        (() => {
+                          const owner = employeesById.get(Number(result.owner));
+                          return owner ? (
+                            <span>
+                              Taken by: {owner.first_name} {owner.last_name}
+                            </span>
+                          ) : null;
+                        })()}{" "}
+                      <br />
+                      <span>
+                        Date:{" "}
+                        {new Date(result.created_at).toLocaleDateString()}
+                      </span>
+                      <br />
+                      <span>Score: {result.percent}</span>
+                      {/* {Array.isArray(result.wrong_question_ids) && result.wrong_question_ids.length > 0 && (
                         <span>
-                          Date:{" "}
-                          {new Date(result.created_at).toLocaleDateString()}
+                          Wrong IDs: {result.wrong_question_ids.join(', ')}
                         </span>
-                        <br />
-                        <span>Score: {result.percent}</span>
-                        <br />
-                      </List.Header>
-                    </List.Content>
-                  </List.Item>
-                ))}
+                      )} */}
+                   </List.Header>
+                  </List.Content>
+                </List.Item>
+              ))}
             </List>
           ) : (
             <LoadingScreen />
@@ -137,7 +179,7 @@ const ResultsPage = ({ user, msgAlert, setUser }) => {
             <p>Select a result to view details</p>
           )}
         </Grid.Column>
-
+{/* 
         <Grid.Column width={4}>
           <Segment>
             {selectedResult && (
@@ -146,7 +188,7 @@ const ResultsPage = ({ user, msgAlert, setUser }) => {
               </p>
             )}
           </Segment>
-        </Grid.Column>
+        </Grid.Column> */}
       </Grid>
     </Segment>
   );

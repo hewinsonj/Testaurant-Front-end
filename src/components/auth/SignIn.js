@@ -37,7 +37,6 @@ const SignIn = (props) => {
           padded="very"
           inverted
           color="grey"
-          verticalAlign="middle"
           id="segment"
         >
           <h3>Sign In</h3>
@@ -70,7 +69,7 @@ const SignIn = (props) => {
               />
             </Form.Field>
             <br />
-            <Form.Button color="orange" class="signButton" type="submit">
+            <Form.Button color="orange" className="signButton" type="submit">
               Submit
             </Form.Button>
           </Form>

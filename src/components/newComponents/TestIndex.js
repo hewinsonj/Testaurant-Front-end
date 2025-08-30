@@ -2,15 +2,15 @@ import { Grid, Segment, List, Button, Form } from "semantic-ui-react";
 import LoadingScreen from "../shared/LoadingPage";
 import { getAllTests } from "../../api/test";
 import { getAllQuestions } from "../../api/question";
-import { getAllEmployees } from "../../api/user";
 import AddTestModal from "./AddTestModal";
 import TestUpdateModal from "./TestUpdateModal";
 import React, { useState, useEffect } from "react";
 import { deleteTest } from "../../api/test";
 import TestTake from "./TestTake";
 import SearchList from "./SearchList";
+import EditLogModal from "./EditLogModal";
 
-const TestIndex = ({ user, msgAlert, newTest, setNewTest }) => {
+const TestIndex = ({ user, msgAlert, newTest, setNewTest, employees: incomingEmployees = [] }) => {
   const [allTests, setAllTests] = useState([]);
   const [filteredTests, setFilteredTests] = useState([]);
   const [allQuestions, setAllQuestions] = useState([]);
@@ -18,37 +18,23 @@ const TestIndex = ({ user, msgAlert, newTest, setNewTest }) => {
   const [selectedTest, setSelectedTest] = useState(null);
   const [sortMethod, setSortMethod] = useState("created");
   const [sortAsc, setSortAsc] = useState(true);
+  const [logOpen, setLogOpen] = useState(false);
 
   useEffect(() => {
-    getAllEmployees(user)
+    getAllTests(user)
       .then((res) => {
-        if (res.data?.users) {
-          setEmployees(res.data.users);
-          getAllTests(user)
-            .then((res) => {
-              // console.log("✅ Fetched Tests:", res.data.test_thiss);
-              const testsWithEmployees = res.data.test_thiss.map(test => ({
-                ...test,
-                employees: res.data.users,
-              }));
-              // Reverse/sort by newest updated_at first before setting state
-              const reversedTests = testsWithEmployees.slice().sort((a, b) => new Date(b.updated_at) - new Date(a.updated_at));
-              setAllTests(reversedTests);
-              setFilteredTests(reversedTests);
-            })
-            .catch((error) => {
-              msgAlert({
-                heading: "Error",
-                message: "Could not get tests",
-                variant: "danger",
-              });
-            });
-        }
+        const tests = res.data.test_thiss;
+        // Reverse/sort by newest updated_at first before setting state
+        const reversedTests = tests
+          .slice()
+          .sort((a, b) => new Date(b.updated_at) - new Date(a.updated_at));
+        setAllTests(reversedTests);
+        setFilteredTests(reversedTests);
       })
       .catch(() => {
         msgAlert({
           heading: "Error",
-          message: "Could not get Employees",
+          message: "Could not get tests",
           variant: "danger",
         });
       });
@@ -69,14 +55,26 @@ const TestIndex = ({ user, msgAlert, newTest, setNewTest }) => {
       });
   }, []);
 
+  useEffect(() => {
+    setEmployees(Array.isArray(incomingEmployees) ? incomingEmployees : []);
+  }, [incomingEmployees]);
+
   const reloadTests = () => {
     return getAllTests(user)
       .then((res) => {
+        /*
         const testsWithEmployees = res.data.test_thiss.map((test) => ({
           ...test,
           employees: employees,
         }));
         const reversedTests = testsWithEmployees
+          .slice()
+          .sort((a, b) => new Date(b.updated_at) - new Date(a.updated_at));
+        setAllTests(reversedTests);
+        setFilteredTests(reversedTests);
+        */
+        const tests = res.data.test_thiss;
+        const reversedTests = tests
           .slice()
           .sort((a, b) => new Date(b.updated_at) - new Date(a.updated_at));
         setAllTests(reversedTests);
@@ -153,11 +151,30 @@ const TestIndex = ({ user, msgAlert, newTest, setNewTest }) => {
   })();
 
   const getOwnerName = (test) => {
-    if (user?.role === "manager" && Array.isArray(employees)) {
-      const owner = employees.find((emp) => emp.id === test.owner);
-      return owner ? `${owner.first_name} ${owner.last_name}` : "Unknown";
+    if (!(user && ["Manager", "GeneralManager", "Admin"].includes(user.role) && Array.isArray(employees))) {
+      return "";
     }
-    return "";
+
+    if (!test) return "Unknown";
+
+    const ownerId = typeof test.owner === 'object' ? (test.owner?.id ?? test.owner?.pk) : test.owner;
+
+    // Try to find a match across common shapes
+    const match = employees.find((emp) => {
+      const eid = emp?.id ?? emp?.pk ?? emp?.user?.id;
+      return String(eid) === String(ownerId);
+    });
+
+    if (!match) return "Unknown";
+
+    // Prefer names directly on the employee, else nested under user
+    const first = match.first_name ?? match.firstName ?? match?.user?.first_name ?? match?.user?.firstName ?? '';
+    const last  = match.last_name  ?? match.lastName  ?? match?.user?.last_name  ?? match?.user?.lastName  ?? '';
+    const full = `${first} ${last}`.trim();
+    if (full) return full;
+
+    // Fallbacks
+    return match?.email || match?.user?.email || `User #${ownerId}`;
   };
 
   const sortedTests = [...filteredTests].sort((a, b) => {
@@ -171,34 +188,41 @@ const TestIndex = ({ user, msgAlert, newTest, setNewTest }) => {
     }
     return sortAsc ? -result : result;
   });
-
+console.log(sortedTests)
   return (
     <Segment raised>
       <AddTestModal
-  user={user}
-  msgAlert={msgAlert}
-  setNewTest={setNewTest}
-  onCreated={(newTestObj) => {
-    // Prepend so it shows up first (matches newest-first)
-    setAllTests((prev) => Array.isArray(prev) ? [newTestObj, ...prev] : [newTestObj]);
-    setFilteredTests((prev) => Array.isArray(prev) ? [newTestObj, ...prev] : [newTestObj]);
-    setSelectedTest(newTestObj);
-  }}
-/>
+        user={user}
+        msgAlert={msgAlert}
+        setNewTest={setNewTest}
+        onCreated={(newTestObj) => {
+          // Prepend so it shows up first (matches newest-first)
+          setAllTests((prev) =>
+            Array.isArray(prev) ? [newTestObj, ...prev] : [newTestObj]
+          );
+          setFilteredTests((prev) =>
+            Array.isArray(prev) ? [newTestObj, ...prev] : [newTestObj]
+          );
+          setSelectedTest(newTestObj);
+        }}
+      />
       <Grid columns={3} divided padded>
         {/* Column 1: Test list and create button */}
         <Grid.Column width={5}>
           <h3>All Tests</h3>
 
           <SearchList
-            data={sortedTests.map(test => ({
+          getOwnerName={getOwnerName}   
+          employeesList={employees}
+            data={sortedTests.map((test) => ({
               ...test,
-              employees: employees,
+              // employees: employees,
             }))}
             onSearch={(val) => {
               const lowerVal = val.toLowerCase();
               const filtered = allTests.filter((test) => {
                 const nameMatch = test.name?.toLowerCase().includes(lowerVal);
+                /*
                 const emp = employees.find((e) => e.id === test.owner);
                 const empMatch = emp
                   ? `${emp.first_name || ""} ${emp.last_name || ""}`
@@ -206,16 +230,18 @@ const TestIndex = ({ user, msgAlert, newTest, setNewTest }) => {
                       .includes(lowerVal)
                   : false;
                 return nameMatch || empMatch;
+                */
+                return nameMatch;
               });
               setFilteredTests(filtered);
             }}
             onSelect={(test) => setSelectedTest(test)}
-            searchPlaceholder="Search by test name or creator"
+            searchPlaceholder="Search by test name"
             extractLabel={(test) => test.name || "Untitled Test"}
             reversed={false}
             sortOptions={[
               { key: "updated_at", label: "Last Updated" },
-              { key: "creator", label: "Creator" },
+              // { key: "creator", label: "Creator" },
             ]}
             defaultSortKey="updated_at"
           />
@@ -227,22 +253,33 @@ const TestIndex = ({ user, msgAlert, newTest, setNewTest }) => {
             <Segment>
               <h2>{selectedTest.name}</h2>
               <p>
+                
                 <strong>Date Created:</strong>{" "}
-                {new Date(selectedTest.created_at).toLocaleDateString(undefined, {
-                  year: "numeric",
-                  month: "long",
-                  day: "numeric",
-                })}
+                {new Date(selectedTest.created_at).toLocaleDateString(
+                  undefined,
+                  {
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric",
+                  }
+                )}
               </p>
               <p>
                 <strong>Last Updated:</strong>{" "}
-                {new Date(selectedTest.updated_at).toLocaleDateString(undefined, {
-                  year: "numeric",
-                  month: "long",
-                  day: "numeric",
-                })}
+                {new Date(selectedTest.updated_at).toLocaleDateString(
+                  undefined,
+                  {
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric",
+                  }
+                )}
               </p>
-              <h3>Created by: {getOwnerName(selectedTest)}</h3>
+              {user && ["Manager", "GeneralManager", "Admin"].includes(user.role) && (
+                <p>
+                  <strong>Created By:</strong> {getOwnerName(selectedTest) || "Unknown"}
+                </p>
+              )}
               <p>
                 <strong>Question Count:</strong> {relevantQuestions.length}
               </p>
@@ -277,6 +314,21 @@ const TestIndex = ({ user, msgAlert, newTest, setNewTest }) => {
                   test={selectedTest}
                   msgAlert={msgAlert}
                   allQuestions={allQuestions}
+                />
+                <Button
+                  color="blue"
+                  fluid
+                  style={{ marginTop: "0.5rem" }}
+                  onClick={() => setLogOpen(true)}
+                >
+                  Show Edit Log
+                </Button>
+                <EditLogModal
+                  open={logOpen}
+                  onClose={() => setLogOpen(false)}
+                  user={user}
+                  itemType="Test"
+                  itemId={selectedTest.id}
                 />
                 <Button
                   color="red"
