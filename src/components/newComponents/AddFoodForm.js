@@ -1,8 +1,44 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Button, Form, Container, Icon, Message } from "semantic-ui-react";
 
 const AddFoodForm = (props) => {
-  const { food, handleChange, handleSubmit, heading, errorMsg } = props;
+  const { food, handleChange, handleSubmit, heading, errorMsg, getAllRestaurants, user } = props;
+
+  const [restaurants, setRestaurants] = useState([]);
+  const [restLoading, setRestLoading] = useState(true);
+
+  useEffect(() => {
+    if (getAllRestaurants && user) {
+      getAllRestaurants(user).then((resp) => {
+        const list = Array.isArray(resp?.data) ? resp.data : (resp?.data?.restaurants || resp?.data || []);
+        setRestaurants(Array.isArray(list) ? list : []);
+        setRestLoading(false);
+      }).catch((e) => {
+        console.warn('[AddFoodForm] getAllRestaurants failed', e);
+        setRestaurants([]);
+        setRestLoading(false);
+      });
+    }
+  }, [getAllRestaurants, user]);
+
+  const restaurantOptions = Array.isArray(restaurants)
+    ? [
+        { key: 'none', text: 'No Restaurant', value: '' },
+        ...restaurants.map((r) => ({
+          key: r.id,
+          text: r.name,
+          value: r.id,
+        })),
+      ]
+    : [];
+
+  const forcedRestaurantLabel = restaurants.find((r) => r.id === food.restaurant)?.name || "";
+
+  const handleRestaurantSelect = (e, { value }) => {
+    // Forward in (e, data) signature expected by Semantic UI handlers
+    handleChange(null, { name: 'restaurant', value });
+  };
+
   return (
     <Container className="justify-content-center">
       <h3>{heading}</h3>
@@ -121,6 +157,23 @@ const AddFoodForm = (props) => {
           defaultChecked={food.is_vegetarian}
           onChange={handleChange}
         />
+        {user?.role === "Admin" ? (
+          <Form.Select
+            label="Restaurant"
+            options={restaurantOptions}
+            loading={restLoading}
+            placeholder="Select Restaurant"
+            value={food.restaurant}
+            onChange={handleRestaurantSelect}
+            required
+          />
+        ) : (
+          <Form.Input
+            label="Restaurant"
+            value={forcedRestaurantLabel}
+            readOnly
+          />
+        )}
         <Message
           error
           header="Invalid Entry"

@@ -3,7 +3,7 @@ import { createQuestion } from "../../api/question";
 import AddItem from "./AddItem";
 
 const CreateQuestion = (props) => {
-  const { user, msgAlert, setOpen, setNewQuestion, onCreated } = props;
+  const { user, msgAlert, setOpen, setNewQuestion, onCreated, getAllRestaurants } = props;
 
   const defaultQuestion = {
     question_str: "",
@@ -71,6 +71,8 @@ const CreateQuestion = (props) => {
             handleChange={ handleChange }
             heading="Create a new Question!"
             handleSubmit={ handleCreateQuestion }
+            getAllRestaurants={getAllRestaurants}
+            user={user}
         />
     )
 

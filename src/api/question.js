@@ -36,6 +36,18 @@ export const getQuestion = (user, questionId) => {
 //create a question 
 //data returned: res.data.question will be the new question 
 export const createQuestion = (user, question) => {
+    // Normalize restaurant to an id or null
+    const r = question?.restaurant;
+    let restaurantId = null;
+    if (r !== undefined && r !== null && r !== '') {
+        if (typeof r === 'object') {
+            restaurantId = r.id ?? r.pk ?? null;
+        } else {
+            const n = Number(r);
+            restaurantId = Number.isFinite(n) ? n : null;
+        }
+    }
+
     return axios({
         method: 'POST',
         headers: {
@@ -43,13 +55,14 @@ export const createQuestion = (user, question) => {
         },
         url: apiUrl + '/question_news/',
         data: {
-            "question_new": {
-                "question_str": question.question_str,
-                "option1": question.option1,
-                "option2": question.option2,
-                "option3": question.option3,
-                "option4": question.option4,
-                "answer": question.answer,
+            question_new: {
+                question_str: question.question_str,
+                option1: question.option1,
+                option2: question.option2,
+                option3: question.option3,
+                option4: question.option4,
+                answer: question.answer,
+                restaurant: restaurantId,
             }
         }
     })
@@ -58,16 +71,28 @@ export const createQuestion = (user, question) => {
 //update a question
 //nothing returned
 export const updateQuestion = (user, updatesToQuestion, questionId) => {
-	return axios({
-		method: 'PATCH',
+    const next = { ...updatesToQuestion };
+    if (Object.prototype.hasOwnProperty.call(next, 'restaurant')) {
+        const r = next.restaurant;
+        if (r === '' || r === undefined) {
+            next.restaurant = null;
+        } else if (typeof r === 'object') {
+            next.restaurant = r?.id ?? r?.pk ?? null;
+        } else {
+            const n = Number(r);
+            next.restaurant = Number.isFinite(n) ? n : null;
+        }
+    }
+    return axios({
+        method: 'PATCH',
         headers: {
-			Authorization: `Token ${user.token}`,
-		},
-		url: `${apiUrl}/question_news/${questionId}/`,
-		data: {
-			question_new: updatesToQuestion
-		}
-	})
+            Authorization: `Token ${user.token}`,
+        },
+        url: `${apiUrl}/question_news/${questionId}/`,
+        data: {
+            question_new: next,
+        }
+    })
 }
 
 //delete a question

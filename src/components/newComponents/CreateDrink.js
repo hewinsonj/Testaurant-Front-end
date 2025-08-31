@@ -3,7 +3,7 @@ import { createDrink } from "../../api/drink";
 import AddDrinkForm from "./AddDrinkForm";
 
 const CreateDrink = (props) => {
-  const { user, msgAlert, setOpen, onCreated } = props;
+  const { user, msgAlert, setOpen, onCreated, getAllRestaurants } = props;
 
   const [errorMsg, setErrorMsg] = useState("");
 
@@ -82,6 +82,8 @@ const CreateDrink = (props) => {
       heading="Create a new Drink Item!"
       handleSubmit={handleCreateDrink}
       errorMsg={errorMsg}
+      getAllRestaurants={getAllRestaurants}
+      user={user}
     />
   );
 };

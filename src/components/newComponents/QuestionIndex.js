@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Grid, Segment, List, Button } from "semantic-ui-react";
-import { getAllQuestions, deleteQuestion } from "../../api/question";
+import { deleteQuestion } from "../../api/question";
 // import { getAllEmployees } from "../../api/user";
 import LoadingScreen from "../shared/LoadingPage";
 import AddQuestionModal from "./AddQuestionModal";
@@ -8,12 +8,14 @@ import EditLogModal from "./EditLogModal";
 import QuestionUpdateModal from "./QuestionUpdateModal";
 import SearchList from "./SearchList";
 
-const QuestionIndex = ({ user, msgAlert, newQuestion, setNewQuestion, employees = [] }) => {
+const QuestionIndex = ({ user, msgAlert, newQuestion, setNewQuestion, employees, getAllQuestions, getAllRestaurants }) => {
   const [allQuestions, setAllQuestions] = useState([]);
   const [originalQuestions, setOriginalQuestions] = useState([]);
   const [filteredQuestions, setFilteredQuestions] = useState([]);
   const [selectedQuestion, setSelectedQuestion] = useState(null);
   const [logOpen, setLogOpen] = useState(false);
+  const [restaurants, setRestaurants] = useState([]);
+  const [restLoading, setRestLoading] = useState(false);
 
   const reloadQuestions = () => {
     return getAllQuestions(user)
@@ -50,6 +52,28 @@ const QuestionIndex = ({ user, msgAlert, newQuestion, setNewQuestion, employees 
   useEffect(() => {
     reloadQuestions();
   }, [user]);
+
+  useEffect(() => {
+    let mounted = true;
+    const load = async () => {
+      if (typeof getAllRestaurants !== 'function') return;
+      try {
+        setRestLoading(true);
+        const resp = user ? await getAllRestaurants(user) : await getAllRestaurants();
+        const list = Array.isArray(resp?.data) ? resp.data : (resp?.data?.restaurants || resp?.data || []);
+        if (mounted) setRestaurants(Array.isArray(list) ? list : []);
+      } catch (e) {
+        if (mounted) setRestaurants([]);
+        if (process.env.NODE_ENV !== 'production') {
+          console.warn('[QuestionIndex] getAllRestaurants failed', e?.response?.status, e?.response?.data);
+        }
+      } finally {
+        if (mounted) setRestLoading(false);
+      }
+    };
+    load();
+    return () => { mounted = false; };
+  }, [user, getAllRestaurants]);
 
   const getOwnerName = (q) => {
     if (!q) return "Unknown";
@@ -112,12 +136,31 @@ const QuestionIndex = ({ user, msgAlert, newQuestion, setNewQuestion, employees 
       });
   };
 
+  const getRestaurantName = (q) => {
+    if (!q) return '';
+    let restId = null;
+    if (q.restaurant && typeof q.restaurant === 'object') {
+      restId = q.restaurant.id ?? q.restaurant.pk ?? null;
+    } else if (q.restaurant !== undefined) {
+      restId = q.restaurant; // may be number, '', or null
+    }
+    if (restId == null || restId === '') {
+      restId = q.restaurant_id ?? null;
+    }
+    if (restId == null || restId === '') return 'No Restaurant';
+    if (!Array.isArray(restaurants) || restaurants.length === 0) return '';
+    const match = restaurants.find((r) => String(r.id) === String(restId));
+    if (!match) return `Restaurant #${restId}`;
+    return match.city && match.state ? `${match.name} — ${match.city}, ${match.state}` : match.name;
+  };
+
   return (
     <Segment raised>
       <AddQuestionModal
         user={user}
         msgAlert={msgAlert}
         setNewQuestion={setNewQuestion}
+        getAllRestaurants={getAllRestaurants}
         onCreated={(newQ) => {
           // const owner = employees.find((e) => e.id === newQ.owner);
           // const enriched = {
@@ -182,6 +225,7 @@ const QuestionIndex = ({ user, msgAlert, newQuestion, setNewQuestion, employees 
               <h2>{selectedQuestion.question_str}</h2>
               <p><strong>Created by:</strong> {getOwnerName(selectedQuestion)}</p>
               <p><strong>Last Updated:</strong> {new Date(selectedQuestion.updated_at).toLocaleString()}</p>
+              <p><strong>Restaurant:</strong> {getRestaurantName(selectedQuestion)}</p>
               <p>
                 <strong>A:</strong> {selectedQuestion.option1}
               </p>
@@ -212,6 +256,8 @@ const QuestionIndex = ({ user, msgAlert, newQuestion, setNewQuestion, employees 
                   question={selectedQuestion}
                   user={user}
                   msgAlert={msgAlert}
+                  getAllRestaurants={getAllRestaurants}
+                  
                 />
                 <Button
                   color="blue"

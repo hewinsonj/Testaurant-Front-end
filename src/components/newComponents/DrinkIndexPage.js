@@ -8,7 +8,7 @@ import DrinkUpdateModal from "./DrinkUpdateModal";
 import FilterModal from "./FilterModal";
 import EditLogModal from "./EditLogModal";
 
-const DrinkIndexPage = ({ user, msgAlert, setNewDrink, employees = [] }) => {
+const DrinkIndexPage = ({ user, msgAlert, setNewDrink, employees, getAllRestaurants }) => {
   const [allDrinks, setAllDrinks] = useState([]);
   const [selectedDrink, setSelectedDrink] = useState(null);
 
@@ -34,6 +34,9 @@ const DrinkIndexPage = ({ user, msgAlert, setNewDrink, employees = [] }) => {
   });
   const [searchTerm, setSearchTerm] = useState("");
   const [logOpen, setLogOpen] = useState(false);
+
+  const [restaurants, setRestaurants] = useState([]);
+  const [restLoading, setRestLoading] = useState(false);
 
   const getOwnerName = (drink) => {
     // Only show for elevated roles
@@ -82,6 +85,28 @@ const DrinkIndexPage = ({ user, msgAlert, setNewDrink, employees = [] }) => {
       });
   }, []);
 
+  useEffect(() => {
+    let mounted = true;
+    const load = async () => {
+      try {
+        setRestLoading(true);
+        if (typeof getAllRestaurants !== 'function') return;
+        const resp = user ? await getAllRestaurants(user) : await getAllRestaurants();
+        const list = Array.isArray(resp?.data) ? resp.data : (resp?.data?.restaurants || resp?.data || []);
+        if (mounted) setRestaurants(Array.isArray(list) ? list : []);
+      } catch (e) {
+        if (mounted) setRestaurants([]);
+        if (process.env.NODE_ENV !== 'production') {
+          console.warn('[DrinkIndexPage] getAllRestaurants failed', e?.response?.status, e?.response?.data);
+        }
+      } finally {
+        if (mounted) setRestLoading(false);
+      }
+    };
+    load();
+    return () => { mounted = false; };
+  }, [user, getAllRestaurants]);
+
   const handleDelete = (id) => {
     deleteDrink(user, id)
       .then(() => {
@@ -123,6 +148,23 @@ const DrinkIndexPage = ({ user, msgAlert, setNewDrink, employees = [] }) => {
     return matchesSearch && matchesExclusions && matchesInclusions;
   });
 
+  const getRestaurantName = (drink) => {
+    if (!drink) return '';
+    let restId = null;
+    if (drink.restaurant && typeof drink.restaurant === 'object') {
+      restId = drink.restaurant.id ?? drink.restaurant.pk ?? null;
+    } else if (drink.restaurant !== undefined) {
+      restId = drink.restaurant;
+    }
+    if (restId == null || restId === '') {
+      restId = drink.restaurant_id ?? null;
+    }
+    if (restId == null || restId === '') return 'No Restaurant';
+    if (!Array.isArray(restaurants) || restaurants.length === 0) return '';
+    const match = restaurants.find(r => String(r.id) === String(restId));
+    return match ? match.name : `Restaurant #${restId}`;
+  };
+
   return (
     <Segment raised>
       {user && ["Manager", "Admin", "GeneralManager"].includes(user.role) && (
@@ -130,6 +172,7 @@ const DrinkIndexPage = ({ user, msgAlert, setNewDrink, employees = [] }) => {
           user={user}
           msgAlert={msgAlert}
           setNewDrink={setNewDrink}
+          getAllRestaurants={getAllRestaurants}
           onCreated={(newDrink) => {
             setAllDrinks((prev) =>
               Array.isArray(prev) ? [...prev, newDrink] : [newDrink]
@@ -245,6 +288,9 @@ const DrinkIndexPage = ({ user, msgAlert, setNewDrink, employees = [] }) => {
               <p>
                 <strong>Created By:</strong> {getOwnerName(selectedDrink) || 'Unknown'}
               </p>
+              <p>
+                <strong>Restaurant:</strong> {getRestaurantName(selectedDrink)}
+              </p>
             </Segment>
           ) : (
             <p>Select a drink to view details</p>
@@ -261,6 +307,7 @@ const DrinkIndexPage = ({ user, msgAlert, setNewDrink, employees = [] }) => {
                     drink={selectedDrink}
                     user={user}
                     msgAlert={msgAlert}
+                    getAllRestaurants={getAllRestaurants}
                   />
                   <Button
                     color="blue"

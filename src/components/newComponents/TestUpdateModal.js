@@ -4,7 +4,7 @@ import { updateTest } from "../../api/test";
 import AddTest from "./AddTest";
 
 const TestUpdateModal = (props) => {
-  const { heading, user, msgAlert, setNewTest, test: initialTest, relevantQuestions,  } = props;
+  const { heading, user, msgAlert, setNewTest, test: initialTest, relevantQuestions, getAllRestaurants } = props;
 
   const [open, setOpen] = useState(false);
   const [test, setTest] = useState(initialTest);
@@ -102,6 +102,7 @@ const TestUpdateModal = (props) => {
           handleSubmit={handleUpdateTest}
           relevantQuestions={relevantQuestions} // Pass relevantQuestions here
           allQuestions={props.allQuestions}
+          getAllRestaurants={getAllRestaurants}
           user={user}
         />
       </Modal.Content>

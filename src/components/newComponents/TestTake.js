@@ -13,6 +13,7 @@ const TestTake = ({ user, msgAlert, test, onCompleted }) => {
     percent: 0,
     time: "",
     the_test: null,
+    restaurant: ""
   };
 
   const [open, setOpen] = useState(false);
@@ -149,6 +150,14 @@ const TestTake = ({ user, msgAlert, test, onCompleted }) => {
       elapsedStr = `${mins}m ${rem}s`;
     }
 
+    // Always save the result.restaurant as the test's restaurant (not the user's)
+    const testRestaurantRaw = (test?.restaurant && typeof test.restaurant === 'object')
+      ? (test.restaurant.id ?? test.restaurant.pk ?? null)
+      : (test?.restaurant ?? test?.restaurant_id ?? null);
+    const testRestaurantId = (testRestaurantRaw === '' || testRestaurantRaw == null)
+      ? null
+      : (Number.isFinite(Number(testRestaurantRaw)) ? Number(testRestaurantRaw) : null);
+
     const finalResult = {
       score: `${correctCount} out of ${totalQuestions}`,
       correct: String(correctCount),
@@ -160,10 +169,14 @@ const TestTake = ({ user, msgAlert, test, onCompleted }) => {
       time_completed: hhmmss, // <-- NEW
       the_test: String(test.id),
       owner: user.id,
-      // attach restaurant when available (int or null)
-      restaurant: (user?.restaurant && typeof user.restaurant === 'object') ? (user.restaurant.id ?? null) : (user?.restaurant ?? null),
+      restaurant: testRestaurantId,
     };
 
+    if (process.env.NODE_ENV !== 'production') {
+      console.log('[Result] resolved test.restaurant id →', testRestaurantId);
+    }
+
+    console.log('[Result] creating', finalResult)
     createResult(user, finalResult)
       .then(() => {
         const currentAssigned = Array.isArray(user?.assigned_tests)

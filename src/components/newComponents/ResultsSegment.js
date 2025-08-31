@@ -2,10 +2,35 @@ import React, { useState, useEffect } from "react";
 
 import { Segment, Header, Divider, Label } from "semantic-ui-react"
 
-const ResultsSegment = ({ result, allTests, employees, setOwnerName, label }) => {
+const ResultsSegment = ({ result, allTests, employees, setOwnerName, label, getAllRestaurants }) => {
   if (process.env.NODE_ENV !== 'production') {
     try { console.log('[ResultsSegment] result payload', result); } catch {}
   }
+  const [restaurants, setRestaurants] = useState([]);
+  const [restLoading, setRestLoading] = useState(false);
+
+  useEffect(() => {
+    let mounted = true;
+    const load = async () => {
+      if (typeof getAllRestaurants !== 'function') return;
+      try {
+        setRestLoading(true);
+        const resp = await getAllRestaurants();
+        const list = Array.isArray(resp?.data) ? resp.data : (resp?.data?.restaurants || resp?.data || []);
+        if (mounted) setRestaurants(Array.isArray(list) ? list : []);
+      } catch (e) {
+        if (mounted) setRestaurants([]);
+        if (process.env.NODE_ENV !== 'production') {
+          try { console.warn('[ResultsSegment] getAllRestaurants failed', e?.response?.status, e?.response?.data); } catch {}
+        }
+      } finally {
+        if (mounted) setRestLoading(false);
+      }
+    };
+    load();
+    return () => { mounted = false; };
+  }, [getAllRestaurants]);
+
   const getTestName = (testId) => {
     const testArray = Array.isArray(allTests) ? allTests : [];
     const idStr = String(typeof testId === 'object' ? testId?.id : testId);
@@ -42,6 +67,14 @@ const ResultsSegment = ({ result, allTests, employees, setOwnerName, label }) =>
   };
 
   // Pull questions for this result's test from the allTests prop
+  // Helper to resolve restaurant name
+  const getRestaurantName = (rid) => {
+    if (!rid) return 'No Restaurant';
+    const list = Array.isArray(restaurants) ? restaurants : [];
+    const match = list.find(r => String(r.id) === String(rid));
+    if (!match) return String(rid);
+    return match.city && match.state ? `${match.name} — ${match.city}, ${match.state}` : match.name;
+  };
   const getQuestionsForTest = () => {
     const testId = typeof result?.the_test === 'object' ? result?.the_test?.id : result?.the_test;
     const tests = Array.isArray(allTests) ? allTests : [];
@@ -90,6 +123,14 @@ const ResultsSegment = ({ result, allTests, employees, setOwnerName, label }) =>
       </Header> */}
       <p style={{ fontSize: "1.25rem" }}><strong>Correct:</strong> {result.correct}</p>
       <p style={{ fontSize: "1.25rem" }}><strong>Wrong:</strong> {result.wrong}</p>
+      <p style={{ fontSize: "1.25rem" }}>
+        <strong>Restaurant:</strong> {(() => {
+          const restId = (result?.restaurant && typeof result.restaurant === 'object')
+            ? (result.restaurant.id ?? result.restaurant.pk ?? null)
+            : (result?.restaurant ?? result?.restaurant_id ?? null);
+          return getRestaurantName(restId);
+        })()}
+      </p>
       <div
         style={{
           fontSize: "2rem",

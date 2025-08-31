@@ -4,7 +4,7 @@ import { updateDrink } from "../../api/drink";
 import AddDrinkForm from "./AddDrinkForm";
 
 const DrinkUpdateModal = (props) => {
-  const { user, msgAlert, triggerRefresh } = props;
+  const { user, msgAlert, triggerRefresh, getAllRestaurants } = props;
 
   const [drink, setDrink] = useState(props.drink);
   const [open, setOpen] = useState(false);
@@ -151,6 +151,7 @@ const DrinkUpdateModal = (props) => {
           handleChange={handleChange}
           handleSubmit={handleUpdateDrink}
           heading="Update Your Drink"
+          getAllRestaurants={getAllRestaurants}
         />
       </Modal.Content>
     </Modal>

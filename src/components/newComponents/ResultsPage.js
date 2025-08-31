@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { Grid, Segment, List, Input } from "semantic-ui-react";
+import { Grid, Segment, List, Input, Dropdown } from "semantic-ui-react";
 import LoadingScreen from "../shared/LoadingPage";
 import { getAllResults, getMyResults } from "../../api/result";
 import { getAllTests } from "../../api/test";
 import { getAllEmployees } from "../../api/user";
+import { getAllRestaurants } from '../../api/restaurant'
 import ResultsSegment from "./ResultsSegment";
 
 const ResultsPage = ({ user, msgAlert, setUser }) => {
@@ -13,6 +14,9 @@ const ResultsPage = ({ user, msgAlert, setUser }) => {
   const [selectedResult, setSelectedResult] = useState(null);
   const [ownerName, setOwnerName] = useState("");
   const [empSearch, setEmpSearch] = useState("");
+  const [restaurants, setRestaurants] = useState([]);
+  const [restLoading, setRestLoading] = useState(false);
+  const [restFilter, setRestFilter] = useState(''); // '' = all, 'none' = no restaurant, otherwise id
 
   const roleLC = (user?.role || '').toLowerCase();
   const isMgrish = ['manager', 'generalmanager', 'admin'].includes(roleLC);
@@ -71,6 +75,28 @@ const ResultsPage = ({ user, msgAlert, setUser }) => {
     }
   }, [user]);
 
+  useEffect(() => {
+    let mounted = true;
+    const load = async () => {
+      if (typeof getAllRestaurants !== 'function') return;
+      try {
+        setRestLoading(true);
+        const resp = user ? await getAllRestaurants(user) : await getAllRestaurants();
+        const list = Array.isArray(resp?.data) ? resp.data : (resp?.data?.restaurants || resp?.data || []);
+        if (mounted) setRestaurants(Array.isArray(list) ? list : []);
+      } catch (e) {
+        if (mounted) setRestaurants([]);
+        if (process.env.NODE_ENV !== 'production') {
+          console.warn('[ResultsPage] getAllRestaurants failed', e?.response?.status, e?.response?.data);
+        }
+      } finally {
+        if (mounted) setRestLoading(false);
+      }
+    };
+    load();
+    return () => { mounted = false; };
+  }, [user, getAllRestaurants]);
+
   const getTestNameById = (testRef) => {
     const testId =
       typeof testRef === "object" && testRef !== null ? testRef.id : testRef;
@@ -78,6 +104,28 @@ const ResultsPage = ({ user, msgAlert, setUser }) => {
       (t) => t.id === testId || t.id === Number(testId)
     );
     return test ? test.name : "Unknown Test";
+  };
+
+  const restaurantsById = React.useMemo(() => {
+    const map = new Map();
+    if (Array.isArray(restaurants)) {
+      restaurants.forEach(r => {
+        if (r?.id != null) map.set(Number(r.id), r);
+      });
+    }
+    return map;
+  }, [restaurants]);
+
+  const getRestaurantNameById = (restRef) => {
+    let id = null;
+    if (restRef && typeof restRef === 'object') {
+      id = restRef.id ?? restRef.pk ?? null;
+    } else if (restRef !== undefined) {
+      id = restRef;
+    }
+    if (id == null || id === '') return 'No Restaurant';
+    const r = restaurantsById.get(Number(id));
+    return r ? (r.city && r.state ? `${r.name} — ${r.city}, ${r.state}` : r.name) : `Restaurant #${id}`;
   };
 
   const employeesById = React.useMemo(() => {
@@ -102,8 +150,17 @@ const ResultsPage = ({ user, msgAlert, setUser }) => {
         return first.includes(term) || last.includes(term);
       });
     }
+    if (restFilter !== '') {
+      list = list.filter((r) => {
+        const rid = (r.restaurant !== undefined && r.restaurant !== null && r.restaurant !== '')
+          ? (typeof r.restaurant === 'object' ? (r.restaurant.id ?? r.restaurant.pk ?? null) : r.restaurant)
+          : (r.restaurant_id ?? null);
+        if (restFilter === 'none') return rid == null;
+        return String(rid) === String(restFilter);
+      });
+    }
     return list;
-  }, [allResults, isMgrish, empSearch, employeesById]);
+  }, [allResults, isMgrish, empSearch, employeesById, restFilter]);
 
   return (
     <Segment raised>
@@ -114,13 +171,33 @@ const ResultsPage = ({ user, msgAlert, setUser }) => {
           </h3>
           {isMgrish && (
             <div style={{ margin: '0.5rem 0 0.75rem' }}>
-              <Input
-                fluid
-                icon="search"
-                placeholder="Filter by employee name..."
-                value={empSearch}
-                onChange={(e, { value }) => setEmpSearch(value)}
-              />
+              <div style={{ display: 'flex', gap: '0.5rem' }}>
+                <div style={{ flex: 1 }}>
+                  <Input
+                    fluid
+                    icon="search"
+                    placeholder="Filter by employee name..."
+                    value={empSearch}
+                    onChange={(e, { value }) => setEmpSearch(value)}
+                  />
+                </div>
+                <div style={{ minWidth: 220 }}>
+                  <Dropdown
+                    fluid
+                    selection
+                    clearable
+                    placeholder={restLoading ? 'Loading restaurants…' : 'Filter by restaurant'}
+                    options={(() => {
+                      const opts = Array.isArray(restaurants) ? restaurants.map(r => ({
+                        key: String(r.id), value: String(r.id), text: r.name
+                      })) : [];
+                      return [{ key: 'all', value: '', text: 'All Restaurants' }, { key: 'none', value: 'none', text: 'No Restaurant' }, ...opts];
+                    })()}
+                    value={restFilter}
+                    onChange={(e, { value }) => setRestFilter(value)}
+                  />
+                </div>
+              </div>
             </div>
           )}
           {resultsForList.length > 0 ? (
@@ -152,6 +229,8 @@ const ResultsPage = ({ user, msgAlert, setUser }) => {
                       </span>
                       <br />
                       <span>Score: {result.percent}</span>
+                      <br />
+                      <span>Restaurant: {getRestaurantNameById(result.restaurant ?? result.restaurant_id)}</span>
                       {/* {Array.isArray(result.wrong_question_ids) && result.wrong_question_ids.length > 0 && (
                         <span>
                           Wrong IDs: {result.wrong_question_ids.join(', ')}
@@ -173,7 +252,8 @@ const ResultsPage = ({ user, msgAlert, setUser }) => {
               result={selectedResult}
               allTests={allTests}
               employees={employees}
-              setOwnerName={setOwnerName} // ✅ Pass it down
+              setOwnerName={setOwnerName}
+              getAllRestaurants={getAllRestaurants}
             />
           ) : (
             <p>Select a result to view details</p>

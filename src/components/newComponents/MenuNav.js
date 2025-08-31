@@ -3,6 +3,7 @@ import { Menu } from "semantic-ui-react";
 import FoodIndexPage from "./FoodIndexPage";
 import DrinkIndexPage from "./DrinkIndexPage";
 import { getAllEmployees } from "../../api/user";
+import { getAllRestaurants } from "../../api/restaurant";
 
 export default class MenuNav extends Component {
   state = { activeItem: "foods", setNewFood: false, setNewDrink: false, employees: [] };
@@ -58,6 +59,7 @@ export default class MenuNav extends Component {
           setNewFood={this.props.setNewFood}
           msgAlert={this.props.msgAlert}
           employees={this.state.employees}
+          getAllRestaurants={getAllRestaurants}
         />
       ) : (
         <DrinkIndexPage
@@ -65,6 +67,7 @@ export default class MenuNav extends Component {
           setNewDrink={this.props.setNewDrink}
           msgAlert={this.props.msgAlert}
           employees={this.state.employees}
+          getAllRestaurants={getAllRestaurants}
         />
       );
     return (

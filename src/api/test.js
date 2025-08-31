@@ -49,7 +49,8 @@ export const createTest = (user, test) => {
                 "name": test.name,
                 "question_new": test.question_new,
                 "owner": user.id,
-                "allotted_time": test.allotted_time
+                "allotted_time": test.allotted_time,
+                "restaurant": test.restaurant
             },
         }
     })

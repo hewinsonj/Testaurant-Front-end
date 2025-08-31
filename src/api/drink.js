@@ -61,6 +61,7 @@ export const createDrink = (user, drink) => {
                 "con_dairy": drink.con_dairy,
                 "is_vegan": drink.is_vegan,
                 "is_vegetarian": drink.is_vegetarian,
+                "restaurant": drink.restaurant
             }
         }
     })

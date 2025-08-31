@@ -2,7 +2,66 @@ import React from "react";
 import { Button, Form, Container } from "semantic-ui-react";
 
 const AddItem = (props) => {
-  const { question, handleChange, handleSubmit, heading } = props;
+  const { question, handleChange, handleSubmit, heading, getAllRestaurants, user } = props;
+
+  const role = user?.role || '';
+  const userRestaurantId = (typeof user?.restaurant === 'object') ? (user?.restaurant?.id ?? null) : (user?.restaurant ?? null);
+
+  const [restaurants, setRestaurants] = React.useState([]);
+  const [restLoading, setRestLoading] = React.useState(false);
+
+  React.useEffect(() => {
+    let mounted = true;
+    const load = async () => {
+      if (typeof getAllRestaurants !== 'function') return;
+      try {
+        setRestLoading(true);
+        const resp = user ? await getAllRestaurants(user) : await getAllRestaurants();
+        const list = Array.isArray(resp?.data) ? resp.data : (resp?.data?.restaurants || resp?.data || []);
+        if (mounted) setRestaurants(Array.isArray(list) ? list : []);
+      } catch (e) {
+        if (mounted) setRestaurants([]);
+        if (process.env.NODE_ENV !== 'production') {
+          console.warn('[AddItem] getAllRestaurants failed', e?.response?.status, e?.response?.data);
+        }
+      } finally {
+        if (mounted) setRestLoading(false);
+      }
+    };
+    load();
+    return () => { mounted = false; };
+  }, [user, getAllRestaurants]);
+
+  // If Manager/GM, force their restaurant into the form state so submit carries it
+  React.useEffect(() => {
+    if (user && ["GeneralManager", "Manager"].includes(role)) {
+      if (userRestaurantId != null) {
+        handleChange?.(null, { name: 'restaurant', value: userRestaurantId });
+      }
+    }
+  }, [role, userRestaurantId]);
+
+  const restaurantOptions = React.useMemo(() => {
+    if (!Array.isArray(restaurants)) return [];
+    const opts = restaurants.map(r => ({
+      key: String(r.id),
+      value: r.id,
+      text: r.city && r.state ? `${r.name} — ${r.city}, ${r.state}` : r.name,
+    }));
+    // Add a No Restaurant option for Admins
+    return [{ key: 'none', value: '', text: 'No Restaurant' }, ...opts];
+  }, [restaurants]);
+
+  const forcedRestaurantLabel = React.useMemo(() => {
+    if (userRestaurantId == null) return '';
+    const match = restaurants.find(r => r.id === userRestaurantId);
+    if (!match) return String(userRestaurantId);
+    return match.city && match.state ? `${match.name} — ${match.city}, ${match.state}` : match.name;
+  }, [restaurants, userRestaurantId]);
+
+  const handleRestaurantSelect = (e, { value }) => {
+    return handleChange(e, { name: 'restaurant', value });
+  };
 
   return (
     <Container className="justify-content-center">
@@ -64,6 +123,29 @@ const AddItem = (props) => {
           value={question.answer}
           onChange={handleChange}
         />
+        {role === 'Admin' ? (
+          <Form.Select
+            name="restaurant"
+            id="restaurant"
+            label="Restaurant"
+            placeholder={restLoading ? 'Loading…' : 'Select restaurant'}
+            loading={restLoading}
+            disabled={restLoading}
+            options={restaurantOptions}
+            value={(() => {
+              const val = question?.restaurant ?? question?.restaurant_id ?? (typeof question?.restaurant === 'object' ? question.restaurant?.id : '');
+              return val == null ? '' : val;
+            })()}
+            onChange={handleRestaurantSelect}
+            clearable
+          />
+        ) : (
+          <Form.Input
+            label="Restaurant"
+            value={forcedRestaurantLabel}
+            readOnly
+          />
+        )}
         <Button type="submit" color="orange">
           Submit
         </Button>

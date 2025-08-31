@@ -4,7 +4,7 @@ import { updateQuestion } from "../../api/question";
 import AddItem from "./AddItem";
 
 const QuestionUpdateModal = (props) => {
-  const { user, msgAlert, triggerRefresh } = props;
+  const { user, msgAlert, triggerRefresh, getAllRestaurants } = props;
   const [question, setQuestion] = useState(props.question);
   const [open, setOpen] = useState(false);
 
@@ -80,6 +80,8 @@ const QuestionUpdateModal = (props) => {
           handleChange={handleChange}
           heading="Update a Question!"
           handleSubmit={handleUpdateQuestion}
+          getAllRestaurants={getAllRestaurants}
+          user={user}
         />
       </Modal.Content>
     </Modal>

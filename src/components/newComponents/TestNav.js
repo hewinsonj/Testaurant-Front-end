@@ -5,6 +5,7 @@ import TestIndex from './TestIndex'
 import TestAssignIndex from './TestAssignIndex'
 import { getAllTests } from '../../api/test'
 import { getAllQuestions } from '../../api/question'
+import { getAllRestaurants } from '../../api/restaurant'
 import { Link } from 'react-router-dom'
 import { getAllEmployees } from '../../api/user'
 
@@ -65,6 +66,8 @@ export default class TestNav extends Component {
           setNewQuestion={this.props.setNewQuestion}
           msgAlert={this.props.msgAlert}
           employees={this.state.employees}
+          getAllQuestions={getAllQuestions}
+          getAllRestaurants={getAllRestaurants}
         />
       ) : activeItem === "Assigned Tests" ? (
         <TestAssignIndex
@@ -78,6 +81,7 @@ export default class TestNav extends Component {
           msgAlert={this.props.msgAlert}
           setNewTest={this.props.setNewTest}
           employees={this.state.employees}
+          getAllRestaurants={getAllRestaurants}
         />
       );
 

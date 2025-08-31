@@ -57,6 +57,8 @@ export const createFood = (user, food) => {
                 "con_dairy": food.con_dairy,
                 "is_vegan": food.is_vegan,
                 "is_vegetarian": food.is_vegetarian,
+                "restaurant": food.restaurant,
+
             }
         }
     })

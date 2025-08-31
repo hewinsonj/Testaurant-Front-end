@@ -5,11 +5,12 @@ import AddTest from './AddTest'
 
 const CreateTest = (props) => {
 
-    const {  user, msgAlert, setNewTest, setOpen, onCreated } = props
+    const {  user, msgAlert, setNewTest, setOpen, onCreated, getAllRestaurants } = props
 
     const defaultTest = {
         name: '',
         question_new: [],
+        restaurant: ''
     }
 
     const tempQuestion = {
@@ -127,6 +128,7 @@ const CreateTest = (props) => {
       handleSubmit={handleCreateTest}
       allQuestions={allQuestions}
       user={user}
+      getAllRestaurants={getAllRestaurants}
     />
   );
 };

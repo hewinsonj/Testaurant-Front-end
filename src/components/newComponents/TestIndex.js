@@ -10,11 +10,13 @@ import TestTake from "./TestTake";
 import SearchList from "./SearchList";
 import EditLogModal from "./EditLogModal";
 
-const TestIndex = ({ user, msgAlert, newTest, setNewTest, employees: incomingEmployees = [] }) => {
+const TestIndex = ({ user, msgAlert, newTest, setNewTest, employees: incomingEmployees = [], getAllRestaurants }) => {
   const [allTests, setAllTests] = useState([]);
   const [filteredTests, setFilteredTests] = useState([]);
   const [allQuestions, setAllQuestions] = useState([]);
   const [employees, setEmployees] = useState([]);
+  const [restaurants, setRestaurants] = useState([]);
+  const [restLoading, setRestLoading] = useState(false);
   const [selectedTest, setSelectedTest] = useState(null);
   const [sortMethod, setSortMethod] = useState("created");
   const [sortAsc, setSortAsc] = useState(true);
@@ -54,6 +56,29 @@ const TestIndex = ({ user, msgAlert, newTest, setNewTest, employees: incomingEmp
         });
       });
   }, []);
+
+  useEffect(() => {
+    let mounted = true;
+    const load = async () => {
+      try {
+        setRestLoading(true);
+        const resp = user ? await getAllRestaurants(user) : await getAllRestaurants();
+        const list = Array.isArray(resp?.data) ? resp.data : (resp?.data?.restaurants || resp?.data || []);
+        if (mounted) setRestaurants(Array.isArray(list) ? list : []);
+      } catch (e) {
+        if (mounted) setRestaurants([]);
+        msgAlert({
+          heading: 'Error',
+          message: 'Could not get restaurants',
+          variant: 'danger',
+        });
+      } finally {
+        if (mounted) setRestLoading(false);
+      }
+    };
+    load();
+    return () => { mounted = false; };
+  }, [user, getAllRestaurants]);
 
   useEffect(() => {
     setEmployees(Array.isArray(incomingEmployees) ? incomingEmployees : []);
@@ -177,6 +202,41 @@ const TestIndex = ({ user, msgAlert, newTest, setNewTest, employees: incomingEmp
     return match?.email || match?.user?.email || `User #${ownerId}`;
   };
 
+  const getRestaurantName = (test) => {
+    if (!test) return '';
+
+    // Normalize possible shapes
+    let restId;
+    if (test.restaurant && typeof test.restaurant === 'object') {
+      restId = test.restaurant.id ?? test.restaurant.pk;
+    } else if (test.restaurant !== undefined) {
+      restId = test.restaurant; // may be number, '', or null
+    } else if (test.restaurant_id !== undefined) {
+      restId = test.restaurant_id;
+    }
+
+    // If the API omitted the field entirely, don't claim "No Restaurant" yet
+    if (restId === undefined) {
+      return restLoading ? '' : '';
+    }
+    // If explicitly null/empty string, then truly no restaurant
+    if (restId === null || restId === '') return 'No Restaurant';
+
+    // If we haven't loaded the restaurants list yet, avoid false negatives
+    if (!Array.isArray(restaurants) || restaurants.length === 0) {
+      return '';
+    }
+
+    const match = restaurants.find((r) => String(r.id) === String(restId));
+    return match ? match.name : `Restaurant #${restId}`;
+  };
+
+  const formatAllottedTime = (test) => {
+    const mins = Number(test?.allotted_time ?? 0);
+    if (!Number.isFinite(mins) || mins <= 0) return 'No limit';
+    return `${mins} minute${mins === 1 ? '' : 's'}`;
+  };
+
   const sortedTests = [...filteredTests].sort((a, b) => {
     let result = 0;
     if (sortMethod === "creator") {
@@ -195,6 +255,7 @@ console.log(sortedTests)
         user={user}
         msgAlert={msgAlert}
         setNewTest={setNewTest}
+        getAllRestaurants={getAllRestaurants}
         onCreated={(newTestObj) => {
           // Prepend so it shows up first (matches newest-first)
           setAllTests((prev) =>
@@ -204,6 +265,9 @@ console.log(sortedTests)
             Array.isArray(prev) ? [newTestObj, ...prev] : [newTestObj]
           );
           setSelectedTest(newTestObj);
+          if (process.env.NODE_ENV !== 'production') {
+            console.log('[TestIndex] created test', newTestObj);
+          }
         }}
       />
       <Grid columns={3} divided padded>
@@ -284,6 +348,12 @@ console.log(sortedTests)
                 <strong>Question Count:</strong> {relevantQuestions.length}
               </p>
               <p>
+                <strong>Allotted Time:</strong> {formatAllottedTime(selectedTest)}
+              </p>
+              <p>
+                <strong>Restaurant:</strong> {getRestaurantName(selectedTest)}
+              </p>
+              <p>
                 <strong>Questions:</strong>
               </p>
               <ul>
@@ -314,6 +384,7 @@ console.log(sortedTests)
                   test={selectedTest}
                   msgAlert={msgAlert}
                   allQuestions={allQuestions}
+                  getAllRestaurants={getAllRestaurants}
                 />
                 <Button
                   color="blue"

@@ -4,7 +4,7 @@ import { updateFood } from "../../api/food";
 import AddFoodForm from "./AddFoodForm";
 
 const FoodUpdateModal = (props) => {
-  const { user, msgAlert } = props;
+  const { user, msgAlert, getAllRestaurants } = props;
 
   const [food, setFood] = useState(props.food);
   const [open, setOpen] = useState(false);
@@ -151,6 +151,7 @@ const FoodUpdateModal = (props) => {
           handleChange={handleChange}
           handleSubmit={handleUpdateFood}
           heading="Update Your Food"
+          getAllRestaurants={getAllRestaurants}
         />
       </Modal.Content>
     </Modal>

@@ -2,7 +2,61 @@ import React from "react";
 import { Button, Form, Container, Icon, Message } from "semantic-ui-react";
 
 const AddDrinkForm = (props) => {
-  const { drink, handleChange, handleSubmit, heading, errorMsg } = props;
+  const { drink, handleChange, handleSubmit, heading, errorMsg, getAllRestaurants, user } = props;
+
+  const role = user?.role || '';
+  const userRestaurantId = (typeof user?.restaurant === 'object') ? (user?.restaurant?.id ?? null) : (user?.restaurant ?? null);
+
+  const [restaurants, setRestaurants] = React.useState([]);
+  const [restLoading, setRestLoading] = React.useState(false);
+
+  React.useEffect(() => {
+    let mounted = true;
+    const load = async () => {
+      if (typeof getAllRestaurants !== 'function') return;
+      try {
+        setRestLoading(true);
+        const resp = user ? await getAllRestaurants(user) : await getAllRestaurants();
+        const list = Array.isArray(resp?.data) ? resp.data : (resp?.data?.restaurants || resp?.data || []);
+        if (mounted) setRestaurants(Array.isArray(list) ? list : []);
+      } catch (e) {
+        if (mounted) setRestaurants([]);
+        if (process.env.NODE_ENV !== 'production') {
+          console.warn('[AddDrinkForm] getAllRestaurants failed', e?.response?.status, e?.response?.data);
+        }
+      } finally {
+        if (mounted) setRestLoading(false);
+      }
+    };
+    load();
+    return () => { mounted = false; };
+  }, [user, getAllRestaurants]);
+
+  // If Manager/GM, force their restaurant into form state
+  React.useEffect(() => {
+    if (user && ["GeneralManager", "Manager"].includes(role)) {
+      if (userRestaurantId != null) {
+        handleChange?.(null, { name: 'restaurant', value: userRestaurantId });
+      }
+    }
+  }, [role, userRestaurantId]);
+
+  const restaurantOptions = React.useMemo(() => {
+    if (!Array.isArray(restaurants)) return [];
+    const opts = restaurants.map(r => ({ key: String(r.id), value: r.id, text: r.city && r.state ? `${r.name} — ${r.city}, ${r.state}` : r.name }));
+    return [{ key: 'none', value: '', text: 'No Restaurant' }, ...opts];
+  }, [restaurants]);
+
+  const forcedRestaurantLabel = React.useMemo(() => {
+    if (userRestaurantId == null) return '';
+    const match = Array.isArray(restaurants) ? restaurants.find(r => r.id === userRestaurantId) : null;
+    if (!match) return String(userRestaurantId);
+    return match.city && match.state ? `${match.name} — ${match.city}, ${match.state}` : match.name;
+  }, [restaurants, userRestaurantId]);
+
+  const handleRestaurantSelect = (e, { value }) => {
+    return handleChange?.(null, { name: 'restaurant', value });
+  };
 
   return (
     <Container className="justify-content-center">
@@ -158,6 +212,29 @@ const AddDrinkForm = (props) => {
           defaultChecked={drink.is_vegetarian}
           onChange={handleChange}
         />
+        {role === 'Admin' ? (
+          <Form.Select
+            name="restaurant"
+            id="restaurant"
+            label="Restaurant"
+            placeholder={restLoading ? 'Loading…' : 'Select restaurant'}
+            loading={restLoading}
+            disabled={restLoading}
+            options={restaurantOptions}
+            value={(() => {
+              const val = drink?.restaurant ?? drink?.restaurant_id ?? (typeof drink?.restaurant === 'object' ? drink.restaurant?.id : '');
+              return val == null ? '' : val;
+            })()}
+            onChange={handleRestaurantSelect}
+            clearable
+          />
+        ) : (
+          <Form.Input
+            label="Restaurant"
+            value={forcedRestaurantLabel}
+            readOnly
+          />
+        )}
         <Message
           error
           header="Invalid Entry"

@@ -82,6 +82,16 @@ export const getResult = (user, resultId) => {
 //create a result 
 //data returned: res.data.result will be the new result 
 export const createResult = (user, result) => {
+    const r = result?.restaurant;
+    let restaurantId = null;
+    if (r !== undefined && r !== null && r !== '') {
+      if (typeof r === 'object') {
+        restaurantId = r.id ?? r.pk ?? null;
+      } else {
+        const n = Number(r);
+        restaurantId = Number.isFinite(n) ? n : null;
+      }
+    }
     // console.log(result, 'this is result right before my api request')
     return axios({
         method: 'POST',
@@ -101,7 +111,7 @@ export const createResult = (user, result) => {
             time_completed: result.time_completed,
             the_test: Number(result.the_test),
             owner: result.owner,
-            restaurant: result.restaurant ?? null,
+            restaurant: restaurantId,
           }
         }
     })

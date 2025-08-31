@@ -3,7 +3,7 @@ import { createFood } from "../../api/food";
 import AddFoodForm from "./AddFoodForm";
 
 const CreateFood = (props) => {
-  const { user, msgAlert, setOpen, onCreated } = props;
+  const { user, msgAlert, setOpen, onCreated, getAllRestaurants } = props;
 
   const defaultFood = {
     name: "",
@@ -80,6 +80,8 @@ const CreateFood = (props) => {
       heading="Create a new Food Item!"
       handleSubmit={handleCreateFood}
       errorMsg={errorMsg}
+      getAllRestaurants={getAllRestaurants}
+      user={user}
     />
   );
 };
