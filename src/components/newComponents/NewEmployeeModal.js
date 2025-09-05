@@ -11,10 +11,30 @@ const NewEmployeeModal = ({ open, onClose, refreshEmployees, msgAlert, user, all
     lastName: '',
     hireDate: '',
     role: 'employee',
+    restaurant: '',
   });
   const [loading, setLoading] = useState(false);
 
   const alertFn = typeof msgAlert === 'function' ? msgAlert : () => {};
+
+  const actorRole = user?.role || '';
+  const actorRestaurantId = (user?.restaurant && typeof user.restaurant === 'object')
+    ? (user.restaurant.id ?? user.restaurant.pk ?? null)
+    : (user?.restaurant ?? null);
+
+  const getRestaurantName = (rid) => {
+    if (!rid) return '';
+    const list = Array.isArray(allRestaurants) ? allRestaurants : [];
+    const match = list.find(r => String(r.id) === String(rid));
+    if (!match) return String(rid);
+    return match.city && match.state ? `${match.name} — ${match.city}, ${match.state}` : match.name;
+  };
+
+  React.useEffect(() => {
+    if (actorRole !== 'Admin') {
+      setFormData(prev => ({ ...prev, restaurant: actorRestaurantId ?? '' }));
+    }
+  }, [actorRole, actorRestaurantId]);
 
   const handleChange = (e, { name, value }) => {
     setFormData(prev => ({ ...prev, [name]: value }));
@@ -39,6 +59,14 @@ const NewEmployeeModal = ({ open, onClose, refreshEmployees, msgAlert, user, all
         return;
       }
 
+      const normalizeRestaurant = (r) => {
+        if (r === '' || r === undefined) return null;
+        if (r === null) return null;
+        if (typeof r === 'object') return r.id ?? r.pk ?? null;
+        const n = Number(r);
+        return Number.isFinite(n) ? n : null;
+      };
+
       const payload = {
         email: formData.email,
         password: formData.password,
@@ -47,6 +75,9 @@ const NewEmployeeModal = ({ open, onClose, refreshEmployees, msgAlert, user, all
         last_name: formData.lastName || '',
         hire_date: formData.hireDate || null,
         role: normalizeRole(formData.role),
+        restaurant: (actorRole === 'Admin')
+          ? normalizeRestaurant(formData.restaurant)
+          : (actorRestaurantId ?? null),
       };
 
       console.log('[SignUp] posting payload', payload);
@@ -131,18 +162,29 @@ const NewEmployeeModal = ({ open, onClose, refreshEmployees, msgAlert, user, all
               { key: 'admin', text: 'Admin', value: 'admin' },
             ]}
           />
-          <Form.Select
-            label="Restaurant"
-            name="restaurant"
-            value={formData.restaurant}
-            onChange={handleChange}
-            options={(allRestaurants || []).map(r => ({
-              key: r.id,
-              text: r.name,
-              value: r.id,
-            }))}
-            placeholder="Select a restaurant"
-          />
+          {actorRole === 'Admin' ? (
+            <Form.Select
+              label="Restaurant"
+              name="restaurant"
+              value={(formData.restaurant ?? '')}
+              onChange={handleChange}
+              options={(() => {
+                const list = Array.isArray(allRestaurants) ? allRestaurants : [];
+                return [
+                  { key: 'none', text: 'No Restaurant', value: '' },
+                  ...list.map(r => ({ key: r.id, text: r.name, value: r.id })),
+                ];
+              })()}
+              placeholder="Select a restaurant"
+              clearable
+            />
+          ) : (
+            <Form.Input
+              label="Restaurant"
+              value={getRestaurantName(actorRestaurantId) || 'No Restaurant'}
+              readOnly
+            />
+          )}
           <Button type='submit' primary fluid>
             Create Employee
           </Button>

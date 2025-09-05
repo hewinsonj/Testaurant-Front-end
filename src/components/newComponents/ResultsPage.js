@@ -181,66 +181,74 @@ const ResultsPage = ({ user, msgAlert, setUser }) => {
                     onChange={(e, { value }) => setEmpSearch(value)}
                   />
                 </div>
-                <div style={{ minWidth: 220 }}>
-                  <Dropdown
-                    fluid
-                    selection
-                    clearable
-                    placeholder={restLoading ? 'Loading restaurants…' : 'Filter by restaurant'}
-                    options={(() => {
-                      const opts = Array.isArray(restaurants) ? restaurants.map(r => ({
-                        key: String(r.id), value: String(r.id), text: r.name
-                      })) : [];
-                      return [{ key: 'all', value: '', text: 'All Restaurants' }, { key: 'none', value: 'none', text: 'No Restaurant' }, ...opts];
-                    })()}
-                    value={restFilter}
-                    onChange={(e, { value }) => setRestFilter(value)}
-                  />
-                </div>
+                {user && user.role === 'Admin' && (
+                  <div style={{ minWidth: 220 }}>
+                    <Dropdown
+                      fluid
+                      selection
+                      clearable
+                      placeholder={restLoading ? 'Loading restaurants…' : 'Filter by restaurant'}
+                      options={(() => {
+                        const opts = Array.isArray(restaurants) ? restaurants.map(r => ({
+                          key: String(r.id), value: String(r.id), text: r.name
+                        })) : [];
+                        return [
+                          { key: 'all', value: '', text: 'All Restaurants' },
+                          { key: 'none', value: 'none', text: 'No Restaurant' },
+                          ...opts
+                        ];
+                      })()}
+                      value={restFilter}
+                      onChange={(e, { value }) => setRestFilter(value)}
+                    />
+                  </div>
+                )}
               </div>
             </div>
           )}
           {resultsForList.length > 0 ? (
-            <List divided selection>
-              {resultsForList.map((result) => (
-                <List.Item
-                  key={result.id}
-                  onClick={() => setSelectedResult(result)}
-                >
-                  <List.Content>
-                    <List.Header as="h4" style={{ lineHeight: "1.4em" }}>
-                      {" "}
-                      <strong>Test: {getTestNameById(result.the_test)}</strong>{" "}
-                      <br />
-                      {isMgrish &&
-                        Array.isArray(employees) && employees.length > 0 &&
-                        (() => {
-                          const owner = employeesById.get(Number(result.owner));
-                          return owner ? (
-                            <span>
-                              Taken by: {owner.first_name} {owner.last_name}
-                            </span>
-                          ) : null;
-                        })()}{" "}
-                      <br />
-                      <span>
-                        Date:{" "}
-                        {new Date(result.created_at).toLocaleDateString()}
-                      </span>
-                      <br />
-                      <span>Score: {result.percent}</span>
-                      <br />
-                      <span>Restaurant: {getRestaurantNameById(result.restaurant ?? result.restaurant_id)}</span>
-                      {/* {Array.isArray(result.wrong_question_ids) && result.wrong_question_ids.length > 0 && (
+            <div style={{ maxHeight: '650px', overflowY: 'auto' }}>
+              <List divided selection>
+                {resultsForList.map((result) => (
+                  <List.Item
+                    key={result.id}
+                    onClick={() => setSelectedResult(result)}
+                  >
+                    <List.Content>
+                      <List.Header as="h4" style={{ lineHeight: "1.4em" }}>
+                        {" "}
+                        <strong>Test: {getTestNameById(result.the_test)}</strong>{" "}
+                        <br />
+                        {isMgrish &&
+                          Array.isArray(employees) && employees.length > 0 &&
+                          (() => {
+                            const owner = employeesById.get(Number(result.owner));
+                            return owner ? (
+                              <span>
+                                Taken by: {owner.first_name} {owner.last_name}
+                              </span>
+                            ) : null;
+                          })()}{" "}
+                        <br />
                         <span>
-                          Wrong IDs: {result.wrong_question_ids.join(', ')}
+                          Date:{" "}
+                          {new Date(result.created_at).toLocaleDateString()}
                         </span>
-                      )} */}
-                   </List.Header>
-                  </List.Content>
-                </List.Item>
-              ))}
-            </List>
+                        <br />
+                        <span>Score: {result.percent}</span>
+                        <br />
+                        <span>Restaurant: {getRestaurantNameById(result.restaurant ?? result.restaurant_id)}</span>
+                        {/* {Array.isArray(result.wrong_question_ids) && result.wrong_question_ids.length > 0 && (
+                          <span>
+                            Wrong IDs: {result.wrong_question_ids.join(', ')}
+                          </span>
+                        )} */}
+                     </List.Header>
+                    </List.Content>
+                  </List.Item>
+                ))}
+              </List>
+            </div>
           ) : (
             <LoadingScreen />
           )}
@@ -254,6 +262,8 @@ const ResultsPage = ({ user, msgAlert, setUser }) => {
               employees={employees}
               setOwnerName={setOwnerName}
               getAllRestaurants={getAllRestaurants}
+              showWrongDetails={true}
+              user={user}
             />
           ) : (
             <p>Select a result to view details</p>

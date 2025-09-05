@@ -275,40 +275,31 @@ console.log(sortedTests)
         <Grid.Column width={5}>
           <h3>All Tests</h3>
 
-          <SearchList
-          getOwnerName={getOwnerName}   
-          employeesList={employees}
-            data={sortedTests.map((test) => ({
-              ...test,
-              // employees: employees,
-            }))}
-            onSearch={(val) => {
-              const lowerVal = val.toLowerCase();
-              const filtered = allTests.filter((test) => {
-                const nameMatch = test.name?.toLowerCase().includes(lowerVal);
-                /*
-                const emp = employees.find((e) => e.id === test.owner);
-                const empMatch = emp
-                  ? `${emp.first_name || ""} ${emp.last_name || ""}`
-                      .toLowerCase()
-                      .includes(lowerVal)
-                  : false;
-                return nameMatch || empMatch;
-                */
-                return nameMatch;
-              });
-              setFilteredTests(filtered);
-            }}
-            onSelect={(test) => setSelectedTest(test)}
-            searchPlaceholder="Search by test name"
-            extractLabel={(test) => test.name || "Untitled Test"}
-            reversed={false}
-            sortOptions={[
-              { key: "updated_at", label: "Last Updated" },
-              // { key: "creator", label: "Creator" },
-            ]}
-            defaultSortKey="updated_at"
-          />
+          <div style={{ maxHeight: '650px', overflowY: 'auto' }}>
+            <SearchList
+              getOwnerName={getOwnerName}
+              employeesList={employees}
+              data={sortedTests.map((test) => ({
+                ...test,
+              }))}
+              onSearch={(val) => {
+                const lowerVal = val.toLowerCase();
+                const filtered = allTests.filter((test) => {
+                  const nameMatch = test.name?.toLowerCase().includes(lowerVal);
+                  return nameMatch;
+                });
+                setFilteredTests(filtered);
+              }}
+              onSelect={(test) => setSelectedTest(test)}
+              searchPlaceholder="Search by test name"
+              extractLabel={(test) => test.name || 'Untitled Test'}
+              reversed={false}
+              sortOptions={[
+                { key: 'updated_at', label: 'Last Updated' },
+              ]}
+              defaultSortKey="updated_at"
+            />
+          </div>
         </Grid.Column>
 
         {/* Column 2: Selected test details */}

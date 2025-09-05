@@ -153,18 +153,20 @@ const employeesForList = React.useMemo(() => {
           >
             + New Employee
           </Button>
-          <Button
-            primary
-            fluid
-            style={{ marginTop: "1rem", marginBottom: "1rem" }}
-            onClick={() => setNewRestModalOpen(true)}
-          >
-            + New Restaurant
-          </Button>
+          {user && user.role === 'Admin' && (
+            <Button
+              primary
+              fluid
+              style={{ marginTop: "1rem", marginBottom: "1rem" }}
+              onClick={() => setNewRestModalOpen(true)}
+            >
+              + New Restaurant
+            </Button>
+          )}
 
           <h3>All Employees</h3>
 
-          {user && ['Admin', 'GeneralManager', 'Manager'].includes(user.role) && (
+          {user && ['Admin'].includes(user.role) && (
             <div style={{ marginBottom: '0.75rem' }}>
               <strong>Filter by Restaurant:&nbsp;</strong>
               <Dropdown
@@ -389,7 +391,7 @@ const employeesForList = React.useMemo(() => {
           )}
           <h4>Test Results</h4>
 
-          <Segment style={{ maxHeight: "300px", overflowY: "auto" }}>
+          <Segment style={{ maxHeight: "600px", overflowY: "auto" }}>
             {selectedEmployee ? (
               (selectedEmployee.results || [])
                 .slice()
@@ -408,6 +410,7 @@ const employeesForList = React.useMemo(() => {
                         user={user}
                         msgAlert={msgAlert}
                         label={test ? test.name : "Unknown Test"}
+                        showWrongDetails={false}
                       />
                     </div>
                   );

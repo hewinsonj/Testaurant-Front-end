@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 
 import { Segment, Header, Divider, Label } from "semantic-ui-react"
 
-const ResultsSegment = ({ result, allTests, employees, setOwnerName, label, getAllRestaurants }) => {
+const ResultsSegment = ({ result, allTests, employees, setOwnerName, user, label, getAllRestaurants, showWrongDetails = true }) => {
   if (process.env.NODE_ENV !== 'production') {
     try { console.log('[ResultsSegment] result payload', result); } catch {}
   }
@@ -155,22 +155,24 @@ const ResultsSegment = ({ result, allTests, employees, setOwnerName, label, getA
       <p style={{ fontSize: "1.25rem" }}><strong>Elapsed:</strong> {result.time || '—'}</p>
       <p style={{ fontSize: "1.25rem" }}><strong>Time Completed:</strong> {result.time_completed || '—'}</p>
 
-      {Array.isArray(result?.wrong_question_ids) || typeof result?.wrong_question_ids === 'string' ? (
-        wrongIds.length > 0 ? (
-          <div style={{ marginTop: '0.75rem' }}>
-            <strong>Wrong Questions:</strong>
-            <ul style={{ marginTop: '0.25rem' }}>
-              {wrongIds.map((qid) => (
-                <li key={String(qid)}>{getQuestionText(qid)}</li>
-              ))}
-            </ul>
-          </div>
-        ) : (
-          <div style={{ marginTop: '0.75rem' }}>
-            <strong>Wrong Questions:</strong> none
-          </div>
-        )
-      ) : null}
+      {showWrongDetails && (
+        (Array.isArray(result?.wrong_question_ids) || typeof result?.wrong_question_ids === 'string') ? (
+          wrongIds.length > 0 ? (
+            <div style={{ marginTop: '0.75rem' }}>
+              <strong>Wrong Questions:</strong>
+              <ul style={{ marginTop: '0.25rem' }}>
+                {wrongIds.map((qid) => (
+                  <li key={String(qid)}>{getQuestionText(qid)}</li>
+                ))}
+              </ul>
+            </div>
+          ) : (
+            <div style={{ marginTop: '0.75rem' }}>
+              <strong>Wrong Questions:</strong> none
+            </div>
+          )
+        ) : null
+      )}
 
       <Divider />
 

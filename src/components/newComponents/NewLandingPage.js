@@ -116,7 +116,7 @@ const NewLandingPage = ({ user, setUser, msgAlert }) => {
                 active={activeItem === "employees"}
                 onClick={handleItemClick}
               >
-                Admin
+                Management
               </Menu.Item>
             )}
             <Menu.Item
@@ -145,7 +145,15 @@ const NewLandingPage = ({ user, setUser, msgAlert }) => {
           </Menu.Menu>
         )}{" "}
         {user?.first_name && (
-          <Menu.Item position="right">Welcome, {user.first_name}!</Menu.Item>
+          <Menu.Item
+            position="right"
+            as="div"
+            fitted="horizontally"
+            tabIndex={-1}
+            style={{ pointerEvents: 'none', cursor: 'default', margin: '10px'}}
+          >
+            Welcome, {user.first_name}!
+          </Menu.Item>
         )}
       </Menu>
     </Sticky>

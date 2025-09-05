@@ -13,54 +13,64 @@ As a user, I want the ability to...
   - sign in.
   - change my password.
   - sign out.
-  - create lesson plans while logged into an admin account.
+  - create, update, and delete lesson plans (Admins/Managers).
   - view lesson plans.
-  - update lesson plans while logged into an admin account.
-  - delete lesson plans while logged into an admin account.
   - view that I have completed a lesson plan.
-  - view that others have completed a lesson plan while logged into an  admin account.
-  - create tests while logged into an admin account.
-  - view tests while logged into an admin account.
-  - update tests while logged into an admin account.
-  - delete tests while logged into an admin account.
-  - take tests. 
-  - view my test results.
-  - view other users test results while logged into an admin account.
+  - view that others have completed a lesson plan (Admins/Managers).
+  - create, update, and delete tests (Admins/Managers).
+  - view tests.
+  - take tests, including time-limited tests with countdown timers.
+  - view my test results, including details on questions answered incorrectly.
+  - view other users' test results (Admins/Managers).
   - leave comments on menu items.
   - add menu items to the shared access database.
   - search and filter the database for certain menu items or ingredients.
-  - search for other users while logged into an admin account.
+  - search for other users (Admins/Managers).
+  - manage restaurants (Admins/Managers can create, update, delete; Employees have view-only access).
+  - assign employees to restaurants.
+  - create and manage employee accounts with roles (Admin, GeneralManager, Manager, Employee).
+  - filter and search tests, questions, foods, and drinks by restaurant.
+  - view audit logs of edits (Admins/Managers).
 
- ## General Approach
 
-The application will consist of a backend API using Django and a client-side interface built with React and Symantic components. PostgreSQL will be used for stored data and the server will use Django to interact with the database. 
+## General Approach
+
+Testaurant consists of a backend API using Django and a client-side interface built with React and Semantic UI components. PostgreSQL is used for persistent data storage, and the server uses Django to interact with the database. The frontend communicates with the backend via RESTful APIs using Axios.
 
 ## Technologies Used
-- Backend API
+- **Backend API**
     - Django
 
- - Data Management
+- **Data Management**
     - PostgreSQL
 
-- Client Application
+- **Client Application**
     - React
-    - Symantic
+    - Semantic UI
+    - Axios
+## Roles & Permissions
 
-## Schedule
-    - Monday - Pseudo Code
-    - Tuesday - Back-end
-    - Wednesday - Back-end
-    - Thursday - (BREAK)
-    - Friday - Back-end
-    - Saturday - Front-end
-    - Sunday - Front-end
-    - Moday - Front-end
-    - Tuesday - Front-end
-    - Wednesday - Front-end
-    - Thursday - Front-end
-    - Friday - Presentation
+Testaurant uses a role-based access control system to ensure the right level of access for each user. The main roles are:
 
+- **Admin**: Full access to all restaurants, users, and data. Can manage restaurants, employees, lesson plans, tests, and view audit logs.
+- **GeneralManager**: Access to all restaurants and employees within their organization. Can manage lesson plans, tests, view results, and audit logs.
+- **Manager**: Access is scoped to specific restaurant(s). Can manage employees, lesson plans, tests, and view results and audit logs for their assigned restaurants.
+- **Employee**: Access is limited to their assigned restaurant(s). Can view lesson plans, take tests, and view their own results.
+
+Role-based filtering and scoping ensure that users only see and manage data relevant to their role and assigned restaurant(s).
+
+## Restaurant & Employee Management
+
+- **Restaurant Management**: Admins and Managers can create, update, and delete restaurants. Employees can view restaurant information relevant to them.
+- **Employee Management**: Admins and Managers can create and manage employee accounts, assign them to restaurants, and set their roles.
+- **Role Assignment**: Each employee can be assigned a role (Admin, GeneralManager, Manager, Employee) and scoped to one or more restaurants as appropriate.
+
+## Edit Logging (Audit Logs)
+
+Testaurant maintains an audit log of edits and changes made to critical data such as lesson plans, tests, menu items, and employee accounts. Admins and Managers can review these logs to track who made changes, what was changed, and when. This feature improves accountability and transparency across the platform.
     
+
+## Wireframes & Screenshots
 
  "Landing" Page
     ![](/testuarant_wireframes/Testuraunt-Landing.drawio.png)
