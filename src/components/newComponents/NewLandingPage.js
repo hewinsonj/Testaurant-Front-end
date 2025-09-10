@@ -32,7 +32,7 @@ const NewLandingPage = ({ user, setUser, msgAlert }) => {
   const guestMLogin = () => {
     const guestCredentials = {
       email: "guestmanager@gmail.com",
-      password: "superburger",
+      password: "guestmanager",
     };
 
     signIn(guestCredentials)
