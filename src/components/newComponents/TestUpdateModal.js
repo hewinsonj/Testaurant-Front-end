@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Button, Modal } from "semantic-ui-react";
 import { updateTest } from "../../api/test";
 import AddTest from "./AddTest";
@@ -11,6 +11,12 @@ const TestUpdateModal = (props) => {
   const [idStorage, setIdStorage] = useState({
     question_ids: Array.isArray(relevantQuestions) ? relevantQuestions.map((q) => q.id) : [],
   });
+
+  const safeToggleNewTest = () => {
+    if (typeof setNewTest === 'function') {
+      setNewTest((prev) => !prev);
+    }
+  };
 
   const handleChange = (e, { name, id, checked }) => {
     setIdStorage((prevState) => {
@@ -52,7 +58,7 @@ const TestUpdateModal = (props) => {
           variant: "success",
         });
         setOpen(false);
-        setNewTest((prev) => !prev);
+        safeToggleNewTest();
       })
       .catch((error) => {
         console.error("Error During Test Update:", error.message);

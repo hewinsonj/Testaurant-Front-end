@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { createDrink } from "../../api/drink";
 import AddDrinkForm from "./AddDrinkForm";
 

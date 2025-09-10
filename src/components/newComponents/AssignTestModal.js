@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import {
   Button,
   Modal,
@@ -138,13 +138,13 @@ const AssignTestModal = ({ user, employee, tests, msgAlert, allQuestions, onAssi
                   <List bulleted>
                     {hoveredTest.question_new?.map((qId, idx) => {
                       // console.log("qId is:", qId, "| type:", typeof qId);
-                      let question = allQuestions.find((q) => q.id == qId);
+                      let question = allQuestions.find((q) => q.id === Number(qId));
                       // console.log(
                       //   "Matching by direct ID => question found:",
                       //   question
                       // );
                       if (!question && qId?.id) {
-                        question = allQuestions.find((q) => q.id == qId.id);
+                        question = allQuestions.find((q) => q.id === Number(qId.id));
                         // console.log(
                         //   "Trying qId.id => question found:",
                         //   question

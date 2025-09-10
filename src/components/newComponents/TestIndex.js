@@ -1,16 +1,15 @@
-import { Grid, Segment, List, Button, Form } from "semantic-ui-react";
-import LoadingScreen from "../shared/LoadingPage";
+import { Grid, Segment, Button } from "semantic-ui-react";
 import { getAllTests } from "../../api/test";
 import { getAllQuestions } from "../../api/question";
 import AddTestModal from "./AddTestModal";
 import TestUpdateModal from "./TestUpdateModal";
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { deleteTest } from "../../api/test";
 import TestTake from "./TestTake";
 import SearchList from "./SearchList";
 import EditLogModal from "./EditLogModal";
 
-const TestIndex = ({ user, msgAlert, newTest, setNewTest, employees: incomingEmployees = [], getAllRestaurants }) => {
+const TestIndex = ({ user, msgAlert, setNewTest, employees: incomingEmployees = [], getAllRestaurants }) => {
   const [allTests, setAllTests] = useState([]);
   const [filteredTests, setFilteredTests] = useState([]);
   const [allQuestions, setAllQuestions] = useState([]);
@@ -18,8 +17,6 @@ const TestIndex = ({ user, msgAlert, newTest, setNewTest, employees: incomingEmp
   const [restaurants, setRestaurants] = useState([]);
   const [restLoading, setRestLoading] = useState(false);
   const [selectedTest, setSelectedTest] = useState(null);
-  const [sortMethod, setSortMethod] = useState("created");
-  const [sortAsc, setSortAsc] = useState(true);
   const [logOpen, setLogOpen] = useState(false);
 
   useEffect(() => {
@@ -40,7 +37,7 @@ const TestIndex = ({ user, msgAlert, newTest, setNewTest, employees: incomingEmp
           variant: "danger",
         });
       });
-  }, [user]);
+  }, [user, msgAlert]);
 
   useEffect(() => {
     getAllQuestions(user)
@@ -55,7 +52,7 @@ const TestIndex = ({ user, msgAlert, newTest, setNewTest, employees: incomingEmp
           variant: "danger",
         });
       });
-  }, []);
+  }, [user, msgAlert]);
 
   useEffect(() => {
     let mounted = true;
@@ -78,7 +75,7 @@ const TestIndex = ({ user, msgAlert, newTest, setNewTest, employees: incomingEmp
     };
     load();
     return () => { mounted = false; };
-  }, [user, getAllRestaurants]);
+  }, [user, getAllRestaurants, msgAlert]);
 
   useEffect(() => {
     setEmployees(Array.isArray(incomingEmployees) ? incomingEmployees : []);
@@ -87,17 +84,7 @@ const TestIndex = ({ user, msgAlert, newTest, setNewTest, employees: incomingEmp
   const reloadTests = () => {
     return getAllTests(user)
       .then((res) => {
-        /*
-        const testsWithEmployees = res.data.test_thiss.map((test) => ({
-          ...test,
-          employees: employees,
-        }));
-        const reversedTests = testsWithEmployees
-          .slice()
-          .sort((a, b) => new Date(b.updated_at) - new Date(a.updated_at));
-        setAllTests(reversedTests);
-        setFilteredTests(reversedTests);
-        */
+
         const tests = res.data.test_thiss;
         const reversedTests = tests
           .slice()
@@ -238,17 +225,9 @@ const TestIndex = ({ user, msgAlert, newTest, setNewTest, employees: incomingEmp
   };
 
   const sortedTests = [...filteredTests].sort((a, b) => {
-    let result = 0;
-    if (sortMethod === "creator") {
-      const aName = getOwnerName(a).toLowerCase();
-      const bName = getOwnerName(b).toLowerCase();
-      result = aName.localeCompare(bName);
-    } else {
-      result = new Date(b.updated_at) - new Date(a.updated_at);
-    }
-    return sortAsc ? -result : result;
+    return new Date(b.updated_at) - new Date(a.updated_at);
   });
-console.log(sortedTests)
+// console.log(sortedTests)
   return (
     <Segment raised>
       <AddTestModal
@@ -265,9 +244,9 @@ console.log(sortedTests)
             Array.isArray(prev) ? [newTestObj, ...prev] : [newTestObj]
           );
           setSelectedTest(newTestObj);
-          if (process.env.NODE_ENV !== 'production') {
-            console.log('[TestIndex] created test', newTestObj);
-          }
+          // if (process.env.NODE_ENV !== 'production') {
+          //   console.log('[TestIndex] created test', newTestObj);
+          // }
         }}
       />
       <Grid columns={3} divided padded>

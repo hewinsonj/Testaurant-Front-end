@@ -1,17 +1,9 @@
 import React, { useState } from "react";
 import {
   Button,
-  Segment,
   Grid,
-  Label,
-  Icon,
-  Image,
   Modal,
-  Header,
-  List,
-  Container,
 } from "semantic-ui-react";
-import AddTest from "./AddTest";
 import CreateTest from "./CreateTest";
 
 const AddTestModal = ({

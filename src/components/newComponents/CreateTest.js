@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { createTest } from '../../api/test'
 import { getAllQuestions } from '../../api/question'
 import AddTest from './AddTest'
@@ -21,6 +21,7 @@ const CreateTest = (props) => {
     const [idStorage, setIdStorage] = useState(tempQuestion)
     const [allQuestions, setAllQuestions] = useState(null)
     const [isTestReady, setIsTestReady] = useState(false) // Add flag to determine when the test state is ready for API call
+    const pendingTestRef = useRef(null);
 
     useEffect(() => {
         getAllQuestions(user)
@@ -34,7 +35,7 @@ const CreateTest = (props) => {
                     'variant': 'danger'
                 })
             })
-    },[])
+    }, [msgAlert, user])
 
     //------------------- handleChange refactor ---------------------
     const handleChange = (e , target) => {
@@ -66,13 +67,15 @@ const CreateTest = (props) => {
     const handleCreateTest = (e) => {
         e.preventDefault();
 
-        // Update test state with question IDs from idStorage before API call
-        setTest(prevTest => ({
-            ...prevTest,
-            question_new: idStorage.question_ids // Sync the selected question IDs
-        }));
+        // Build a snapshot so the effect doesn't depend on `test`
+        const snapshot = {
+          ...test,
+          question_new: Array.isArray(idStorage.question_ids) ? idStorage.question_ids : [],
+        };
+        setTest(snapshot);
+        pendingTestRef.current = snapshot;
 
-        // Set flag to true so useEffect can trigger API call
+        // Trigger the effect
         setIsTestReady(true);
     };
     //------------------- End handleCreateTest refactor ---------------------
@@ -81,8 +84,9 @@ const CreateTest = (props) => {
     useEffect(() => {
       let isMounted = true; // guard against updates after unmount
 
-      if (isTestReady) {
-        createTest(user, test)
+      if (isTestReady && pendingTestRef.current) {
+        const payload = pendingTestRef.current;
+        createTest(user, payload)
           .then((res) => {
             if (!isMounted) return;
             const newTest = (res && res.data && (res.data.test || res.data)) || null;
@@ -108,13 +112,14 @@ const CreateTest = (props) => {
           .finally(() => {
             if (!isMounted) return;
             setIsTestReady(false);
+            pendingTestRef.current = null;
           });
       }
 
       return () => {
         isMounted = false;
       };
-    }, [isTestReady]);
+    }, [isTestReady, user, msgAlert, onCreated, setOpen, setNewTest]);
     //------------------- End useEffect for API Call ---------------------
 
     // console.log('this is the idstorage.question_ids', idStorage.question_ids);

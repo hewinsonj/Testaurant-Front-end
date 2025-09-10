@@ -1,9 +1,7 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Grid, Segment, List } from "semantic-ui-react";
-import LoadingScreen from "../shared/LoadingPage";
 import { getAllTests } from "../../api/test";
 import { getAllQuestions } from "../../api/question";
-// import { getAllEmployees } from "../../api/user";
 import TestTake from "./TestTake";
 
 const TestAssignIndex = ({ user, msgAlert }) => {
@@ -19,7 +17,7 @@ const TestAssignIndex = ({ user, msgAlert }) => {
     : [];
   const [assignedIds, setAssignedIds] = useState(initialAssigned);
 
-  const loadAssignedTests = () => {
+  const loadAssignedTests = useCallback(() => {
     return getAllTests(user)
       .then((testRes) => {
         const tests = (testRes?.data?.test_thiss || [])
@@ -31,11 +29,11 @@ const TestAssignIndex = ({ user, msgAlert }) => {
       .catch(() => {
         msgAlert({ heading: "Error", message: "Could not load assigned tests", variant: "danger" });
       });
-  };
+  }, [user, assignedIds, msgAlert]);
 
   useEffect(() => {
     loadAssignedTests();
-  }, [user, assignedIds]);
+  }, [loadAssignedTests]);
 
   useEffect(() => {
     getAllQuestions(user)
@@ -43,7 +41,7 @@ const TestAssignIndex = ({ user, msgAlert }) => {
       .catch(() => {
         msgAlert({ heading: "Error", message: "Could not get questions", variant: "danger" });
       });
-  }, [user]);
+  }, [user, msgAlert]);
 
   const findRelevantQuestions = (test, questions) => {
     if (!test || !Array.isArray(test.question_new) || !Array.isArray(questions)) return [];

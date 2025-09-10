@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { Divider, Segment, Grid, Container } from "semantic-ui-react";
+import { useState, useEffect } from "react";
+import { Divider, Segment, Grid } from "semantic-ui-react";
 import { getAllResults } from "../../api/result";
 import { getAllTests } from "../../api/test";
 import LoadingScreen from "../shared/LoadingPage";
@@ -11,37 +11,48 @@ const UserPage = ({ user, msgAlert }) => {
   const [allTests, setAllTests] = useState([]);
 
   useEffect(() => {
-    getAllResults(user)
-      .then((res) => {
-        setAllResults(res.data.results);
-      })
-      .catch((error) => {
+    if (!user) return;
+    let cancelled = false;
+    (async () => {
+      try {
+        const res = await getAllResults(user);
+        if (!cancelled) {
+          setAllResults(res.data.results);
+        }
+      } catch (error) {
         msgAlert({
           heading: "Error",
           message: "Could not get Results",
           variant: "danger",
         });
-      });
-  }, []);
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [user, msgAlert]);
 
   useEffect(() => {
-    getAllTests(user)
-      .then((res) => {
-        setAllTests(res.data.test_thiss);
-      })
-      .then(() => {
-        // console.log(allTests, "ALL TESTS");
-      })
-
-      
-      .catch((error) => {
+    if (!user) return;
+    let cancelled = false;
+    (async () => {
+      try {
+        const res = await getAllTests(user);
+        if (!cancelled) {
+          setAllTests(res.data.test_thiss);
+        }
+      } catch (error) {
         msgAlert({
           heading: "Error",
           message: "Could not get tests",
           variant: "danger",
         });
-      });
-  }, []);
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [user, msgAlert]);
 
   return (
     <>

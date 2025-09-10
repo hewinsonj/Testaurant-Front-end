@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { Button, Form, Container, Icon, Message } from "semantic-ui-react";
+import { useState, useEffect } from "react";
+import { Button, Form, Container, Message } from "semantic-ui-react";
 
 const AddFoodForm = (props) => {
   const { food, handleChange, handleSubmit, heading, errorMsg, getAllRestaurants, user } = props;
@@ -20,6 +20,18 @@ const AddFoodForm = (props) => {
       });
     }
   }, [getAllRestaurants, user]);
+
+  useEffect(() => {
+    if (!user || user.role === "Admin") return;
+    if (!Array.isArray(restaurants) || restaurants.length === 0) return;
+    // If the form doesn't have a restaurant yet, default to the first available option
+    if (!food.restaurant) {
+      const firstId = restaurants[0]?.id ?? "";
+      if (firstId) {
+        handleChange(null, { name: 'restaurant', value: firstId });
+      }
+    }
+  }, [user, restaurants, food.restaurant, handleChange]);
 
   const restaurantOptions = Array.isArray(restaurants)
     ? [

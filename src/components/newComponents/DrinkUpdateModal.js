@@ -1,15 +1,15 @@
-import React, { useState } from "react";
+import { useState, useCallback } from "react";
 import { Modal, Button } from "semantic-ui-react";
 import { updateDrink } from "../../api/drink";
 import AddDrinkForm from "./AddDrinkForm";
 
 const DrinkUpdateModal = (props) => {
-  const { user, msgAlert, triggerRefresh, getAllRestaurants } = props;
+  const { user, msgAlert, getAllRestaurants } = props;
 
   const [drink, setDrink] = useState(props.drink);
   const [open, setOpen] = useState(false);
 
-  const handleChange = (e, target) => {
+  const handleChange = useCallback((e, target) => {
     setDrink((prevDrink) => {
       const { name, value } = target;
       const updatedName = name;
@@ -82,7 +82,7 @@ const DrinkUpdateModal = (props) => {
 
       return { ...prevDrink, ...updatedDrink };
     });
-  };
+  }, []);
 
   const handleUpdateDrink = (e) => {
     e.preventDefault();
@@ -106,7 +106,7 @@ const DrinkUpdateModal = (props) => {
     }
 
     //close form if no change was made
-    if (drink == props.drink) {
+    if (drink === props.drink) {
       setOpen(false);
     } else {
       updateDrink(user, drink, props.drink.id)

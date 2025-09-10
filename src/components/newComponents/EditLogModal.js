@@ -2,15 +2,6 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { Modal, Table, Loader, Message, Button, Icon } from 'semantic-ui-react';
 import { getEditLogs } from '../../api/editLog';
 
-/**
- * EditLogModal
- * Props:
- *  - open (bool)
- *  - onClose (fn)
- *  - user (object with token)
- *  - itemType (required): "Test" | "Question" | "Drink" | "Food" | "User"
- *  - itemId (optional): number | string
- */
 const EditLogModal = ({ open, onClose, user, itemType, itemId }) => {
   const [logs, setLogs] = useState([]);
   const [loading, setLoading] = useState(false);

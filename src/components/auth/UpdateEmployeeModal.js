@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Button, Modal, Form, Header, Segment, Icon } from "semantic-ui-react";
 import { updateEmployee } from "../../api/user";
 

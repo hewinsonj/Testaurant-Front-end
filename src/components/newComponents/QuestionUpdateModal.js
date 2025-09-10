@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Button, Modal } from "semantic-ui-react";
 import { updateQuestion } from "../../api/question";
 import AddItem from "./AddItem";
@@ -7,6 +7,12 @@ const QuestionUpdateModal = (props) => {
   const { user, msgAlert, triggerRefresh, getAllRestaurants } = props;
   const [question, setQuestion] = useState(props.question);
   const [open, setOpen] = useState(false);
+
+  const safeTriggerRefresh = () => {
+    if (typeof triggerRefresh === 'function') {
+      triggerRefresh();
+    }
+  };
 
   const handleChange = (e, target) => {
     setQuestion((prevQuestion) => {
@@ -35,13 +41,13 @@ const QuestionUpdateModal = (props) => {
   const handleUpdateQuestion = (e) => {
     e.preventDefault();
     //close form if no change was made
-    if (question == props.question) {
+    if (question === props.question) {
       setOpen(false);
     } else {
       updateQuestion(user, question, props.question.id)
         .then(() => {
           setOpen(false);
-          triggerRefresh();
+          safeTriggerRefresh();
           msgAlert({
             heading: "Success",
             message: "Updated Question",

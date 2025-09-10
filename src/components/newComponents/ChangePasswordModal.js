@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Button, Modal } from "semantic-ui-react";
 import ChangePassword from "../auth/ChangePassword";
 

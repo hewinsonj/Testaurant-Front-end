@@ -1,30 +1,28 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { Button, Segment, Grid, Form, Modal } from "semantic-ui-react";
 import LoadingScreen from "../shared/LoadingPage";
 import { updateEmployee } from "../../api/user";
 import { createResult } from "../../api/result";
 
 const TestTake = ({ user, msgAlert, test, onCompleted }) => {
-  const defaultResult = {
-    score: "",
-    correct: 0,
-    wrong: 0,
-    total: "",
-    percent: 0,
-    time: "",
-    the_test: null,
-    restaurant: ""
-  };
 
   const [open, setOpen] = useState(false);
   const [confirmOpen, setConfirmOpen] = useState(false);
-  const [result, setResult] = useState(defaultResult);
   const [answers, setAnswers] = useState({});
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [startedAt, setStartedAt] = useState(null);
   const [timeLeftSec, setTimeLeftSec] = useState(0);
   const [timerActive, setTimerActive] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+
+  // Track mount status to avoid setting state on unmounted component
+  const isMounted = useRef(false);
+  useEffect(() => {
+    isMounted.current = true;
+    return () => {
+      isMounted.current = false;
+    };
+  }, []);
 
   const parseAllottedSeconds = (t) => {
     // `test.allotted_time` is stored as minutes (string or number). Treat <= 0 as no timer.
@@ -42,55 +40,9 @@ const TestTake = ({ user, msgAlert, test, onCompleted }) => {
     return `${mm}:${ss}`;
   };
 
-  React.useEffect(() => {
-    if (!open || !timerActive || !startedAt) return;
-    const allotted = parseAllottedSeconds(test);
-    if (allotted <= 0) return;
-    const endAt = startedAt + allotted * 1000;
-
-    const tick = () => {
-      const rem = Math.max(0, Math.ceil((endAt - Date.now()) / 1000));
-      setTimeLeftSec(rem);
-      if (rem <= 0) {
-        clearInterval(id);
-        setTimerActive(false);
-        if (!submitting) handleSubmit(true); // auto-submit
-      }
-    };
-
-    // Initial tick, then interval
-    tick();
-    const id = setInterval(tick, 1000);
-    return () => clearInterval(id);
-  }, [open, timerActive, startedAt, test, submitting]);
-
-  const handleAnswerChange = (e) => {
-    const { value } = e.target;
-    setAnswers((prevAnswers) => ({
-      ...prevAnswers,
-      [currentQuestionIndex]: value,
-    }));
-  };
-
-  const handleCheckAnswer = () => {
-    const currentQuestion = test.question_new[currentQuestionIndex];
-    if (answers[currentQuestionIndex] === currentQuestion.answer) {
-      setResult((prevResult) => ({
-        ...prevResult,
-        correct: prevResult.correct + 1,
-      }));
-    } else {
-      setResult((prevResult) => ({
-        ...prevResult,
-        wrong: prevResult.wrong + 1,
-      }));
-    }
-  };
-
   const handleNext = () => {
     if (!answers[currentQuestionIndex]) return;
     if (currentQuestionIndex < test.question_new.length - 1) {
-      handleCheckAnswer(); // Check the current answer before moving to the next question
       setCurrentQuestionIndex((prevIndex) => prevIndex + 1);
     }
   };
@@ -101,7 +53,7 @@ const TestTake = ({ user, msgAlert, test, onCompleted }) => {
     }
   };
 
-  const handleSubmit = (auto = false) => {
+  const handleSubmit = React.useCallback((auto = false) => {
     if (submitting) return;
     setSubmitting(true);
 
@@ -154,7 +106,7 @@ const TestTake = ({ user, msgAlert, test, onCompleted }) => {
     const testRestaurantRaw = (test?.restaurant && typeof test.restaurant === 'object')
       ? (test.restaurant.id ?? test.restaurant.pk ?? null)
       : (test?.restaurant ?? test?.restaurant_id ?? null);
-    const testRestaurantId = (testRestaurantRaw === '' || testRestaurantRaw == null)
+    const testRestaurantId = (testRestaurantRaw === '' || testRestaurantRaw === null)
       ? null
       : (Number.isFinite(Number(testRestaurantRaw)) ? Number(testRestaurantRaw) : null);
 
@@ -172,11 +124,11 @@ const TestTake = ({ user, msgAlert, test, onCompleted }) => {
       restaurant: testRestaurantId,
     };
 
-    if (process.env.NODE_ENV !== 'production') {
-      console.log('[Result] resolved test.restaurant id →', testRestaurantId);
-    }
+    // if (process.env.NODE_ENV !== 'production') {
+    //   console.log('[Result] resolved test.restaurant id →', testRestaurantId);
+    // }
 
-    console.log('[Result] creating', finalResult)
+    // console.log('[Result] creating', finalResult)
     createResult(user, finalResult)
       .then(() => {
         const currentAssigned = Array.isArray(user?.assigned_tests)
@@ -196,8 +148,10 @@ const TestTake = ({ user, msgAlert, test, onCompleted }) => {
               message: auto ? 'Time is up! Your test was submitted automatically.' : 'Result submitted and test removed from your assigned tests.',
               variant: 'success',
             });
-            setTimerActive(false);
-            setOpen(false);
+            if (isMounted.current) {
+              setTimerActive(false);
+              setOpen(false);
+            }
             if (typeof onCompleted === 'function') {
               onCompleted(updatedAssigned);
             }
@@ -211,9 +165,33 @@ const TestTake = ({ user, msgAlert, test, onCompleted }) => {
         });
       })
       .finally(() => {
-        setSubmitting(false);
+        if (isMounted.current) {
+          setSubmitting(false);
+        }
       });
-  };
+  }, [answers, test, startedAt, user, msgAlert, onCompleted, submitting]);
+
+  React.useEffect(() => {
+    if (!open || !timerActive || !startedAt) return;
+    const allotted = parseAllottedSeconds(test);
+    if (allotted <= 0) return;
+    const endAt = startedAt + allotted * 1000;
+
+    const tick = () => {
+      const rem = Math.max(0, Math.ceil((endAt - Date.now()) / 1000));
+      setTimeLeftSec(rem);
+      if (rem <= 0) {
+        clearInterval(id);
+        setTimerActive(false);
+        if (!submitting) handleSubmit(true); // auto-submit
+      }
+    };
+
+    // Initial tick, then interval
+    tick();
+    const id = setInterval(tick, 1000);
+    return () => clearInterval(id);
+  }, [open, timerActive, startedAt, test, submitting, handleSubmit]);
 
   if (!test) {
     return <LoadingScreen />;

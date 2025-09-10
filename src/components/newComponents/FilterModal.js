@@ -1,21 +1,20 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Modal, Button, Checkbox, Form } from 'semantic-ui-react';
 
 const FilterModal = ({ open, onClose, filters = [], onApply }) => {
   const [selectedFilters, setSelectedFilters] = useState({});
 
-  useEffect(() => {
-    const initial = {};
-    filters.forEach(f => initial[f.key] = false);
-    setSelectedFilters(initial);
-  }, []);
+useEffect(() => {
+  const initial = {};
+  filters.forEach(f => initial[f.key] = false);
+  setSelectedFilters(initial);
+}, [filters]);
 
   const handleCheckboxChange = (key) => {
     setSelectedFilters(prev => ({ ...prev, [key]: !prev[key] }));
   };
 
   // When applying filters, separate inclusion keys (is_vegan, is_vegetarian) from exclusion filters.
-  // onApply now receives an object: { excludeKeys: [...], includeKeys: [...] }
   const handleApply = () => {
     const excludeKeys = [];
     const includeKeys = [];

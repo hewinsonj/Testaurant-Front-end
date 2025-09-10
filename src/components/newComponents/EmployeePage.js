@@ -59,7 +59,7 @@ const EmployeePage = ({ user, msgAlert }) => {
           restRes?.data ??
           [];
         setAllRestaurants(Array.isArray(restaurants) ? restaurants : []);
-        console.log('[Restaurants fetched]', restaurants);
+        // console.log('[Restaurants fetched]', restaurants);
       })
       .catch((error) => {
         msgAlert({
@@ -68,7 +68,7 @@ const EmployeePage = ({ user, msgAlert }) => {
           variant: "danger",
         });
       });
-  }, [user]);
+  }, [user, msgAlert]);
 
   const getAssignedTestNames = (testIds) => {
     if (!Array.isArray(testIds)) return [];

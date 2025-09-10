@@ -8,7 +8,6 @@ const AddTest = (props) => {
     heading,
     test,
     allQuestions,
-    relatedQuestions,
     handleSubmit,
     handleChange,
     handleChangeOther,
@@ -21,14 +20,6 @@ const AddTest = (props) => {
 
   const [restaurants, setRestaurants] = React.useState([]);
   const [restLoading, setRestLoading] = React.useState(false);
-
-  const handleAllottedTimeChange = (e, data) => {
-    const raw = data?.value;
-    const num = Number(raw);
-    const safe = Number.isFinite(num) && num > 0 ? Math.floor(num) : 0;
-    // Call the parent handler in Semantic-UI style with a normalized payload
-    return handleChangeOther(e, { ...data, name: 'allotted_time', value: String(safe) });
-  };
 
   const TIME_OPTIONS = [0, 5, 10, 15, 20, 30, 45, 60, 90, 120, 160].map((m) => ({
     key: String(m),
@@ -63,7 +54,7 @@ const AddTest = (props) => {
     };
     load();
     return () => { mounted = false; };
-  }, [props.user]);
+  }, [getAllRestaurants, user, props.user]);
 
   React.useEffect(() => {
     if (user && ["GeneralManager", "Manager"].includes(role)) {
@@ -72,10 +63,10 @@ const AddTest = (props) => {
         handleChangeOther?.(null, { name: 'restaurant', value: String(userRestaurantId) });
       }
     }
-  }, [role, userRestaurantId]);
+  }, [role, userRestaurantId, handleChangeOther, user]);
 
   const forcedRestaurantLabel = React.useMemo(() => {
-    if (userRestaurantId == null) return '';
+    if (userRestaurantId === null) return '';
     const match = restaurants.find(r => String(r.id) === String(userRestaurantId));
     if (!match) return String(userRestaurantId);
     return match.city && match.state ? `${match.name} — ${match.city}, ${match.state}` : match.name;
@@ -141,7 +132,7 @@ const AddTest = (props) => {
                   options={restaurantOptions}
                   value={(() => {
                     const val = test?.restaurant ?? test?.restaurant_id ?? (typeof test?.restaurant === 'object' ? test.restaurant?.id : '');
-                    return val == null ? '' : String(val);
+                    return val === null ? '' : String(val);
                   })()}
                   onChange={handleRestaurantSelect}
                   clearable

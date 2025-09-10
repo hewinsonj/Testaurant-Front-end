@@ -1,8 +1,7 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Grid, Segment, List, Button, Input } from "semantic-ui-react";
 import { getAllFoods, deleteFood } from "../../api/food";
 import AddFoodModal from "./AddFoodModal";
-import LoadingScreen from "../shared/LoadingPage";
 import FoodUpdateModal from "./FoodUpdateModal";
 import EditLogModal from "./EditLogModal";
 import FilterModal from "./FilterModal";
@@ -31,7 +30,6 @@ const FoodIndexPage = ({ user, msgAlert, setNewFood, employees: incomingEmployee
   const [searchTerm, setSearchTerm] = useState("");
   const [logOpen, setLogOpen] = useState(false);
   const [restaurants, setRestaurants] = useState([]);
-  const [restLoading, setRestLoading] = useState(false);
 
   const getOwnerName = (food) => {
     // Only show for elevated roles; employees don't need owner info
@@ -42,7 +40,7 @@ const FoodIndexPage = ({ user, msgAlert, setNewFood, employees: incomingEmployee
 
     // Normalize owner id (can be id or object)
     const ownerId = typeof food.owner === 'object' ? (food.owner?.id ?? food.owner?.pk) : food.owner;
-    if (ownerId == null) {
+    if (ownerId === null) {
       // Fall back to embedded owner object (if present)
       const first = food.owner?.first_name ?? food.owner?.firstName ?? '';
       const last  = food.owner?.last_name  ?? food.owner?.lastName  ?? '';
@@ -82,13 +80,12 @@ const FoodIndexPage = ({ user, msgAlert, setNewFood, employees: incomingEmployee
           variant: "danger",
         });
       });
-  }, []);
+  }, [user, msgAlert]);
 
   useEffect(() => {
     let mounted = true;
     const load = async () => {
       try {
-        setRestLoading(true);
         if (typeof getAllRestaurants !== 'function') return;
         const resp = user ? await getAllRestaurants(user) : await getAllRestaurants();
         const list = Array.isArray(resp?.data) ? resp.data : (resp?.data?.restaurants || resp?.data || []);
@@ -99,7 +96,6 @@ const FoodIndexPage = ({ user, msgAlert, setNewFood, employees: incomingEmployee
           console.warn('[FoodIndexPage] getAllRestaurants failed', e?.response?.status, e?.response?.data);
         }
       } finally {
-        if (mounted) setRestLoading(false);
       }
     };
     load();
@@ -151,10 +147,10 @@ const FoodIndexPage = ({ user, msgAlert, setNewFood, employees: incomingEmployee
     } else if (food.restaurant !== undefined) {
       restId = food.restaurant;
     }
-    if (restId == null || restId === '') {
+    if (restId === null || restId === '') {
       restId = food.restaurant_id ?? null;
     }
-    if (restId == null || restId === '') return 'No Restaurant';
+    if (restId === null || restId === '') return 'No Restaurant';
     if (!Array.isArray(restaurants) || restaurants.length === 0) return '';
     const match = restaurants.find(r => String(r.id) === String(restId));
     return match ? match.name : `Restaurant #${restId}`;

@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import { Component } from "react";
 import { Menu } from "semantic-ui-react";
 import FoodIndexPage from "./FoodIndexPage";
 import DrinkIndexPage from "./DrinkIndexPage";
@@ -21,9 +21,9 @@ export default class MenuNav extends Component {
             (Array.isArray(res?.data) ? res.data : []) ??
             [];
           this.setState({ employees: Array.isArray(list) ? list : [] });
-          if (process.env.NODE_ENV !== 'production') {
-            console.log('[MenuNav employees sample]', (Array.isArray(list) && list.length > 0) ? list[0] : list);
-          }
+          // if (process.env.NODE_ENV !== 'production') {
+          //   console.log('[MenuNav employees sample]', (Array.isArray(list) && list.length > 0) ? list[0] : list);
+          // }
         })
         .catch((err) => {
           console.warn(

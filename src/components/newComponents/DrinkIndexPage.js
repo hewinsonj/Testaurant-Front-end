@@ -1,9 +1,7 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Grid, Segment, List, Button, Input } from "semantic-ui-react";
-
 import { getAllDrinks, deleteDrink } from "../../api/drink";
 import AddDrinkModal from "./AddDrinkModal";
-import LoadingScreen from "../shared/LoadingPage";
 import DrinkUpdateModal from "./DrinkUpdateModal";
 import FilterModal from "./FilterModal";
 import EditLogModal from "./EditLogModal";
@@ -36,7 +34,6 @@ const DrinkIndexPage = ({ user, msgAlert, setNewDrink, employees, getAllRestaura
   const [logOpen, setLogOpen] = useState(false);
 
   const [restaurants, setRestaurants] = useState([]);
-  const [restLoading, setRestLoading] = useState(false);
 
   const getOwnerName = (drink) => {
     // Only show for elevated roles
@@ -47,7 +44,7 @@ const DrinkIndexPage = ({ user, msgAlert, setNewDrink, employees, getAllRestaura
 
     // Normalize owner id (can be id or object)
     const ownerId = typeof drink.owner === 'object' ? (drink.owner?.id ?? drink.owner?.pk) : drink.owner;
-    if (ownerId == null) {
+    if (ownerId === null) {
       const first = drink.owner?.first_name ?? drink.owner?.firstName ?? '';
       const last  = drink.owner?.last_name  ?? drink.owner?.lastName  ?? '';
       const full = `${first} ${last}`.trim();
@@ -83,13 +80,12 @@ const DrinkIndexPage = ({ user, msgAlert, setNewDrink, employees, getAllRestaura
           variant: "danger",
         });
       });
-  }, []);
+  }, [user, msgAlert]);
 
   useEffect(() => {
     let mounted = true;
     const load = async () => {
       try {
-        setRestLoading(true);
         if (typeof getAllRestaurants !== 'function') return;
         const resp = user ? await getAllRestaurants(user) : await getAllRestaurants();
         const list = Array.isArray(resp?.data) ? resp.data : (resp?.data?.restaurants || resp?.data || []);
@@ -100,7 +96,6 @@ const DrinkIndexPage = ({ user, msgAlert, setNewDrink, employees, getAllRestaura
           console.warn('[DrinkIndexPage] getAllRestaurants failed', e?.response?.status, e?.response?.data);
         }
       } finally {
-        if (mounted) setRestLoading(false);
       }
     };
     load();
@@ -156,10 +151,10 @@ const DrinkIndexPage = ({ user, msgAlert, setNewDrink, employees, getAllRestaura
     } else if (drink.restaurant !== undefined) {
       restId = drink.restaurant;
     }
-    if (restId == null || restId === '') {
+    if (restId === null || restId === '') {
       restId = drink.restaurant_id ?? null;
     }
-    if (restId == null || restId === '') return 'No Restaurant';
+    if (restId === null || restId === '') return 'No Restaurant';
     if (!Array.isArray(restaurants) || restaurants.length === 0) return '';
     const match = restaurants.find(r => String(r.id) === String(restId));
     return match ? match.name : `Restaurant #${restId}`;

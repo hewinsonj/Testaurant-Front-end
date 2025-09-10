@@ -80,7 +80,7 @@ const NewEmployeeModal = ({ open, onClose, refreshEmployees, msgAlert, user, all
           : (actorRestaurantId ?? null),
       };
 
-      console.log('[SignUp] posting payload', payload);
+      // console.log('[SignUp] posting payload', payload);
       await signUp(payload);
 
       alertFn({ heading: 'Success', message: 'New employee created!', variant: 'success' });

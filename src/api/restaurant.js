@@ -35,7 +35,7 @@ export const createRestaurant = (user, restaurant) => {
             "zip_code": restaurant.zip_code,
         }
     }
-    console.log('[Restaurant API] creating with payload:', payload, 'token?', Boolean(user?.token))
+    // console.log('[Restaurant API] creating with payload:', payload, 'token?', Boolean(user?.token))
     return axios({
         method: 'POST',
         headers: {

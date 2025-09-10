@@ -1,4 +1,3 @@
-import React from "react"
 import { Button, Icon } from "semantic-ui-react"
 import { deleteEmployee } from "../../api/user"
 

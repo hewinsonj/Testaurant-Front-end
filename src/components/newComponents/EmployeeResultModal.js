@@ -1,5 +1,3 @@
-import React from 'react';
-import { Button, Modal } from 'semantic-ui-react';
 import ResultsSegment from './ResultsSegment';
 
 const EmployeeResultModal = ({ result, user, msgAlert, testName }) => {

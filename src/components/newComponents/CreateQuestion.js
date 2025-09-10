@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { createQuestion } from "../../api/question";
 import AddItem from "./AddItem";
 

@@ -1,4 +1,3 @@
-import React, { useState } from "react";
 import { Grid, Form, Segment } from "semantic-ui-react";
 
 const DrinksPage = () => {

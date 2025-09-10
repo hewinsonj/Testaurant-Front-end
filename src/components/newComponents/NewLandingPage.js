@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Menu, Sticky } from "semantic-ui-react";
 import { Link, useNavigate } from "react-router-dom";
-import { signIn, changePassword } from "../../api/auth";
+import { signIn } from "../../api/auth";
 
 const NewLandingPage = ({ user, setUser, msgAlert }) => {
   const [activeItem, setActiveItem] = useState("results");
@@ -32,7 +32,7 @@ const NewLandingPage = ({ user, setUser, msgAlert }) => {
   const guestMLogin = () => {
     const guestCredentials = {
       email: "guestmanager@gmail.com",
-      password: "guestmanager",
+      password: "superburger",
     };
 
     signIn(guestCredentials)

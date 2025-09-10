@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { createFood } from "../../api/food";
 import AddFoodForm from "./AddFoodForm";
 
@@ -20,6 +20,7 @@ const CreateFood = (props) => {
     con_dairy: false,
     is_vegan: false,
     is_vegetarian: false,
+    restaurant: "",
   };
   const [food, setFood] = useState(defaultFood);
   const [errorMsg, setErrorMsg] = useState("");
@@ -48,6 +49,11 @@ const CreateFood = (props) => {
 
     if (food.con_egg && food.is_vegan) {
       setErrorMsg("Food cannot be marked vegan if it contains egg.");
+      return;
+    }
+
+    if (!food.restaurant || food.restaurant === "") {
+      setErrorMsg("Please select a restaurant before creating a food item.");
       return;
     }
 

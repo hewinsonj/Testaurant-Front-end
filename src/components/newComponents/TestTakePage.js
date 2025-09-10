@@ -1,11 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { Button, Segment, Grid, Form } from "semantic-ui-react";
-import { useNavigate, useParams } from "react-router-dom";
-import { getTest, deleteTest } from "../../api/test";
+import { useParams } from "react-router-dom";
+import { getTest } from "../../api/test";
 import LoadingScreen from "../shared/LoadingPage";
 
 const TestTakePage = ({ user, msgAlert, test }) => {
-  const [open, setOpen] = React.useState(false);
   const { testId } = useParams();
 
   useEffect(() => {

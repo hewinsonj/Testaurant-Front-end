@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useCallback, memo } from "react";
 import { Button, Form, Container } from "semantic-ui-react";
+import PropTypes from "prop-types";
 
 const AddItem = (props) => {
   const { question, handleChange, handleSubmit, heading, getAllRestaurants, user } = props;
@@ -39,7 +40,7 @@ const AddItem = (props) => {
         handleChange?.(null, { name: 'restaurant', value: userRestaurantId });
       }
     }
-  }, [role, userRestaurantId]);
+  }, [role, userRestaurantId, user, handleChange]);
 
   const restaurantOptions = React.useMemo(() => {
     if (!Array.isArray(restaurants)) return [];
@@ -53,15 +54,15 @@ const AddItem = (props) => {
   }, [restaurants]);
 
   const forcedRestaurantLabel = React.useMemo(() => {
-    if (userRestaurantId == null) return '';
+    if (userRestaurantId === null) return '';
     const match = restaurants.find(r => r.id === userRestaurantId);
     if (!match) return String(userRestaurantId);
     return match.city && match.state ? `${match.name} — ${match.city}, ${match.state}` : match.name;
   }, [restaurants, userRestaurantId]);
 
-  const handleRestaurantSelect = (e, { value }) => {
+  const handleRestaurantSelect = useCallback((e, { value }) => {
     return handleChange(e, { name: 'restaurant', value });
-  };
+  }, [handleChange]);
 
   return (
     <Container className="justify-content-center">
@@ -134,7 +135,7 @@ const AddItem = (props) => {
             options={restaurantOptions}
             value={(() => {
               const val = question?.restaurant ?? question?.restaurant_id ?? (typeof question?.restaurant === 'object' ? question.restaurant?.id : '');
-              return val == null ? '' : val;
+              return val === null ? '' : val;
             })()}
             onChange={handleRestaurantSelect}
             clearable
@@ -154,4 +155,19 @@ const AddItem = (props) => {
   );
 };
 
-export default AddItem;
+AddItem.propTypes = {
+  question: PropTypes.object.isRequired,
+  handleChange: PropTypes.func,
+  handleSubmit: PropTypes.func,
+  heading: PropTypes.node,
+  getAllRestaurants: PropTypes.func,
+  user: PropTypes.shape({
+    role: PropTypes.string,
+    restaurant: PropTypes.oneOfType([
+      PropTypes.number,
+      PropTypes.shape({ id: PropTypes.number })
+    ])
+  })
+};
+
+export default memo(AddItem);

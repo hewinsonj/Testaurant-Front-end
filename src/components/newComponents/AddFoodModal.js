@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Button, Grid, Modal } from "semantic-ui-react";
 import CreateFood from "./CreateFood";
 

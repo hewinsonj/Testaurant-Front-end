@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "semantic-ui-react";
 import { getAllTests } from "../../api/test";
 import { Button, Modal } from "semantic-ui-react";
@@ -23,7 +23,7 @@ const ResultsShowModal = ({ result, msgAlert, user }) => {
 
   const findString = (result) => {
     for (let i = 0; i < allTests.length; i++) {
-      if (result.the_test == allTests[i].id) {
+      if (result.the_test === allTests[i].id) {
         return <h1>{allTests[i].name}</h1>;
       }
     }

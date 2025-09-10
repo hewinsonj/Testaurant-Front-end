@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Modal, Button } from "semantic-ui-react";
 import { updateFood } from "../../api/food";
 import AddFoodForm from "./AddFoodForm";
@@ -106,7 +106,7 @@ const FoodUpdateModal = (props) => {
     }
 
     //close form if no change was made
-    if (food == props.food) {
+    if (food === props.food) {
       setOpen(false);
     } else {
       updateFood(user, food, props.food.id)

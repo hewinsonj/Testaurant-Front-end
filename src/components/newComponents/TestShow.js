@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Button, Segment, Grid, Modal } from "semantic-ui-react";
 import { deleteTest } from "../../api/test";
 import TestUpdateModal from "./TestUpdateModal";

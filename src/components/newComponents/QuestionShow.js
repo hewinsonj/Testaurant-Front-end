@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Button, Segment, Grid, Comment, Form, Modal } from "semantic-ui-react";
+import React from "react";
+import { Button, Segment, Grid, Modal } from "semantic-ui-react";
 import { useNavigate } from "react-router-dom";
 import { deleteQuestion } from "../../api/question";
 import LoadingScreen from "../shared/LoadingPage";

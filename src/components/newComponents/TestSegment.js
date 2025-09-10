@@ -1,4 +1,3 @@
-import React from "react";
 import { Segment, Grid } from "semantic-ui-react";
 import TestShow from "./TestShow";
 import TestTake from "./TestTake";

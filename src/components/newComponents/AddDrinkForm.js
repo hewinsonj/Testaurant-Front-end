@@ -1,5 +1,6 @@
-import React from "react";
-import { Button, Form, Container, Icon, Message } from "semantic-ui-react";
+import React, { useCallback, memo } from "react";
+import { Button, Form, Container, Message } from "semantic-ui-react";
+import PropTypes from "prop-types";
 
 const AddDrinkForm = (props) => {
   const { drink, handleChange, handleSubmit, heading, errorMsg, getAllRestaurants, user } = props;
@@ -39,7 +40,7 @@ const AddDrinkForm = (props) => {
         handleChange?.(null, { name: 'restaurant', value: userRestaurantId });
       }
     }
-  }, [role, userRestaurantId]);
+  }, [role, userRestaurantId, user, handleChange]);
 
   const restaurantOptions = React.useMemo(() => {
     if (!Array.isArray(restaurants)) return [];
@@ -48,15 +49,15 @@ const AddDrinkForm = (props) => {
   }, [restaurants]);
 
   const forcedRestaurantLabel = React.useMemo(() => {
-    if (userRestaurantId == null) return '';
+    if (userRestaurantId === null) return '';
     const match = Array.isArray(restaurants) ? restaurants.find(r => r.id === userRestaurantId) : null;
     if (!match) return String(userRestaurantId);
     return match.city && match.state ? `${match.name} — ${match.city}, ${match.state}` : match.name;
   }, [restaurants, userRestaurantId]);
 
-  const handleRestaurantSelect = (e, { value }) => {
+  const handleRestaurantSelect = useCallback((e, { value }) => {
     return handleChange?.(null, { name: 'restaurant', value });
-  };
+  }, [handleChange]);
 
   return (
     <Container className="justify-content-center">
@@ -114,8 +115,7 @@ const AddDrinkForm = (props) => {
           name="con_egg"
           id="con_egg"
           label="con_egg"
-          defaultChecked={drink.con_egg}
-          // value= { drink.con_egg}
+          checked={!!drink.con_egg}
           onChange={handleChange}
         />
         <Form.Checkbox
@@ -123,8 +123,7 @@ const AddDrinkForm = (props) => {
           name="con_tree_nut"
           id="con_tree_nut"
           label="con_tree_nut"
-          defaultChecked={drink.con_tree_nut}
-          // value= { drink.con_tree_nut}
+          checked={!!drink.con_tree_nut}
           onChange={handleChange}
         />
         <Form.Checkbox
@@ -132,8 +131,7 @@ const AddDrinkForm = (props) => {
           name="con_peanut"
           id="con_peanut"
           label="con_peanut"
-          defaultChecked={drink.con_peanut}
-          // value= { drink.con_peanut}
+          checked={!!drink.con_peanut}
           onChange={handleChange}
         />
         <Form.Checkbox
@@ -141,8 +139,7 @@ const AddDrinkForm = (props) => {
           name="con_shellfish"
           id="con_shellfish"
           label="con_shellfish"
-          defaultChecked={drink.con_shellfish}
-          // value= { drink.con_shellfish}
+          checked={!!drink.con_shellfish}
           onChange={handleChange}
         />
         <Form.Checkbox
@@ -150,8 +147,7 @@ const AddDrinkForm = (props) => {
           name="con_soy"
           id="con_soy"
           label="con_soy"
-          defaultChecked={drink.con_soy}
-          // value= { drink.con_soy}
+          checked={!!drink.con_soy}
           onChange={handleChange}
         />
         <Form.Checkbox
@@ -159,8 +155,7 @@ const AddDrinkForm = (props) => {
           name="con_fish"
           id="con_fish"
           label="con_fish"
-          defaultChecked={drink.con_fish}
-          // value= { drink.con_fish}
+          checked={!!drink.con_fish}
           onChange={handleChange}
         />
         <Form.Checkbox
@@ -168,8 +163,7 @@ const AddDrinkForm = (props) => {
           name="con_wheat"
           id="con_wheat"
           label="con_wheat"
-          defaultChecked={drink.con_wheat}
-          // value= { drink.con_wheat}
+          checked={!!drink.con_wheat}
           onChange={handleChange}
         />
         <Form.Checkbox
@@ -177,8 +171,7 @@ const AddDrinkForm = (props) => {
           name="con_sesame"
           id="con_sesame"
           label="con_sesame"
-          defaultChecked={drink.con_sesame}
-          // value= { drink.con_sesame}
+          checked={!!drink.con_sesame}
           onChange={handleChange}
         />
         <Form.Checkbox
@@ -186,8 +179,7 @@ const AddDrinkForm = (props) => {
           name="con_gluten"
           id="con_gluten"
           label="con_gluten"
-          defaultChecked={drink.con_gluten}
-          // value= { drink.con_gluten}
+          checked={!!drink.con_gluten}
           onChange={handleChange}
         />
         <Form.Checkbox
@@ -195,21 +187,21 @@ const AddDrinkForm = (props) => {
           name="con_dairy"
           id="con_dairy"
           label="con_dairy"
-          defaultChecked={drink.con_dairy}
+          checked={!!drink.con_dairy}
           onChange={handleChange}
         />
         <Form.Checkbox
           name="is_vegan"
           id="is_vegan"
           label="is_vegan"
-          defaultChecked={drink.is_vegan}
+          checked={!!drink.is_vegan}
           onChange={handleChange}
         />
         <Form.Checkbox
           name="is_vegetarian"
           id="is_vegetarian"
           label="is_vegetarian"
-          defaultChecked={drink.is_vegetarian}
+          checked={!!drink.is_vegetarian}
           onChange={handleChange}
         />
         {role === 'Admin' ? (
@@ -223,7 +215,7 @@ const AddDrinkForm = (props) => {
             options={restaurantOptions}
             value={(() => {
               const val = drink?.restaurant ?? drink?.restaurant_id ?? (typeof drink?.restaurant === 'object' ? drink.restaurant?.id : '');
-              return val == null ? '' : val;
+              return val === null ? '' : val;
             })()}
             onChange={handleRestaurantSelect}
             clearable
@@ -248,4 +240,20 @@ const AddDrinkForm = (props) => {
   );
 };
 
-export default AddDrinkForm;
+AddDrinkForm.propTypes = {
+  drink: PropTypes.object.isRequired,
+  handleChange: PropTypes.func,
+  handleSubmit: PropTypes.func,
+  heading: PropTypes.node,
+  errorMsg: PropTypes.node,
+  getAllRestaurants: PropTypes.func,
+  user: PropTypes.shape({
+    role: PropTypes.string,
+    restaurant: PropTypes.oneOfType([
+      PropTypes.number,
+      PropTypes.shape({ id: PropTypes.number })
+    ])
+  })
+};
+
+export default memo(AddDrinkForm);

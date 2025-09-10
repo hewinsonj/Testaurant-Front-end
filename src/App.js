@@ -1,5 +1,4 @@
-// import React, { Component, Fragment } from 'react'
-import React, { useState, Fragment } from "react";
+import { useState } from "react";
 import { Route, Routes } from "react-router-dom";
 import { v4 as uuid } from "uuid";
 
@@ -22,17 +21,12 @@ import TestTakePage from './components/newComponents/TestTakePage'
 import ResultsPage from './components/newComponents/ResultsPage'
 import TheLandingDisplay from './components/newComponents/TheLandingDisplay'
 import EmployeePage from './components/newComponents/EmployeePage'
-// import { getAllTests } from './api/test'
-// import { getAllQuestions } from './api/question'
+
 
 const App = () => {
   const [user, setUser] = useState(null);
-  //   const [viewedUser, setViewedUser] = useState(null)
   const [msgAlerts, setMsgAlerts] = useState([]);
   const [newQuestion, setNewQuestion] = useState(false);
-  const [newTest, setNewTest] = useState(false);
-  const [newFood, setNewFood] = useState(false);
-  const [activeItem, setActiveItem] = useState("testaurant");
 
   const clearUser = () => {
     setUser(null);
@@ -57,9 +51,7 @@ const App = () => {
         user={user}
         msgAlert={msgAlert}
         setNewQuestion={setNewQuestion}
-        setNewTest={setNewTest}
         setUser={setUser}
-
       />
 
       <Routes>
@@ -119,7 +111,6 @@ const App = () => {
               msgAlert={msgAlert}
               user={user}
               newQuestion={newQuestion}
-              activeItem={activeItem}
             />
           }
         />
@@ -130,7 +121,7 @@ const App = () => {
         <Route
           path="/menu-nav"
           element={
-            <MenuNav msgAlert={msgAlert} user={user} setNewFood={setNewFood} />
+            <MenuNav msgAlert={msgAlert} user={user} />
           }
         />
         <Route
@@ -140,7 +131,6 @@ const App = () => {
               msgAlert={msgAlert}
               user={user}
               setNewQuestion={setNewQuestion}
-              setNewTest={setNewTest}
             />
           }
         />
@@ -151,7 +141,6 @@ const App = () => {
               msgAlert={msgAlert}
               user={user}
               setNewQuestion={setNewQuestion}
-              setNewTest={setNewTest}
             />
           }
         />
@@ -175,7 +164,7 @@ const App = () => {
         />
         <Route
           path="/results/"
-          element={<ResultsPage msgAlert={msgAlert} user={user} setUset={setUser}/>}
+          element={<ResultsPage msgAlert={msgAlert} user={user} setUser={setUser}/>}
         />
         <Route
           path="/employees/"

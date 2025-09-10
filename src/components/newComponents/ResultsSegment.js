@@ -1,20 +1,16 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 
-import { Segment, Header, Divider, Label } from "semantic-ui-react"
+import { Segment, Divider, Label } from "semantic-ui-react"
 
 const ResultsSegment = ({ result, allTests, employees, setOwnerName, user, label, getAllRestaurants, showWrongDetails = true }) => {
-  if (process.env.NODE_ENV !== 'production') {
-    try { console.log('[ResultsSegment] result payload', result); } catch {}
-  }
+
   const [restaurants, setRestaurants] = useState([]);
-  const [restLoading, setRestLoading] = useState(false);
 
   useEffect(() => {
     let mounted = true;
     const load = async () => {
       if (typeof getAllRestaurants !== 'function') return;
       try {
-        setRestLoading(true);
         const resp = await getAllRestaurants();
         const list = Array.isArray(resp?.data) ? resp.data : (resp?.data?.restaurants || resp?.data || []);
         if (mounted) setRestaurants(Array.isArray(list) ? list : []);
@@ -24,7 +20,6 @@ const ResultsSegment = ({ result, allTests, employees, setOwnerName, user, label
           try { console.warn('[ResultsSegment] getAllRestaurants failed', e?.response?.status, e?.response?.data); } catch {}
         }
       } finally {
-        if (mounted) setRestLoading(false);
       }
     };
     load();
@@ -38,20 +33,9 @@ const ResultsSegment = ({ result, allTests, employees, setOwnerName, user, label
     return match ? match.name : "Unknown Test";
   }
 
-  const getOwnerEmail = (ownerId) => {
-    const match = Array.isArray(employees) ? employees.find((emp) => emp.id === ownerId) : null;
-    return match ? match.email : "Unknown User Email"
-  }
-
-  const getOwnerFullName = (ownerId) => {
-    const match = Array.isArray(employees) ? employees.find((emp) => emp.id === ownerId) : null;
-    if (!match) return "Unknown User"
-    return `${match.first_name || ""} ${match.last_name || ""}`.trim()
-  }
-
   const toArray = (val) => {
     if (Array.isArray(val)) return val;
-    if (val == null) return [];
+    if (val === null) return [];
     if (typeof val === 'string') {
       // Try JSON first
       try {
@@ -110,17 +94,8 @@ const ResultsSegment = ({ result, allTests, employees, setOwnerName, user, label
       <Label ribbon color="black" size="huge">
         {label || `Test: ${getTestName(result.the_test)}`}
       </Label>
-      {/* <Header as="h4" style={{ textAlign: "right" }} color="grey" size="small">
-        Taken by: {getOwnerFullName(result.owner)} 
-        <Divider></Divider>
-        Email: {getOwnerEmail(result.owner)}
-      </Header> */}
-
       <Divider />
 
-      {/* <Header as="h3" style={{ fontSize: "1.5rem", marginBottom: "0.5rem" }}>
-        Test Stats
-      </Header> */}
       <p style={{ fontSize: "1.25rem" }}><strong>Correct:</strong> {result.correct}</p>
       <p style={{ fontSize: "1.25rem" }}><strong>Wrong:</strong> {result.wrong}</p>
       <p style={{ fontSize: "1.25rem" }}>

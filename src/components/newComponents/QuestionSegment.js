@@ -1,5 +1,4 @@
-import React from "react";
-import { Segment, Grid, GridColumn } from "semantic-ui-react";
+import { Segment, Grid } from "semantic-ui-react";
 import QuestionShow from "./QuestionShow";
 
 const QuestionSegment = ({ question, msgAlert, user }) => {

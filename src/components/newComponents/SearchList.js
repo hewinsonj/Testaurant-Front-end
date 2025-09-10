@@ -32,7 +32,7 @@ const SearchList = ({
 
     // normalize owner id
     const ownerId = typeof item.owner === 'object' ? (item.owner?.id ?? item.owner?.pk) : item.owner;
-    if (ownerId == null) return "";
+    if (ownerId === null) return "";
 
     // choose a candidate employees array: explicit prop, embedded employees, or embedded users
     const candidates = Array.isArray(employeesList) && employeesList.length > 0

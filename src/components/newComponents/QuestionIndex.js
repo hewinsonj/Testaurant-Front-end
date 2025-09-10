@@ -1,44 +1,24 @@
-import React, { useState, useEffect } from "react";
-import { Grid, Segment, List, Button } from "semantic-ui-react";
+import { useState, useEffect, useCallback } from "react";
+import { Grid, Segment, Button } from "semantic-ui-react";
 import { deleteQuestion } from "../../api/question";
-// import { getAllEmployees } from "../../api/user";
-import LoadingScreen from "../shared/LoadingPage";
 import AddQuestionModal from "./AddQuestionModal";
 import EditLogModal from "./EditLogModal";
 import QuestionUpdateModal from "./QuestionUpdateModal";
 import SearchList from "./SearchList";
 
-const QuestionIndex = ({ user, msgAlert, newQuestion, setNewQuestion, employees, getAllQuestions, getAllRestaurants }) => {
-  const [allQuestions, setAllQuestions] = useState([]);
+const QuestionIndex = ({ user, msgAlert, setNewQuestion, employees, getAllQuestions, getAllRestaurants }) => {
   const [originalQuestions, setOriginalQuestions] = useState([]);
   const [filteredQuestions, setFilteredQuestions] = useState([]);
   const [selectedQuestion, setSelectedQuestion] = useState(null);
   const [logOpen, setLogOpen] = useState(false);
   const [restaurants, setRestaurants] = useState([]);
-  const [restLoading, setRestLoading] = useState(false);
 
-  const reloadQuestions = () => {
+  const reloadQuestions = useCallback(() => {
     return getAllQuestions(user)
       .then((qRes) => {
-        // const emps = empRes?.data?.users || [];
-        // setEmployees(emps);
-
-        // const enrichedQuestions = (qRes?.data?.question_news || []).map((q) => {
-        //   const owner = emps.find((emp) => emp.id === q.owner);
-        //   return {
-        //     ...q,
-        //     creator_name: owner
-        //       ? `${owner.first_name || ""} ${owner.last_name || ""}`.trim()
-        //       : "Unknown",
-        //   };
-        // });
-
-        // setAllQuestions(enrichedQuestions);
-        // setOriginalQuestions(enrichedQuestions);
-        // setFilteredQuestions(enrichedQuestions);
-        setAllQuestions(qRes?.data?.question_news || []);
-        setOriginalQuestions(qRes?.data?.question_news || []);
-        setFilteredQuestions(qRes?.data?.question_news || []);
+        const list = qRes?.data?.question_news || [];
+        setOriginalQuestions(list);
+        setFilteredQuestions(list);
       })
       .catch(() => {
         msgAlert({
@@ -47,18 +27,17 @@ const QuestionIndex = ({ user, msgAlert, newQuestion, setNewQuestion, employees,
           variant: "danger",
         });
       });
-  };
+  }, [getAllQuestions, user, msgAlert]);
 
   useEffect(() => {
     reloadQuestions();
-  }, [user]);
+  }, [reloadQuestions]);
 
   useEffect(() => {
     let mounted = true;
     const load = async () => {
       if (typeof getAllRestaurants !== 'function') return;
       try {
-        setRestLoading(true);
         const resp = user ? await getAllRestaurants(user) : await getAllRestaurants();
         const list = Array.isArray(resp?.data) ? resp.data : (resp?.data?.restaurants || resp?.data || []);
         if (mounted) setRestaurants(Array.isArray(list) ? list : []);
@@ -68,7 +47,6 @@ const QuestionIndex = ({ user, msgAlert, newQuestion, setNewQuestion, employees,
           console.warn('[QuestionIndex] getAllRestaurants failed', e?.response?.status, e?.response?.data);
         }
       } finally {
-        if (mounted) setRestLoading(false);
       }
     };
     load();
@@ -79,7 +57,7 @@ const QuestionIndex = ({ user, msgAlert, newQuestion, setNewQuestion, employees,
     if (!q) return "Unknown";
     // Questions typically store owner as an id; normalize to id if object
     const ownerId = typeof q.owner === 'object' ? (q.owner?.id ?? q.owner?.pk) : q.owner;
-    if (ownerId == null) return "Unknown";
+    if (ownerId === null) return "Unknown";
 
     // Look up the employee in the provided list
     const match = Array.isArray(employees)
@@ -110,7 +88,6 @@ const QuestionIndex = ({ user, msgAlert, newQuestion, setNewQuestion, employees,
     if (!questionId) return;
 
     // Optimistically remove from lists
-    setAllQuestions((prev) => prev.filter((q) => q.id !== questionId));
     setOriginalQuestions((prev) => prev.filter((q) => q.id !== questionId));
     setFilteredQuestions((prev) => prev.filter((q) => q.id !== questionId));
     setSelectedQuestion(null);
@@ -144,10 +121,10 @@ const QuestionIndex = ({ user, msgAlert, newQuestion, setNewQuestion, employees,
     } else if (q.restaurant !== undefined) {
       restId = q.restaurant; // may be number, '', or null
     }
-    if (restId == null || restId === '') {
+    if (restId === null || restId === '') {
       restId = q.restaurant_id ?? null;
     }
-    if (restId == null || restId === '') return 'No Restaurant';
+    if (restId === null || restId === '') return 'No Restaurant';
     if (!Array.isArray(restaurants) || restaurants.length === 0) return '';
     const match = restaurants.find((r) => String(r.id) === String(restId));
     if (!match) return `Restaurant #${restId}`;
@@ -162,18 +139,7 @@ const QuestionIndex = ({ user, msgAlert, newQuestion, setNewQuestion, employees,
         setNewQuestion={setNewQuestion}
         getAllRestaurants={getAllRestaurants}
         onCreated={(newQ) => {
-          // const owner = employees.find((e) => e.id === newQ.owner);
-          // const enriched = {
-          //   ...newQ,
-          //   creator_name: owner ? `${owner.first_name || ''} ${owner.last_name || ''}`.trim() : 'Unknown',
-          // };
 
-          // Optimistic: prepend locally so the UI updates instantly
-          // setAllQuestions((prev) => Array.isArray(prev) ? [enriched, ...prev] : [enriched]);
-          // setOriginalQuestions((prev) => Array.isArray(prev) ? [enriched, ...prev] : [enriched]);
-          // setFilteredQuestions((prev) => Array.isArray(prev) ? [enriched, ...prev] : [enriched]);
-          // setSelectedQuestion(enriched);
-          setAllQuestions((prev) => Array.isArray(prev) ? [newQ, ...prev] : [newQ]);
           setOriginalQuestions((prev) => Array.isArray(prev) ? [newQ, ...prev] : [newQ]);
           setFilteredQuestions((prev) => Array.isArray(prev) ? [newQ, ...prev] : [newQ]);
           setSelectedQuestion(newQ);
@@ -194,9 +160,6 @@ const QuestionIndex = ({ user, msgAlert, newQuestion, setNewQuestion, employees,
               const lowerVal = val.toLowerCase();
               const filtered = originalQuestions.filter((q) => {
                 const textMatch = q.question_str?.toLowerCase().includes(lowerVal);
-                // const ownerName = getOwnerName(q).toLowerCase();
-                // const ownerMatch = ownerName.includes(lowerVal);
-                // return textMatch || ownerMatch;
                 return textMatch;
               });
               setFilteredQuestions(filtered);

@@ -7,12 +7,11 @@ import { getAllEmployees } from "../../api/user";
 import { getAllRestaurants } from '../../api/restaurant'
 import ResultsSegment from "./ResultsSegment";
 
-const ResultsPage = ({ user, msgAlert, setUser }) => {
+const ResultsPage = ({ user, msgAlert }) => {
   const [allResults, setAllResults] = useState([]);
   const [allTests, setAllTests] = useState([]);
   const [employees, setEmployees] = useState([]);
   const [selectedResult, setSelectedResult] = useState(null);
-  const [ownerName, setOwnerName] = useState("");
   const [empSearch, setEmpSearch] = useState("");
   const [restaurants, setRestaurants] = useState([]);
   const [restLoading, setRestLoading] = useState(false);
@@ -73,7 +72,7 @@ const ResultsPage = ({ user, msgAlert, setUser }) => {
       // Not a manager: never fetch employees to avoid 403s
       setEmployees([]);
     }
-  }, [user]);
+  }, [user, isMgrish, msgAlert]);
 
   useEffect(() => {
     let mounted = true;
@@ -95,7 +94,7 @@ const ResultsPage = ({ user, msgAlert, setUser }) => {
     };
     load();
     return () => { mounted = false; };
-  }, [user, getAllRestaurants]);
+  }, [user]);
 
   const getTestNameById = (testRef) => {
     const testId =
@@ -123,7 +122,7 @@ const ResultsPage = ({ user, msgAlert, setUser }) => {
     } else if (restRef !== undefined) {
       id = restRef;
     }
-    if (id == null || id === '') return 'No Restaurant';
+    if (id === null || id === '') return 'No Restaurant';
     const r = restaurantsById.get(Number(id));
     return r ? (r.city && r.state ? `${r.name} — ${r.city}, ${r.state}` : r.name) : `Restaurant #${id}`;
   };
@@ -155,7 +154,7 @@ const ResultsPage = ({ user, msgAlert, setUser }) => {
         const rid = (r.restaurant !== undefined && r.restaurant !== null && r.restaurant !== '')
           ? (typeof r.restaurant === 'object' ? (r.restaurant.id ?? r.restaurant.pk ?? null) : r.restaurant)
           : (r.restaurant_id ?? null);
-        if (restFilter === 'none') return rid == null;
+        if (restFilter === 'none') return rid === null;
         return String(rid) === String(restFilter);
       });
     }
@@ -260,7 +259,6 @@ const ResultsPage = ({ user, msgAlert, setUser }) => {
               result={selectedResult}
               allTests={allTests}
               employees={employees}
-              setOwnerName={setOwnerName}
               getAllRestaurants={getAllRestaurants}
               showWrongDetails={true}
               user={user}

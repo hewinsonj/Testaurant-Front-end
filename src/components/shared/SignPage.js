@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import { Component } from "react";
 import { Button, Segment, Grid, Divider, Container } from "semantic-ui-react";
 
 export default class SignPage extends Component {

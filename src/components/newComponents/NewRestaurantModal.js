@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Button, Form, Modal } from 'semantic-ui-react';
 import { createRestaurant } from '../../api/restaurant'; // expects POST /restaurants/
 
@@ -35,7 +35,7 @@ const NewRestaurantModal = ({ open, onClose, refreshRestaurants, refreshEmployee
         zip_code: formData.zip_code || '',
       };
 
-      console.log('[Restaurant] posting payload', payload);
+      // console.log('[Restaurant] posting payload', payload);
       await createRestaurant(user, payload);
 
       alertFn({ heading: 'Success', message: 'Restaurant created!', variant: 'success' });
