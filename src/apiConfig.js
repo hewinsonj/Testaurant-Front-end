@@ -1,7 +1,7 @@
 let apiUrl;
 const apiUrls = {
   // YOU MUST CHANGE PRODUCTION URL WHEN DEPLOYING
-  production: "https://honeybadgesapi.fly.dev",
+  production: "https://testaurant-api.fly.dev",
   development: "http://localhost:8000",
 };
 
