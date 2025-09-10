@@ -67,6 +67,9 @@ const NewEmployeeModal = ({ open, onClose, refreshEmployees, msgAlert, user, all
         return Number.isFinite(n) ? n : null;
       };
 
+      const selectedRestaurant =
+        (actorRole === 'Admin') ? formData.restaurant : actorRestaurantId;
+
       const payload = {
         email: formData.email,
         password: formData.password,
@@ -75,9 +78,7 @@ const NewEmployeeModal = ({ open, onClose, refreshEmployees, msgAlert, user, all
         last_name: formData.lastName || '',
         hire_date: formData.hireDate || null,
         role: normalizeRole(formData.role),
-        restaurant: (actorRole === 'Admin')
-          ? normalizeRestaurant(formData.restaurant)
-          : (actorRestaurantId ?? null),
+        restaurant: normalizeRestaurant(selectedRestaurant),
       };
 
       // console.log('[SignUp] posting payload', payload);
