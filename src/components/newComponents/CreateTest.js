@@ -5,7 +5,7 @@ import AddTest from './AddTest'
 
 const CreateTest = (props) => {
 
-    const {  user, msgAlert, setNewTest, setOpen, onCreated, getAllRestaurants } = props
+    const { user, msgAlert, setNewTest = null, setOpen, onCreated, getAllRestaurants } = props
 
     const defaultTest = {
         name: '',
@@ -20,8 +20,7 @@ const CreateTest = (props) => {
     const [test, setTest] = useState(defaultTest)
     const [idStorage, setIdStorage] = useState(tempQuestion)
     const [allQuestions, setAllQuestions] = useState(null)
-    const [isTestReady, setIsTestReady] = useState(false) // Add flag to determine when the test state is ready for API call
-    const pendingTestRef = useRef(null);
+    const submittingRef = useRef(false);
 
     useEffect(() => {
         getAllQuestions(user)
@@ -64,63 +63,46 @@ const CreateTest = (props) => {
     }
 
     //------------------- handleCreateTest refactor ---------------------
-    const handleCreateTest = (e) => {
+    const handleCreateTest = async (e) => {
         e.preventDefault();
 
-        // Build a snapshot so the effect doesn't depend on `test`
-        const snapshot = {
+        // prevent duplicate submissions (e.g., React StrictMode double-invoke)
+        if (submittingRef.current) return;
+        submittingRef.current = true;
+
+        const payload = {
           ...test,
           question_new: Array.isArray(idStorage.question_ids) ? idStorage.question_ids : [],
         };
-        setTest(snapshot);
-        pendingTestRef.current = snapshot;
 
-        // Trigger the effect
-        setIsTestReady(true);
+        try {
+          const res = await createTest(user, payload);
+          const newTest = (res && res.data && (res.data.test || res.data)) || null;
+
+          msgAlert({
+            heading: 'Success',
+            message: 'Created Test',
+            variant: 'success'
+          });
+
+          if (typeof onCreated === 'function' && newTest) {
+            onCreated(newTest);
+          }
+          setOpen(false);
+          if (typeof setNewTest === 'function') {
+            setNewTest((prev) => !prev);
+          }
+        } catch (error) {
+          msgAlert({
+            heading: 'Failure',
+            message: 'Create Test Failure' + error,
+            variant: 'danger'
+          });
+        } finally {
+          submittingRef.current = false;
+        }
     };
     //------------------- End handleCreateTest refactor ---------------------
-
-    //------------------- useEffect for API Call ---------------------
-    useEffect(() => {
-      let isMounted = true; // guard against updates after unmount
-
-      if (isTestReady && pendingTestRef.current) {
-        const payload = pendingTestRef.current;
-        createTest(user, payload)
-          .then((res) => {
-            if (!isMounted) return;
-            const newTest = (res && res.data && (res.data.test || res.data)) || null;
-            msgAlert({
-              heading: 'Success',
-              message: 'Created Test',
-              variant: 'success'
-            });
-            if (typeof onCreated === 'function' && newTest) {
-              onCreated(newTest);
-            }
-            setOpen(false);
-            setNewTest((prev) => !prev);
-          })
-          .catch(error => {
-            if (!isMounted) return;
-            msgAlert({
-              heading: 'Failure',
-              message: 'Create Test Failure' + error,
-              variant: 'danger'
-            });
-          })
-          .finally(() => {
-            if (!isMounted) return;
-            setIsTestReady(false);
-            pendingTestRef.current = null;
-          });
-      }
-
-      return () => {
-        isMounted = false;
-      };
-    }, [isTestReady, user, msgAlert, onCreated, setOpen, setNewTest]);
-    //------------------- End useEffect for API Call ---------------------
 
     // console.log('this is the idstorage.question_ids', idStorage.question_ids);
 

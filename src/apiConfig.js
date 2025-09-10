@@ -8,7 +8,7 @@ const trimTrailingSlash = (s) => (s || "").replace(/\/+$/, "");
 
 const defaults = {
   production: "https://testaurant-api.fly.dev",
-  development: "http://localhost:8000/api",
+  development: "http://localhost:8000/",
 };
 
 let apiUrl;
