@@ -7,7 +7,7 @@ const rawFromEnv = process.env.REACT_APP_API_URL || ""; // e.g., https://testaur
 const trimTrailingSlash = (s) => (s || "").replace(/\/+$/, "");
 
 const defaults = {
-  production: "https://testaurant-api.fly.dev/api",
+  production: "https://testaurant-api.fly.dev",
   development: "http://localhost:8000/api",
 };
 
