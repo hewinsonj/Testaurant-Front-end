@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { Grid, Segment, Button, Dropdown } from "semantic-ui-react";import { getAllEmployees } from "../../api/user";
+import { Grid, Segment, Button, Dropdown, Modal, List, Input, Form } from "semantic-ui-react";
+import { getAllEmployees } from "../../api/user";
 import { getAllTests } from "../../api/test";
 import { getAllQuestions } from "../../api/question";
 import { getAllResults } from "../../api/result";
-import { getAllRestaurants } from "../../api/restaurant";
+import { getAllRestaurants, updateRestaurant, deleteRestaurant } from "../../api/restaurant";
 import AssignTestModal from "./AssignTestModal";
 import UpdateEmployeeModal from "../auth/UpdateEmployeeModal";
 import DeleteEmployeeButton from "../auth/DeleteEmployeeButton";
@@ -24,6 +25,11 @@ const EmployeePage = ({ user, msgAlert }) => {
   const [newRestModalOpen, setNewRestModalOpen] = useState(false);
   const [logOpen, setLogOpen] = useState(false);
   const [restaurantFilter, setRestaurantFilter] = useState("");
+
+  const [restListOpen, setRestListOpen] = useState(false);
+  const [restUpdateOpen, setRestUpdateOpen] = useState(false);
+  const [selectedRestaurant, setSelectedRestaurant] = useState(null);
+  const [restaurantSearch, setRestaurantSearch] = useState("");
 
   useEffect(() => {
     Promise.all([
@@ -139,6 +145,19 @@ const employeesForList = React.useMemo(() => {
   });
 }, [filteredEmployees, restaurantFilter]);
 
+  const filteredRestaurants = React.useMemo(() => {
+    const q = restaurantSearch.toLowerCase();
+    return (allRestaurants || []).filter(r => {
+      const hay = `${r.name || ''} ${r.city || ''} ${r.state || ''}`.toLowerCase();
+      return hay.includes(q);
+    });
+  }, [allRestaurants, restaurantSearch]);
+
+  const selectRestaurantById = (id) => {
+    const match = (allRestaurants || []).find(r => String(r.id) === String(id));
+    setSelectedRestaurant(match || null);
+  };
+
 
   return (
     <Segment raised>
@@ -162,7 +181,26 @@ const employeesForList = React.useMemo(() => {
             >
               + New Restaurant
             </Button>
+
+            
+
+
           )}
+
+             {/* Admin-only: Restaurant modals trigger buttons */}
+      {user && user.role === 'Admin' && (
+        <>
+            <Button
+              primary
+              fluid
+              style={{ marginTop: "1rem", marginBottom: "1rem" }}
+              onClick={() => setRestListOpen(true)}
+            >
+              View Restaurants
+            </Button>
+
+        </>
+      )}
 
           <h3>All Employees</h3>
 
@@ -174,7 +212,7 @@ const employeesForList = React.useMemo(() => {
                 fluid
                 options={restaurantOptions}
                 value={restaurantFilter}
-                onChange={(e, { value }) => setRestaurantFilter(value)}
+                onChange={(e, { value }) => { setRestaurantFilter(value); if (value) selectRestaurantById(value); }}
                 placeholder="All Restaurants"
               />
             </div>
@@ -489,6 +527,117 @@ const employeesForList = React.useMemo(() => {
           </Segment>
         </Grid.Column>
       </Grid>
+      {/* Restaurants List Modal */}
+      <Modal open={restListOpen} onClose={() => setRestListOpen(false)} size="small">
+        <Modal.Header>All Restaurants</Modal.Header>
+        <Modal.Content>
+          <Input
+            icon="search"
+            placeholder="Search restaurants by name, city, or state..."
+            value={restaurantSearch}
+            onChange={(e) => setRestaurantSearch(e.target.value)}
+            fluid
+            style={{ marginBottom: '0.75rem' }}
+          />
+          <div style={{ maxHeight: 400, overflowY: 'auto' }}>
+            <List divided selection>
+              {filteredRestaurants.map((r) => (
+                <List.Item
+                  key={r.id}
+                  active={selectedRestaurant && String(selectedRestaurant.id) === String(r.id)}
+                  onClick={() => setSelectedRestaurant(r)}
+                >
+                  <List.Content floated='right'>
+                    <Button size='mini' onClick={(e) => { e.stopPropagation(); setSelectedRestaurant(r); setRestListOpen(false); setRestUpdateOpen(true); }}>Edit</Button>
+                  </List.Content>
+                  <List.Content>
+                    <List.Header>{r.name || `Restaurant #${r.id}`}</List.Header>
+                    <List.Description>
+                      {(r.city || r.state) ? `${r.city || ''}${r.city && r.state ? ', ' : ''}${r.state || ''}` : '—'}
+                    </List.Description>
+                  </List.Content>
+                </List.Item>
+              ))}
+            </List>
+          </div>
+        </Modal.Content>
+        <Modal.Actions>
+          <Button onClick={() => setSelectedRestaurant(null)}>Clear Selection</Button>
+          <Button
+            negative
+            disabled={!selectedRestaurant}
+            onClick={() => {
+              if (!selectedRestaurant) return;
+              const ok = window.confirm(`Delete "${selectedRestaurant.name || 'this restaurant'}"? This cannot be undone.`);
+              if (!ok) return;
+              deleteRestaurant(user, selectedRestaurant.id)
+                .then(() => {
+                  setAllRestaurants((prev) => prev.filter(r => r.id !== selectedRestaurant.id));
+                  setSelectedRestaurant(null);
+                  msgAlert({ heading: 'Deleted', message: 'Restaurant removed.', variant: 'success' });
+                })
+                .catch((err) => {
+                  console.error('[DeleteRestaurant] error', err?.response?.status, err?.response?.data || err?.message);
+                  msgAlert({ heading: 'Error', message: 'Failed to delete restaurant.', variant: 'danger' });
+                });
+            }}
+          >
+            Delete
+          </Button>
+          <Button
+            disabled={!selectedRestaurant}
+            onClick={() => { setRestListOpen(false); setRestUpdateOpen(true); }}
+            primary
+          >
+            Edit Selected
+          </Button>
+          <Button onClick={() => setRestListOpen(false)}>Close</Button>
+        </Modal.Actions>
+      </Modal>
+
+      {/* Update Restaurant Modal */}
+      <Modal open={restUpdateOpen} onClose={() => setRestUpdateOpen(false)} size="small">
+        <Modal.Header>Update Restaurant</Modal.Header>
+        <Modal.Content>
+          {selectedRestaurant ? (
+            <Form
+              onSubmit={
+                (e) => {
+                  e.preventDefault();
+                  const form = e.target;
+                  const payload = {
+                    name: form.name.value,
+                    city: form.city.value,
+                    state: form.state.value,
+                  };
+                  updateRestaurant(user, payload, selectedRestaurant.id)
+                    .then(() => {
+                      setAllRestaurants((prev) => prev.map(r => (r.id === selectedRestaurant.id ? { ...r, ...payload } : r)));
+                      setSelectedRestaurant((prev) => (prev ? { ...prev, ...payload } : prev));
+                      msgAlert({ heading: 'Saved', message: 'Restaurant updated.', variant: 'success' });
+                      setRestUpdateOpen(false);
+                    })
+                    .catch((err) => {
+                      console.error('[UpdateRestaurant] error', err?.response?.status, err?.response?.data || err?.message);
+                      msgAlert({ heading: 'Error', message: 'Failed to update restaurant.', variant: 'danger' });
+                    });
+                }
+              }
+            >
+              <Form.Input name="name" label="Name" defaultValue={selectedRestaurant.name || ''} required />
+              <Form.Group widths="equal">
+                <Form.Input name="city" label="City" defaultValue={selectedRestaurant.city || ''} />
+                <Form.Input name="state" label="State" defaultValue={selectedRestaurant.state || ''} />
+              </Form.Group>
+              <Button primary type="submit">Save</Button>
+              <Button type="button" onClick={() => setRestUpdateOpen(false)}>Cancel</Button>
+            </Form>
+          ) : (
+            <p style={{ fontStyle: 'italic' }}>Select a restaurant from the list first.</p>
+          )}
+        </Modal.Content>
+      </Modal>
+
       <NewEmployeeModal
         open={newEmpModalOpen}
         onClose={() => setNewEmpModalOpen(false)}

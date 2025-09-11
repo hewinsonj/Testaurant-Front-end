@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Grid, Segment, List, Button, Input } from "semantic-ui-react";
+import { Grid, Segment, List, Button, Input, Dropdown } from "semantic-ui-react";
 import { getAllDrinks, deleteDrink } from "../../api/drink";
 import AddDrinkModal from "./AddDrinkModal";
 import DrinkUpdateModal from "./DrinkUpdateModal";
@@ -34,6 +34,7 @@ const DrinkIndexPage = ({ user, msgAlert, setNewDrink, employees, getAllRestaura
   const [logOpen, setLogOpen] = useState(false);
 
   const [restaurants, setRestaurants] = useState([]);
+  const [selectedRestaurantId, setSelectedRestaurantId] = useState('all');
 
   const getOwnerName = (drink) => {
     // Only show for elevated roles
@@ -128,19 +129,39 @@ const DrinkIndexPage = ({ user, msgAlert, setNewDrink, employees, getAllRestaura
     setActiveFilters({ excludeKeys, includeKeys });
   };
 
+  const getRestaurantId = (drink) => {
+    if (!drink) return null;
+    let restId = null;
+    if (drink.restaurant && typeof drink.restaurant === 'object') {
+      restId = drink.restaurant.id ?? drink.restaurant.pk ?? null;
+    } else if (drink.restaurant !== undefined) {
+      restId = drink.restaurant;
+    }
+    if (restId === null || restId === '') {
+      restId = drink.restaurant_id ?? null;
+    }
+    return restId;
+  };
+
+  const currentRestaurantName = () => {
+    if (selectedRestaurantId === 'all') return 'all restaurants';
+    const match = Array.isArray(restaurants) && restaurants.find(r => String(r.id) === String(selectedRestaurantId));
+    return match?.name || `Restaurant #${selectedRestaurantId}`;
+  };
+
+  const searchPlaceholder = `Search ${currentRestaurantName()} by name or ingredients...`;
+
   const filteredDrinks = allDrinks.filter((drink) => {
     const matchesSearch =
       drink.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       drink.ingredients.toLowerCase().includes(searchTerm.toLowerCase());
 
-    const matchesExclusions = activeFilters.excludeKeys.every(
-      (key) => !drink[key]
-    );
-    const matchesInclusions = activeFilters.includeKeys.every(
-      (key) => drink[key]
-    );
+    const matchesExclusions = activeFilters.excludeKeys.every((key) => !drink[key]);
+    const matchesInclusions = activeFilters.includeKeys.every((key) => drink[key]);
 
-    return matchesSearch && matchesExclusions && matchesInclusions;
+    const restMatches = selectedRestaurantId === 'all' || String(getRestaurantId(drink)) === String(selectedRestaurantId);
+
+    return matchesSearch && matchesExclusions && matchesInclusions && restMatches;
   });
 
   const getRestaurantName = (drink) => {
@@ -181,12 +202,27 @@ const DrinkIndexPage = ({ user, msgAlert, setNewDrink, employees, getAllRestaura
         content="Filters"
         onClick={() => setFilterOpen(true)}
       />
+      {user && ["Admin"].includes(user.role) && (
+        <Dropdown
+          placeholder="Filter by restaurant"
+          selection
+          clearable
+          value={selectedRestaurantId}
+          onChange={(e, { value }) => setSelectedRestaurantId(value ?? 'all')}
+          options={[
+            { key: 'all', text: 'All Restaurants', value: 'all' },
+            ...(Array.isArray(restaurants) ? restaurants.map(r => ({ key: r.id, text: r.name, value: r.id })) : [])
+          ]}
+          style={{ marginLeft: "1rem", minWidth: 220 }}
+        />
+      )}
       <Input
         icon="search"
-        placeholder="Search by name or ingredients..."
+        placeholder={searchPlaceholder}
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
-        style={{ marginLeft: "1rem" }}
+        size="large"
+        style={{ marginLeft: "1rem", width: "28rem", maxWidth: "100%" }}
       />
       <FilterModal
         open={filterOpen}

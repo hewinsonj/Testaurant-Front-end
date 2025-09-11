@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Grid, Segment, List, Button, Input } from "semantic-ui-react";
+import { Grid, Segment, List, Button, Input, Dropdown } from "semantic-ui-react";
 import { getAllFoods, deleteFood } from "../../api/food";
 import AddFoodModal from "./AddFoodModal";
 import FoodUpdateModal from "./FoodUpdateModal";
@@ -30,6 +30,7 @@ const FoodIndexPage = ({ user, msgAlert, setNewFood, employees: incomingEmployee
   const [searchTerm, setSearchTerm] = useState("");
   const [logOpen, setLogOpen] = useState(false);
   const [restaurants, setRestaurants] = useState([]);
+  const [selectedRestaurantId, setSelectedRestaurantId] = useState('all');
 
   const getOwnerName = (food) => {
     // Only show for elevated roles; employees don't need owner info
@@ -136,7 +137,9 @@ const FoodIndexPage = ({ user, msgAlert, setNewFood, employees: incomingEmployee
     const matchesExclusions = activeFilters.excludeKeys.every((key) => !food[key]);
     const matchesInclusions = activeFilters.includeKeys.every((key) => food[key]);
 
-    return matchesSearch && matchesExclusions && matchesInclusions;
+    const restMatches = selectedRestaurantId === 'all' || String(getRestaurantId(food)) === String(selectedRestaurantId);
+
+    return matchesSearch && matchesExclusions && matchesInclusions && restMatches;
   });
 
   const getRestaurantName = (food) => {
@@ -156,9 +159,31 @@ const FoodIndexPage = ({ user, msgAlert, setNewFood, employees: incomingEmployee
     return match ? match.name : `Restaurant #${restId}`;
   };
 
+  function getRestaurantId(food) {
+    if (!food) return null;
+    let restId = null;
+    if (food.restaurant && typeof food.restaurant === 'object') {
+      restId = food.restaurant.id ?? food.restaurant.pk ?? null;
+    } else if (food.restaurant !== undefined) {
+      restId = food.restaurant;
+    }
+    if (restId === null || restId === '') {
+      restId = food.restaurant_id ?? null;
+    }
+    return restId;
+  }
+
+  const currentRestaurantName = () => {
+    if (selectedRestaurantId === 'all') return 'all restaurants';
+    const match = Array.isArray(restaurants) && restaurants.find(r => String(r.id) === String(selectedRestaurantId));
+    return match?.name || `Restaurant #${selectedRestaurantId}`;
+  };
+
+  const searchPlaceholder = `Search ${currentRestaurantName()} by name or ingredients...`;
+
   return (
     <Segment raised>
-      {user && ["Manager", "Admin", "GeneralManager"].includes(user.role) && (
+      {user && ["Admin"].includes(user.role) && (
         <AddFoodModal
           user={user}
           msgAlert={msgAlert}
@@ -171,12 +196,27 @@ const FoodIndexPage = ({ user, msgAlert, setNewFood, employees: incomingEmployee
         />
       )}
       <Button icon="filter" content="Filters" onClick={() => setFilterOpen(true)} />
+      {user && ["Admin"].includes(user.role) && (
+        <Dropdown
+          placeholder="Filter by restaurant"
+          selection
+          clearable
+          value={selectedRestaurantId}
+          onChange={(e, { value }) => setSelectedRestaurantId(value ?? 'all')}
+          options={[
+            { key: 'all', text: 'All Restaurants', value: 'all' },
+            ...(Array.isArray(restaurants) ? restaurants.map(r => ({ key: r.id, text: r.name, value: r.id })) : [])
+          ]}
+          style={{ marginLeft: "1rem", minWidth: 220 }}
+        />
+      )}
       <Input
         icon="search"
-        placeholder="Search by name or ingredients..."
+        placeholder={searchPlaceholder}
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
-        style={{ marginLeft: "1rem" }}
+        size="large"
+        style={{ marginLeft: "1rem", width: "28rem", maxWidth: "100%" }}
       />
       <FilterModal
         open={filterOpen}

@@ -166,6 +166,8 @@ const QuestionIndex = ({ user, msgAlert, setNewQuestion, employees, getAllQuesti
             }}
             onSelect={(question) => setSelectedQuestion(question)}
             searchPlaceholder="Search questions"
+            inputSize="large"
+            inputStyle={{ width: "28rem", maxWidth: "100%" }}
             extractLabel={(q) => {
               const s = q.question_str || '';
               return s.length > 60 ? `${s.slice(0, 60)}…` : (s || 'No text');
